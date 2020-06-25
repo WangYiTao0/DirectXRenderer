@@ -2,6 +2,12 @@
 #include "Win.h"
 #include "Debug/DrException.h"
 #include "Input/KeyBoard.h"
+#include "Input/Mouse.h"
+
+#include "Core/Graphics.h"
+
+#include <optional>
+#include <memory>
 
 namespace dr
 {
@@ -33,7 +39,7 @@ namespace dr
 			~WindowClass();
 			WindowClass(const WindowClass&) = delete;
 			WindowClass& operator=(const WindowClass&) = delete;
-			static constexpr const char* wndClassName = "Chili Direct3D Engine Window";
+			static constexpr const char* wndClassName = "DRS Direct3D Engine Window";
 			static WindowClass wndClass;
 			HINSTANCE hInst;
 		};
@@ -42,17 +48,21 @@ namespace dr
 		~Win32Window();
 		Win32Window(const Win32Window&) = delete;
 		Win32Window& operator=(const Win32Window&) = delete;
+		void SetTitle(const std::string& title);
+		static std::optional<int> ProcessMessages();
+		Graphics& Gfx();
 	private:
 		static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 		static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 		LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	public:
 		Keyboard kbd;
-	
+		Mouse mouse;
 	private:
 		int m_width;
 		int m_height;
 		HWND m_hWnd;
+		std::unique_ptr<Graphics> m_pGfx;
 	};
 }
 // error exception helper macro
