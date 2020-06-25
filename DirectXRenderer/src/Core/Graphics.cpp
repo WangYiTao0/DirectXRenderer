@@ -133,7 +133,6 @@ namespace dr
 	void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
 	{
 		GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed(count, 0u, 0u));
-		//m_pContext->DrawIndexed(count, 0u, 0u);
 	}
 
 	void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept

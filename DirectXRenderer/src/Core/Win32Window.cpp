@@ -220,6 +220,7 @@ namespace dr
 					mouse.OnMouseLeave();
 				}
 			}
+			break;
 		}
 		case WM_LBUTTONDOWN:
 		{
@@ -239,12 +240,24 @@ namespace dr
 		{
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnLeftReleased(pt.x, pt.y);
+			// release mouse if outside of window
+			if (pt.x < 0 || pt.x >= m_width || pt.y < 0 || pt.y >= m_height)
+			{
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
 			break;
 		}
 		case WM_RBUTTONUP:
 		{
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnRightReleased(pt.x, pt.y);
+			// release mouse if outside of window
+			if (pt.x < 0 || pt.x >= m_width || pt.y < 0 || pt.y >= m_height)
+			{
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
 			break;
 		}
 		case WM_MOUSEWHEEL:
@@ -252,6 +265,7 @@ namespace dr
 			const POINTS pt = MAKEPOINTS(lParam);
 			const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 			mouse.OnWheelDelta(pt.x, pt.y, delta);
+			break;
 		}
 		/************** END MOUSE MESSAGES **************/
 		}
