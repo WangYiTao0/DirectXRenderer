@@ -18,7 +18,9 @@
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+        "asset/shader/**.hlsl",
+        "asset/shader/**.hlsli",
     }
     
     includedirs
@@ -41,10 +43,36 @@
 
     }
 
+ shadermodel("5.0")
+ shaderassembler("AssemblyCode")
+ local shader_dir = "asset/shader/"
+ --HLSL files that don't end with 'Extensions' will be ignored as they will be
+ --used as includes
+  filter("files:**.hlsl")
+  flags("ExcludeFromBuild")
+  shaderobjectfileoutput(shader_dir.."%{file.basename}"..".cso")
+  shaderassembleroutput(shader_dir.."%{file.basename}"..".asm")
+  filter("files:**_ps.hlsl")
+  removeflags("ExcludeFromBuild")
+  shadertype("Pixel")
+
+  filter("files:**_vs.hlsl")
+  removeflags("ExcludeFromBuild")
+  shadertype("Vertex")
+
+ -- Warnings as errors
+ shaderoptions({"/WX"})
+
 filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
     symbols "on"
+
+    defines
+    {
+        "IS_DEBUG=true"
+    }
+
 
     links
     {
@@ -60,6 +88,11 @@ filter "configurations:Release"
     defines "_RELEASE"
     runtime "Release"
     optimize "on"
+
+    defines
+    {
+        "IS_DEBUG=false"
+    }
 
     links
     {

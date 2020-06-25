@@ -2,6 +2,8 @@
 
 #include "Win32Window.h"
 
+#include "Debug/ThrowMacros.h"
+
 namespace dr
 {
 	// Window Class Stuff
@@ -86,7 +88,7 @@ namespace dr
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
 		// create graphics object
-		m_pGfx = std::make_unique<Graphics>(m_hWnd);
+		m_pGfx = std::make_unique<Graphics>(m_hWnd,m_width,m_height);
 	}
 
 	Win32Window::~Win32Window()
@@ -103,7 +105,7 @@ namespace dr
 		}
 	}
 
-	std::optional<int> Win32Window::ProcessMessages()
+	std::optional<int> Win32Window::ProcessMessages() noexcept
 	{
 		MSG msg;
 		// while queue has messages, remove and dispatch them (but do not block on empty queue)
@@ -127,6 +129,10 @@ namespace dr
 
 	Graphics& Win32Window::Gfx()
 	{
+		if (!m_pGfx)
+		{
+			throw DRWND_NOGFX_EXCEPT();
+		}
 		return *m_pGfx;
 	}
 
@@ -219,6 +225,8 @@ namespace dr
 		{
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnLeftPressed(pt.x, pt.y);
+			// bring window to foreground on lclick client region
+			SetForegroundWindow(hWnd);
 			break;
 		}
 		case WM_RBUTTONDOWN:
@@ -251,35 +259,12 @@ namespace dr
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	Win32Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept
-		:
-		DrException(line, file),
-		hr(hr)
-	{
-
-	}
-
-	const char* Win32Window::Exception::what() const noexcept
-	{
-		std::ostringstream oss;
-		oss << GetType() << std::endl
-			<< "[Error Code] " << GetErrorCode() << std::endl
-			<< "[Description] " << GetErrorString() << std::endl
-			<< GetOriginString();
-		whatBuffer = oss.str();
-		return whatBuffer.c_str();
-	}
-
-	const char* Win32Window::Exception::GetType() const noexcept
-	{
-		return "Dr Window Exception";
-	}
 
 	std::string Win32Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 	{
 		char* pMsgBuf = nullptr;
 		// windows will allocate memory for err string and make our pointer point to it
-		DWORD nMsgLen = FormatMessage(
+		const DWORD nMsgLen = FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
@@ -297,14 +282,43 @@ namespace dr
 		return errorString;
 	}
 
-	HRESULT Win32Window::Exception::GetErrorCode() const noexcept
+	Win32Window::HrException::HrException(int line, const char* file, HRESULT hr) noexcept
+		:
+		Exception(line, file),
+		hr(hr)
+	{}
+
+	const char* Win32Window::HrException::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode()
+			<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
+			<< "[Description] " << GetErrorDescription() << std::endl
+			<< GetOriginString();
+		whatBuffer = oss.str();
+		return whatBuffer.c_str();
+	}
+
+	const char* Win32Window::HrException::GetType() const noexcept
+	{
+		return "Chili Window Exception";
+	}
+
+
+	HRESULT Win32Window::HrException::GetErrorCode() const noexcept
 	{
 		return hr;
 	}
 
-	std::string Win32Window::Exception::GetErrorString() const noexcept
+	std::string Win32Window::HrException::GetErrorDescription() const noexcept
 	{
-		return TranslateErrorCode(hr);
+		return Exception::TranslateErrorCode(hr);
+	}
+
+	const char* Win32Window::NoGfxException::GetType() const noexcept
+	{
+		return "DR Window Exception [No Graphics]";
 	}
 
 }

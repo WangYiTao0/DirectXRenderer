@@ -15,7 +15,9 @@ characterset ("MBCS")
 files
 {
     "src/**.h",
-    "src/**.cpp"
+    "src/**.cpp",
+    --"asset/shader/**.hlsl",
+    --"asset/shader/**.hlsli",
 }
 
 defines
@@ -37,6 +39,8 @@ links
     "D3DCompiler.lib",
 }
 
+
+
 filter "system:windows"
     systemversion "latest"
 
@@ -46,11 +50,20 @@ filter "system:windows"
     }
 
 filter "configurations:Debug"
-    defines "_DEBUG"
+    defines "DR_DEBUG"
     runtime "Debug"
     symbols "on"
+    defines
+    {
+        "IS_DEBUG=true"
+    }
 
 filter "configurations:Release"
-    defines "_RELEASE"
+    defines "DR_RELEASE"
     runtime "Release"
     optimize "on"
+
+    defines
+    {
+        "IS_DEBUG=false"
+    }

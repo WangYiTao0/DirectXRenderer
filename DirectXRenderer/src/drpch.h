@@ -13,6 +13,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <random>
 
 
 // windows header
@@ -22,3 +23,4 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <d3dcompiler.h>

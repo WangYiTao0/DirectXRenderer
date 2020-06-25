@@ -1,5 +1,6 @@
 #pragma once
 #include <queue>
+#include <optional>
 
 namespace dr
 {
@@ -21,7 +22,6 @@ namespace dr
 				Move,
 				Enter,
 				Leave,
-				Invalid
 			};
 		private:
 			Type type;
@@ -30,14 +30,7 @@ namespace dr
 			int x;
 			int y;
 		public:
-			Event() noexcept
-				:
-				type(Type::Invalid),
-				leftIsPressed(false),
-				rightIsPressed(false),
-				x(0),
-				y(0)
-			{}
+
 			Event(Type type, const Mouse& parent) noexcept
 				:
 				type(type),
@@ -46,10 +39,7 @@ namespace dr
 				x(parent.x),
 				y(parent.y)
 			{}
-			bool IsValid() const noexcept
-			{
-				return type != Type::Invalid;
-			}
+
 			Type GetType() const noexcept
 			{
 				return type;
@@ -85,7 +75,7 @@ namespace dr
 		bool IsInWindow() const noexcept;
 		bool LeftIsPressed() const noexcept;
 		bool RightIsPressed() const noexcept;
-		Mouse::Event Read() noexcept;
+		std::optional<Mouse::Event> Read() noexcept;
 		bool IsEmpty() const noexcept
 		{
 			return buffer.empty();

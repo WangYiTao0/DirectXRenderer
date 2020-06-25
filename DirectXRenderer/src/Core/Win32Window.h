@@ -16,15 +16,28 @@ namespace dr
 	public:
 		class Exception : public DrException
 		{
+			using DrException::DrException;
 		public:
-			Exception(int line, const char* file, HRESULT hr) noexcept;
+			static std::string TranslateErrorCode(HRESULT hr) noexcept;
+		};
+
+		class HrException : public Exception
+		{
+		public:
+			HrException(int line, const char* file, HRESULT hr) noexcept;
 			const char* what() const noexcept override;
 			virtual const char* GetType() const noexcept;
-			static std::string TranslateErrorCode(HRESULT hr) noexcept;
 			HRESULT GetErrorCode() const noexcept;
-			std::string GetErrorString() const noexcept;
+			std::string GetErrorDescription() const noexcept;
 		private:
 			HRESULT hr;
+		};
+
+		class NoGfxException : public Exception
+		{
+		public:
+			using Exception::Exception;
+			const char* GetType() const noexcept override;
 		};
 
 	private:
@@ -49,7 +62,7 @@ namespace dr
 		Win32Window(const Win32Window&) = delete;
 		Win32Window& operator=(const Win32Window&) = delete;
 		void SetTitle(const std::string& title);
-		static std::optional<int> ProcessMessages();
+		static std::optional<int> ProcessMessages()noexcept;
 		Graphics& Gfx();
 	private:
 		static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -65,6 +78,3 @@ namespace dr
 		std::unique_ptr<Graphics> m_pGfx;
 	};
 }
-// error exception helper macro
-#define DRWND_EXCEPT( hr ) dr::Win32Window::Exception( __LINE__,__FILE__,hr )
-#define DRWND_LAST_EXCEPT() dr::Win32Window::Exception( __LINE__,__FILE__,GetLastError() )
