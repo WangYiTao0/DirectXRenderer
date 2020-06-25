@@ -76,12 +76,13 @@ filter "configurations:Debug"
 
     links
     {
-        "../DirectXRenderer/3rdPart/assimp/bin/Debug/assimp-vc142-mtd.lib"
+        "../DirectXRenderer/3rdPart/assimp/bin/Debug/assimp-vc142-mtd.lib",
+        "../DirectXRenderer/3rdPart/DirectXTex/lib/Debug/DirectXTex.lib"
     }
 
     postbuildcommands 
     {
-        '{COPY} "../DirectXRenderer/3rdPart/assimp/bin/Debug/assimp-vc142-mtd.dll" "%{cfg.targetdir}"'
+       '{COPY} "../DirectXRenderer/3rdPart/assimp/bin/Debug/assimp-vc142-mtd.dll" "%{cfg.targetdir}"'
     }
 
 filter "configurations:Release"
@@ -96,8 +97,9 @@ filter "configurations:Release"
 
     links
     {
-        "../DirectXRenderer/3rdPart/assimp/bin/Release/assimp-vc142-mt.lib"
-    }
+        "../DirectXRenderer/3rdPart/assimp/bin/Release/assimp-vc142-mt.lib",
+        "../DirectXRenderer/3rdPart/DirectXTex/lib/Debug/DirectXTex.lib",
+   }
 
     postbuildcommands 
     {

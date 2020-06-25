@@ -16,8 +16,6 @@ files
 {
     "src/**.h",
     "src/**.cpp",
-    --"asset/shader/**.hlsl",
-    --"asset/shader/**.hlsli",
 }
 
 defines
@@ -30,6 +28,7 @@ includedirs
     "src",
     "%{IncludeDir.ImGui}",
     "3rdPart/assimp/include",
+    "3rdPart/DirectXTex/include",
 }
 
 links
@@ -38,8 +37,6 @@ links
     "d3d11.lib",
     "D3DCompiler.lib",
 }
-
-
 
 filter "system:windows"
     systemversion "latest"

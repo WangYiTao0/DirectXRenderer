@@ -5,6 +5,7 @@
 #include "Scenes/ShaderToyScene.h"
 
 
+
 Application::Application()
 	:
 	wnd(1600, 900, "DirectX11 Renderer")
