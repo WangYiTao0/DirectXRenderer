@@ -10,9 +10,7 @@ int CALLBACK WinMain(
 {
 	try
 	{
-
-
-		dr::Win32Window wnd(800, 300, "Donkey Fart Box");
+		dr::Win32Window wnd(800, 300, "DirectX11 Renderer");
 
 		MSG msg;
 		BOOL gResult;
@@ -21,11 +19,16 @@ int CALLBACK WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (wnd.kbd.KeyIsPressed(VK_MENU))
+			{
+				MessageBox(nullptr, "Something Happon!", "The alt key was pressed", MB_OK | MB_ICONEXCLAMATION);
+			}
 		}
 
 		if (gResult == -1)
 		{
-			return -1;
+			throw DRWND_LAST_EXCEPT();
 		}
 
 		return msg.wParam;

@@ -53,7 +53,7 @@ namespace dr
 		wr.bottom = height + wr.top;
 		if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)))
 		{
-			//throw DRWND_LAST_EXCEPT();
+			throw DRWND_LAST_EXCEPT();
 		};
 		// create window & get hWnd
 		m_hWnd = CreateWindow(
@@ -62,6 +62,13 @@ namespace dr
 			CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 			nullptr, nullptr, WindowClass::GetInstance(), this
 		);
+
+		// check for error
+		if (m_hWnd == nullptr)
+		{
+			throw DRWND_LAST_EXCEPT();
+		}
+
 		// show window
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 	}
@@ -107,6 +114,26 @@ namespace dr
 		case WM_CLOSE:
 			PostQuitMessage(0);
 			return 0;
+		// clear keystate when window loses focus to prevent input getting "stuck"
+		case WM_KILLFOCUS:
+			kbd.ClearState();
+			break;
+			/*********** KEYBOARD MESSAGES ***********/
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			if (!(lParam & 0x40000000) || kbd.AutorepeatIsEnabled()) // filter autorepeat
+			{
+				kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+			}
+			break;
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+			break;
+		case WM_CHAR:
+			kbd.OnChar(static_cast<unsigned char>(wParam));
+			break;
+			/*********** END KEYBOARD MESSAGES ***********/
 		}
 
 		return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -139,17 +166,21 @@ namespace dr
 	std::string Win32Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 	{
 		char* pMsgBuf = nullptr;
+		// windows will allocate memory for err string and make our pointer point to it
 		DWORD nMsgLen = FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			reinterpret_cast<LPSTR>(&pMsgBuf), 0, nullptr
 		);
+		// 0 string length returned indicates a failure
 		if (nMsgLen == 0)
 		{
 			return "Unidentified error code";
 		}
+		// copy error string from windows-allocated buffer to std::string
 		std::string errorString = pMsgBuf;
+		// free windows buffer
 		LocalFree(pMsgBuf);
 		return errorString;
 	}

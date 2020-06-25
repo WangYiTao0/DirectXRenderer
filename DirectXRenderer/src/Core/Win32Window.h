@@ -1,10 +1,10 @@
 #pragma once
 #include "Win.h"
 #include "Debug/DrException.h"
+#include "Input/KeyBoard.h"
 
 namespace dr
 {
-
 	class Win32Window
 	{
 	public:
@@ -46,12 +46,15 @@ namespace dr
 		static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 		static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 		LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+	public:
+		Keyboard kbd;
+	
 	private:
 		int m_width;
 		int m_height;
 		HWND m_hWnd;
 	};
-// error exception helper macro
-#define DRWND_EXCEPT( hr ) Window::Exception( __LINE__,__FILE__,hr )
-#define DRWND_LAST_EXCEPT() Window::Exception( __LINE__,__FILE__,GetLastError() )
 }
+// error exception helper macro
+#define DRWND_EXCEPT( hr ) dr::Win32Window::Exception( __LINE__,__FILE__,hr )
+#define DRWND_LAST_EXCEPT() dr::Win32Window::Exception( __LINE__,__FILE__,GetLastError() )
