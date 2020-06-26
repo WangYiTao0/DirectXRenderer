@@ -23,7 +23,7 @@
 #include "Debug/DrException.h"
 #include <string>
 #include <optional>
-#include <DirectXTex.h>
+#include <DirectXTex/include/DirectXTex.h>
 
 namespace dr
 {

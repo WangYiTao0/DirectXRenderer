@@ -17,8 +17,10 @@
 
 	files
 	{
-		"src/**.h",
-		"src/**.cpp",
+	    "src/**.h", 
+	    "src/**.c", 
+	    "src/**.hpp", 
+	    "src/**.cpp" ,
         "asset/shader/**.hlsl",
         "asset/shader/**.hlsli",
     }
@@ -27,6 +29,8 @@
     {
         "../DirectXRenderer/src",
         "../DirectXRenderer/3rdPart",
+         "../DirectXRenderer/3rdPart/assimp/include",
+         "../DirectXRenderer/3rdPart/DirectXTex/include",
         "../DirectXRenderer/%{IncludeDir.ImGui}"
     }
 

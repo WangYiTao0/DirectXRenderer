@@ -31,7 +31,7 @@ includedirs
     "src",
     "%{IncludeDir.ImGui}",
     "3rdPart/assimp/include",
-    "3rdPart/DirectXTex/include",
+    "3rdPart",
 }
 
 links

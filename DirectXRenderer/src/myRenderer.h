@@ -23,6 +23,7 @@
 #include "Drawable/Box.h"
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
+#include "Drawable/Model.h"
 
 //CommonTool
 #include "CommonTool/DrMath.h"

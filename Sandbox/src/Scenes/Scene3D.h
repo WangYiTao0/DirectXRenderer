@@ -15,6 +15,6 @@ private:
 	dr::Camera3D cam3d;
 	dr::PointLight light;
 
-	std::vector<std::unique_ptr<dr::Drawable>> drawables;
-	static constexpr size_t nDrawables = 180;
+
+	dr::Model nano{ wnd.Gfx(),"./asset/models/nanosuit.obj" };
 };
