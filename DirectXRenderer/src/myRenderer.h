@@ -4,6 +4,8 @@
 #include "Core/Win32Window.h"
 #include "Core/Timer.h"
 #include "Core/Camera3D.h"
+#include "Core/Vertex.h"
+
 //debug
 #include "Debug/DrException.h"
 #include "Debug/ThrowMacros.h"
