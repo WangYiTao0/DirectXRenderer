@@ -58,19 +58,23 @@ namespace dr
 		Graphics(HWND hWnd, int width, int height);
 		Graphics(const Graphics&) = delete;
 		Graphics& operator=(const Graphics&) = delete;
-		~Graphics() = default;
+		~Graphics();
 		void EndFrame();
 		void BeginFrame(float red, float green, float blue) noexcept;
 
 		void DrawIndexed(UINT count) noxnd;
 		void SetProjection(DirectX::FXMMATRIX proj)noexcept;
 		DirectX::XMMATRIX GetProjection() const noexcept;
+		void SetCamera(DirectX::FXMMATRIX cam) noexcept;
+		DirectX::XMMATRIX GetCamera() const noexcept;
 
 		void EnableImgui() noexcept;
 		void DisableImgui() noexcept;
 		bool IsImguiEnabled() const noexcept;
 		
 	private:
+		DirectX::XMMATRIX projection;
+		DirectX::XMMATRIX camera;
 		bool imguiEnabled = true;
 		DirectX::XMMATRIX m_projection;
 

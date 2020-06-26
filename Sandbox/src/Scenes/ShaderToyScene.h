@@ -5,10 +5,10 @@
 class ShaderToyScene :public Scene
 {
 public:
-	ShaderToyScene(dr::Graphics& gfx);
+	ShaderToyScene(dr::Win32Window& wnd);
 	virtual void Update(float dt) override;
-	virtual void Draw()  override;
+	virtual void Draw(float dt)  override;
 private:
-	dr::Graphics& gfx;
+	dr::Win32Window& wnd;
 
 };

@@ -10,42 +10,16 @@ Application::Application()
 	:
 	wnd(1600, 900, "DirectX11 Renderer")
 {
-	std::mt19937 rng(std::random_device{}());
-	std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
-	std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
-	std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
-	std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-	for (auto i = 0; i < 100; i++)
-	{
-		boxes.push_back(std::make_unique<dr::Box>(
-			wnd.Gfx(), rng, adist,
-			ddist, odist, rdist
-			));
-	}
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 900.f / 1600.f, 0.5f, 40.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 900.f / 1600.f, 0.5f, 4000.0f));
 
-	m_Scenes.push_back(std::make_unique<Scene3D>(wnd.Gfx()));
-	m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd.Gfx()));
+	m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
+	m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
 
 	m_CurScene = m_Scenes.begin();
 
 	OutputSceneName();
 }
 
-int Application::Run()
-{
-
-	while (true)
-	{
-		// process all messages pending, but to not block for new messages
-		if (const auto ecode = dr::Win32Window::ProcessMessages())
-		{
-			// if return optional has value, means we're quitting so return exit code
-			return *ecode;
-		}
-		DoFrame();
-	}
-}
 
 
 void Application::HandleInput(float dt)
@@ -76,6 +50,22 @@ void Application::HandleInput(float dt)
 	}
 }
 
+
+int Application::Run()
+{
+
+	while (true)
+	{
+		// process all messages pending, but to not block for new messages
+		if (const auto ecode = dr::Win32Window::ProcessMessages())
+		{
+			// if return optional has value, means we're quitting so return exit code
+			return *ecode;
+		}
+		DoFrame();
+	}
+}
+
 void Application::CycleScenes()
 {
 	if (++m_CurScene == m_Scenes.end())
@@ -95,10 +85,10 @@ void Application::Update(float dt)
 	(*m_CurScene)->Update(dt);
 }
 
-void Application::Draw()
+void Application::Draw(float dt)
 {
 	// draw scene
-	(*m_CurScene)->Draw();
+	(*m_CurScene)->Draw(dt);
 }
 
 void Application::OutputSceneName() const
@@ -114,24 +104,24 @@ void Application::OutputSceneName() const
 
 void Application::DoFrame()
 {
-	auto dt = timer.Mark();
+	auto dt = timer.Mark() * gameSpeed_factor;
+
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 
 	HandleInput(dt);
 	Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
-	Draw();
 
-	for (auto& b : boxes)
+	Draw(dt);
+
+	// imgui window to control simulation speed
+	if (ImGui::Begin("Simulation Speed"))
 	{
-		b->Update(dt);
-		b->Draw(wnd.Gfx());
+		ImGui::SliderFloat("Speed Factor", &gameSpeed_factor, 0.0f, 4.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
 	}
-	// imgui stuff
-	if (show_demo_window)
-	{
-		ImGui::ShowDemoWindow(&show_demo_window);
-	}
+	ImGui::End();
+
 	// present
-
 	wnd.Gfx().EndFrame();
 }

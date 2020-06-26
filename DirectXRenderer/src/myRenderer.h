@@ -3,6 +3,7 @@
 //Core
 #include "Core/Win32Window.h"
 #include "Core/Timer.h"
+#include "Core/Camera3D.h"
 //debug
 #include "Debug/DrException.h"
 #include "Debug/ThrowMacros.h"
@@ -18,6 +19,8 @@
 //Drawable
 #include "Drawable/Drawable.h"
 #include "Drawable/Box.h"
+#include "Drawable/SolidSphere.h"
+#include "Drawable/PointLight.h"
 
 //CommonTool
 #include "CommonTool/DrMath.h"

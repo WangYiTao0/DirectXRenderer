@@ -108,6 +108,11 @@ namespace dr
 		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 	}
 
+	Graphics::~Graphics()
+	{
+		ImGui_ImplDX11_Shutdown();
+	}
+
 	void Graphics::EndFrame()
 	{
 		// imgui frame end
@@ -173,6 +178,15 @@ namespace dr
 		return m_projection;
 	}
 
+	void Graphics::SetCamera(DirectX::FXMMATRIX cam) noexcept
+	{
+		camera = cam;
+	}
+
+	DirectX::XMMATRIX Graphics::GetCamera() const noexcept
+	{
+		return camera;
+	}
 	void Graphics::EnableImgui() noexcept
 	{
 		imguiEnabled = true;

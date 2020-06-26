@@ -1,8 +1,8 @@
 #include "ShaderToyScene.h"
 
-ShaderToyScene::ShaderToyScene(dr::Graphics& gfx)
+ShaderToyScene::ShaderToyScene(dr::Win32Window& wnd)
 	:
-	gfx(gfx),
+	wnd(wnd),
 	Scene("ShaderToyScene")
 {
 }
@@ -12,7 +12,7 @@ void ShaderToyScene::Update(float dt)
 
 }
 
-void ShaderToyScene::Draw()
+void ShaderToyScene::Draw(float dt)
 {
 
 }
