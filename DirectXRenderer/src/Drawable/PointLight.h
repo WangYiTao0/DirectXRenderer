@@ -13,7 +13,7 @@ namespace dr
 		void SpawnControlWindow() noexcept;
 		void Reset() noexcept;
 		void Draw(Graphics& gfx) const noexcept(!IS_DEBUG);
-		void Bind(Graphics& gfx) const noexcept;
+		void Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept;
 	private:
 		struct PointLightCBuf
 		{

@@ -7,7 +7,7 @@
 // cbuffer CBuf
 // {
 //
-//   float4x4 model;                    // Offset:    0 Size:    64 [unused]
+//   float4x4 modelView;                // Offset:    0 Size:    64 [unused]
 //   float4x4 modelViewProj;            // Offset:   64 Size:    64
 //
 // }

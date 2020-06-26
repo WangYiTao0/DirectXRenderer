@@ -43,7 +43,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 void Scene3D::Update(float dt)
 {
 	wnd.Gfx().SetCamera(cam3d.GetMatrix());
-	light.Bind(wnd.Gfx());
+	light.Bind(wnd.Gfx(), cam3d.GetMatrix());
 
 }
 
