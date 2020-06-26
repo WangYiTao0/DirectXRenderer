@@ -40,5 +40,6 @@ namespace dr
 	void PointLight::Bind(Graphics& gfx) const noexcept
 	{
 		cbuf.Update(gfx, PointLightCBuf{ pos });
+		cbuf.Bind(gfx);
 	}
 }
