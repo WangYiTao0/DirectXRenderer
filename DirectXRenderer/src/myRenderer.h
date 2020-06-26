@@ -20,7 +20,6 @@
 
 //Drawable
 #include "Drawable/Drawable.h"
-#include "Drawable/Box.h"
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
 #include "Drawable/Mesh.h"

@@ -1,9 +1,9 @@
 #pragma once
-#include "DrawableBase.h"
+#include "Drawable.h"
 
 namespace dr
 {
-	class SolidSphere : public DrawableBase<SolidSphere>
+	class SolidSphere : public Drawable
 	{
 	public:
 		SolidSphere(Graphics& gfx, float radius);
