@@ -17,9 +17,10 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 		{}
 		std::unique_ptr<dr::Drawable> operator()()
 		{
+			const DirectX::XMFLOAT3 mat = { cdist(rng),cdist(rng),cdist(rng) };
 			return std::make_unique<dr::Box>(
 				gfx, rng, adist, ddist,
-				odist, rdist, bdist
+				odist, rdist, bdist, mat
 				);
 		}
 	private:
@@ -30,6 +31,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 		std::uniform_real_distribution<float> odist{ 0.0f,dr::PI * 0.08f };
 		std::uniform_real_distribution<float> rdist{ 6.0f,20.0f };
 		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
+		std::uniform_real_distribution<float> cdist{ 0.0f,1.0f };
 	};
 
 	drawables.reserve(nDrawables);
