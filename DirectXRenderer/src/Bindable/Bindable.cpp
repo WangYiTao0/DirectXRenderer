@@ -16,7 +16,7 @@ namespace dr
 			return gfx.m_pDevice.Get();
 		}
 
-		DxgiInfoManager& Bindable::GetInfoManager(Graphics& gfx) noexcept(IS_DEBUG)
+		DxgiInfoManager& Bindable::GetInfoManager(Graphics& gfx)
 		{
 #ifndef NDEBUG
 			return gfx.infoManager;

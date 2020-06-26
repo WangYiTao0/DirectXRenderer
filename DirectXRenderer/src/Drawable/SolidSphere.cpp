@@ -1,6 +1,6 @@
 #include "drpch.h"
 #include "SolidSphere.h"
-#include "Bindable/BindableBase.h"
+#include "Bindable/BindableCommon.h"
 #include "Debug/ThrowMacros.h"
 #include "Geometry/Sphere.h"
 

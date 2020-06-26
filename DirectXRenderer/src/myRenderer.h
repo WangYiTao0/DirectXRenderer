@@ -16,14 +16,14 @@
 #include "Debug/Imgui/ImguiManager.h"
 
 //Bindable 
-#include "Bindable/BindableBase.h"
+#include "Bindable/BindableCommon.h"
 
 //Drawable
 #include "Drawable/Drawable.h"
 #include "Drawable/Box.h"
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
-#include "Drawable/Model.h"
+#include "Drawable/Mesh.h"
 
 //CommonTool
 #include "CommonTool/DrMath.h"

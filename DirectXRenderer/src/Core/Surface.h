@@ -24,6 +24,7 @@
 #include <string>
 #include <optional>
 #include <DirectXTex/include/DirectXTex.h>
+#include "Debug/ConditionalNoexcept.h"
 
 namespace dr
 {

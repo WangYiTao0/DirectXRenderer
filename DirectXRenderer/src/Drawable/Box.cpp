@@ -1,6 +1,6 @@
 #include "drpch.h"
 #include "Box.h"
-#include "Bindable/BindableBase.h"
+#include "Bindable/BindableCommon.h"
 #include "Debug/ThrowMacros.h"
 #include "Drawable/Geometry/Cube.h"
 

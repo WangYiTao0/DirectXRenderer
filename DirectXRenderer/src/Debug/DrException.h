@@ -25,4 +25,3 @@ namespace dr
 
 }
 
-#define noxnd noexcept(!IS_DEBUG)

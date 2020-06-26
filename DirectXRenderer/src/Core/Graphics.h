@@ -6,6 +6,7 @@
 #include <vector>
 #include "Debug/DxgiInfoManager.h"
 #include <DirectXMath.h>
+#include "Debug/ConditionalNoexcept.h"
 
 namespace dr
 {
