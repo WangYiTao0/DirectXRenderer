@@ -27,15 +27,6 @@ Application::Application()
 
 void Application::HandleInput(float dt)
 {
-	if (wnd.kbd.KeyIsPressed(VK_SPACE))
-	{
-		wnd.Gfx().DisableImgui();
-	}
-	else
-	{
-		wnd.Gfx().EnableImgui();
-	}
-
 	while (const auto e = wnd.kbd.ReadKey())
 	{
 		if (!e->IsPress())
@@ -45,13 +36,7 @@ void Application::HandleInput(float dt)
 
 		switch (e->GetCode())
 		{
-		case VK_TAB:
-			CycleScenes();
-			break;
-		}
-
-		if (e->IsPress() && e->GetCode() == VK_F1)
-		{
+		case VK_ESCAPE:
 			if (wnd.CursorEnabled())
 			{
 				wnd.DisableCursor();
@@ -62,10 +47,12 @@ void Application::HandleInput(float dt)
 				wnd.EnableCursor();
 				wnd.mouse.DisableRaw();
 			}
+			break;
+		case VK_TAB:
+			CycleScenes();
+			break;
 		}
 	}
-
-
 
 }
 

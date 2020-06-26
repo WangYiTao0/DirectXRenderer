@@ -20,7 +20,6 @@
 // windows header
 #include "Core/Win.h"
 //DirectX11
-
 #include <wrl.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
