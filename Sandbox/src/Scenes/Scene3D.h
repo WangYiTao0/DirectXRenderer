@@ -10,7 +10,9 @@ public:
 	virtual void Draw(float dt)  override;
 private:
 	void SpawnImguiWindow();
+	void ShowRawInputWindow();
 private:
+	int x = 0, y = 0;
 	dr::Win32Window& wnd;
 	dr::Camera3D cam3d;
 	dr::PointLight light;
