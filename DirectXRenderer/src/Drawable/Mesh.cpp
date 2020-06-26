@@ -233,11 +233,11 @@ namespace dr
 			const auto base = "./asset/Models/nano_textured/"s;
 			aiString texFileName;
 			material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
-			bindablePtrs.push_back(std::make_shared<Texture>(gfx, Surface::FromFile(base + texFileName.C_Str())));
+			bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str()));
 
 			if (material.GetTexture(aiTextureType_SPECULAR, 0, &texFileName) == aiReturn_SUCCESS)
 			{
-				bindablePtrs.push_back(std::make_shared<Texture>(gfx, Surface::FromFile(base + texFileName.C_Str()), 1));
+				bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str(), 1));
 				hasSpecularMap = true;
 			}
 			else
@@ -247,25 +247,26 @@ namespace dr
 			bindablePtrs.push_back(std::make_shared<Sampler>(gfx));
 		}
 
-		bindablePtrs.push_back(std::make_shared<VertexBuffer>(gfx, vbuf));
+		bindablePtrs.push_back(std::make_shared<Bind::VertexBuffer>(gfx, vbuf));
 
 		bindablePtrs.push_back(std::make_shared<IndexBuffer>(gfx, indices));
 
-		std::wstring shader_dir = L"./asset/shader/cso/";
 
-		auto pvs = std::make_shared<VertexShader>(gfx, shader_dir + L"Phong_vs.cso");
+		std::string shader_dir = "./asset/shader/cso/";
+
+		auto pvs = std::make_shared<VertexShader>(gfx, shader_dir + "Phong_vs.cso");
 		auto pvsbc = pvs->GetBytecode();
 		bindablePtrs.push_back(std::move(pvs));
 
-		bindablePtrs.push_back(std::make_shared<InputLayout>(gfx, vbuf.GetLayout().GetD3DLayout(), pvsbc));
+		bindablePtrs.push_back(std::make_shared<InputLayout>(gfx, vbuf.GetLayout(), pvsbc));
 
 		if (hasSpecularMap)
 		{
-			bindablePtrs.push_back(std::make_shared<PixelShader>(gfx, shader_dir+L"PhongSpecMap_ps.cso"));
+			bindablePtrs.push_back(std::make_shared<PixelShader>(gfx, shader_dir+"PhongSpecMap_ps.cso"));
 		}
 		else
 		{
-			bindablePtrs.push_back(std::make_shared<PixelShader>(gfx, shader_dir+L"Phong_ps.cso"));
+			bindablePtrs.push_back(std::make_shared<PixelShader>(gfx, shader_dir+"Phong_ps.cso"));
 			
 			struct PSMaterialConstant
 			{

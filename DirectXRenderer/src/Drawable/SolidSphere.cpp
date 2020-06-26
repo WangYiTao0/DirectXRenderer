@@ -16,14 +16,14 @@ namespace dr
 		auto model = Sphere::Make();
 
 		model.Transform(dx::XMMatrixScaling(radius, radius, radius));
-		AddBind(std::make_shared<VertexBuffer>(gfx, model.vertices));
+		AddBind(std::make_shared<Bind::VertexBuffer>(gfx, model.vertices));
 		AddBind(std::make_shared<IndexBuffer>(gfx, model.indices));
 
-		auto pvs = std::make_shared<VertexShader>(gfx, L"./asset/shader/cso/Solid_vs.cso");
+		auto pvs = std::make_shared<VertexShader>(gfx, "./asset/shader/cso/Solid_vs.cso");
 		auto pvsbc = pvs->GetBytecode();
 		AddBind(std::move(pvs));
 
-		AddBind(std::make_shared<PixelShader>(gfx, L"./asset/shader/cso/Solid_ps.cso"));
+		AddBind(std::make_shared<PixelShader>(gfx, "./asset/shader/cso/Solid_ps.cso"));
 
 		struct PSColorConstant
 		{
@@ -32,7 +32,7 @@ namespace dr
 		} colorConst;
 		AddBind(std::make_shared<PixelConstantBuffer<PSColorConstant>>(gfx, colorConst));
 
-		AddBind(std::make_shared<InputLayout>(gfx, model.vertices.GetLayout().GetD3DLayout(), pvsbc));
+		AddBind(std::make_shared<InputLayout>(gfx, model.vertices.GetLayout(), pvsbc));
 
 		AddBind(std::make_shared<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 

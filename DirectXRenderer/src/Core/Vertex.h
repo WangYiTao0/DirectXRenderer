@@ -5,9 +5,9 @@
 
 namespace dr
 {
-	//DynamicVTX
 	namespace Dvtx
 	{
+		//DynamicVTX
 		struct BGRAColor
 		{
 			unsigned char a;
@@ -15,7 +15,6 @@ namespace dr
 			unsigned char g;
 			unsigned char b;
 		};
-
 		class VertexLayout
 		{
 		public:
@@ -30,128 +29,74 @@ namespace dr
 				BGRAColor,
 				Count,
 			};
-
 			template<ElementType> struct Map;
 			template<> struct Map<Position2D>
 			{
 				using SysType = DirectX::XMFLOAT2;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 				static constexpr const char* semantic = "Position";
+				static constexpr const char* code = "P2";
 			};
 			template<> struct Map<Position3D>
 			{
 				using SysType = DirectX::XMFLOAT3;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 				static constexpr const char* semantic = "Position";
+				static constexpr const char* code = "P3";
 			};
 			template<> struct Map<Texture2D>
 			{
 				using SysType = DirectX::XMFLOAT2;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 				static constexpr const char* semantic = "Texcoord";
+				static constexpr const char* code = "T2";
 			};
 			template<> struct Map<Normal>
 			{
 				using SysType = DirectX::XMFLOAT3;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 				static constexpr const char* semantic = "Normal";
+				static constexpr const char* code = "N";
 			};
 			template<> struct Map<Float3Color>
 			{
 				using SysType = DirectX::XMFLOAT3;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 				static constexpr const char* semantic = "Color";
+				static constexpr const char* code = "C3";
 			};
 			template<> struct Map<Float4Color>
 			{
 				using SysType = DirectX::XMFLOAT4;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 				static constexpr const char* semantic = "Color";
+				static constexpr const char* code = "C4";
 			};
 			template<> struct Map<BGRAColor>
 			{
-				using SysType = dr::Dvtx::BGRAColor;
+				using SysType = Dvtx::BGRAColor;
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 				static constexpr const char* semantic = "Color";
+				static constexpr const char* code = "C8";
 			};
-
-
 
 			class Element
 			{
 			public:
-				Element(ElementType type, size_t offset)
-					:
-					type(type),
-					offset(offset)
-				{}
-				size_t GetOffsetAfter() const noxnd
-				{
-					return offset + Size();
-				}
-				size_t GetOffset() const
-				{
-					return offset;
-				}
-				size_t Size() const noxnd
-				{
-					return SizeOf(type);
-				}
-				static constexpr size_t SizeOf(ElementType type) noxnd
-				{
-					switch (type)
-					{
-					case Position2D:
-						return sizeof(Map<Position2D>::SysType);
-					case Position3D:
-						return sizeof(Map<Position3D>::SysType);
-					case Texture2D:
-						return sizeof(Map<Texture2D>::SysType);
-					case Normal:
-						return sizeof(Map<Normal>::SysType);
-					case Float3Color:
-						return sizeof(Map<Float3Color>::SysType);
-					case Float4Color:
-						return sizeof(Map<Float4Color>::SysType);
-					case BGRAColor:
-						return sizeof(Map<BGRAColor>::SysType);
-					}
-					assert("Invalid element type" && false);
-					return 0u;
-				}
-				ElementType GetType() const noexcept
-				{
-					return type;
-				}
-				D3D11_INPUT_ELEMENT_DESC GetDesc() const noxnd
-				{
-					switch (type)
-					{
-					case Position2D:
-						return GenerateDesc<Position2D>(GetOffset());
-					case Position3D:
-						return GenerateDesc<Position3D>(GetOffset());
-					case Texture2D:
-						return GenerateDesc<Texture2D>(GetOffset());
-					case Normal:
-						return GenerateDesc<Normal>(GetOffset());
-					case Float3Color:
-						return GenerateDesc<Float3Color>(GetOffset());
-					case Float4Color:
-						return GenerateDesc<Float4Color>(GetOffset());
-					case BGRAColor:
-						return GenerateDesc<BGRAColor>(GetOffset());
-					}
-					assert("Invalid element type" && false);
-					return { "INVALID",0,DXGI_FORMAT_UNKNOWN,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 };
-				}
+				Element(ElementType type, size_t offset);
+				size_t GetOffsetAfter() const noxnd;
+				size_t GetOffset() const;
+				size_t Size() const noxnd;
+				static constexpr size_t SizeOf(ElementType type) noxnd;
+				ElementType GetType() const noexcept;
+				D3D11_INPUT_ELEMENT_DESC GetDesc() const noxnd;
+				const char* GetCode() const noexcept;
 			private:
 				template<ElementType type>
-				static constexpr D3D11_INPUT_ELEMENT_DESC GenerateDesc(size_t offset) noxnd
+				static constexpr D3D11_INPUT_ELEMENT_DESC GenerateDesc(size_t offset) noexcept
 				{
 					return { Map<type>::semantic,0,Map<type>::dxgiFormat,0,(UINT)offset,D3D11_INPUT_PER_VERTEX_DATA,0 };
 				}
-
 			private:
 				ElementType type;
 				size_t offset;
@@ -170,35 +115,12 @@ namespace dr
 				assert("Could not resolve element type" && false);
 				return elements.front();
 			}
-			const Element& ResolveByIndex(size_t i) const noxnd
-			{
-				return elements[i];
-			}
-
-			VertexLayout& Append(ElementType type) noxnd
-			{
-				elements.emplace_back(type, Size());
-				return *this;
-			}
-
-			size_t Size() const noxnd
-			{
-				return elements.empty() ? 0u : elements.back().GetOffsetAfter();
-			}
-			size_t GetElementCount() const noexcept
-			{
-				return elements.size();
-			}
-			std::vector<D3D11_INPUT_ELEMENT_DESC> GetD3DLayout() const noxnd
-			{
-				std::vector<D3D11_INPUT_ELEMENT_DESC> desc;
-				desc.reserve(GetElementCount());
-				for (const auto& e : elements)
-				{
-					desc.push_back(e.GetDesc());
-				}
-				return desc;
-			}
+			const Element& ResolveByIndex(size_t i) const noxnd;
+			VertexLayout& Append(ElementType type) noxnd;
+			size_t Size() const noxnd;
+			size_t GetElementCount() const noexcept;
+			std::vector<D3D11_INPUT_ELEMENT_DESC> GetD3DLayout() const noxnd;
+			std::string GetCode() const noxnd;
 		private:
 			std::vector<Element> elements;
 		};
@@ -246,16 +168,10 @@ namespace dr
 				}
 			}
 		protected:
-			Vertex(char* pData, const VertexLayout& layout) noxnd
-				:
-				pData(pData),
-				layout(layout)
-			{
-				assert(pData != nullptr);
-			}
+			Vertex(char* pData, const VertexLayout& layout) noxnd;
 		private:
-			template<typename First, typename ...Rest>
 			// enables parameter pack setting of multiple parameters by element index
+			template<typename First, typename ...Rest>
 			void SetAttributeByIndex(size_t i, First&& first, Rest&&... rest) noxnd
 			{
 				SetAttributeByIndex(i, std::forward<First>(first));
@@ -280,14 +196,10 @@ namespace dr
 			const VertexLayout& layout;
 		};
 
-
 		class ConstVertex
 		{
 		public:
-			ConstVertex(const Vertex& v) noxnd
-				:
-				vertex(v)
-			{}
+			ConstVertex(const Vertex& v) noxnd;
 			template<VertexLayout::ElementType Type>
 			const auto& Attr() const noxnd
 			{
@@ -300,26 +212,11 @@ namespace dr
 		class VertexBuffer
 		{
 		public:
-			VertexBuffer(VertexLayout layout) noxnd
-				:
-				layout(std::move(layout))
-			{}
-			const char* GetData() const noxnd
-			{
-				return buffer.data();
-			}
-			const VertexLayout& GetLayout() const noexcept
-			{
-				return layout;
-			}
-			size_t Size() const noxnd
-			{
-				return buffer.size() / layout.Size();
-			}
-			size_t SizeBytes() const noxnd
-			{
-				return buffer.size();
-			}
+			VertexBuffer(VertexLayout layout) noxnd;
+			const char* GetData() const noxnd;
+			const VertexLayout& GetLayout() const noexcept;
+			size_t Size() const noxnd;
+			size_t SizeBytes() const noxnd;
 			template<typename ...Params>
 			void EmplaceBack(Params&&... params) noxnd
 			{
@@ -327,33 +224,12 @@ namespace dr
 				buffer.resize(buffer.size() + layout.Size());
 				Back().SetAttributeByIndex(0u, std::forward<Params>(params)...);
 			}
-			Vertex Back() noxnd
-			{
-				assert(buffer.size() != 0u);
-				return Vertex{ buffer.data() + buffer.size() - layout.Size(),layout };
-			}
-			Vertex Front() noxnd
-			{
-				assert(buffer.size() != 0u);
-				return Vertex{ buffer.data(),layout };
-			}
-			Vertex operator[](size_t i) noxnd
-			{
-				assert(i < Size());
-				return Vertex{ buffer.data() + layout.Size() * i,layout };
-			}
-			ConstVertex Back() const noxnd
-			{
-				return const_cast<VertexBuffer*>(this)->Back();
-			}
-			ConstVertex Front() const noxnd
-			{
-				return const_cast<VertexBuffer*>(this)->Front();
-			}
-			ConstVertex operator[](size_t i) const noxnd
-			{
-				return const_cast<VertexBuffer&>(*this)[i];
-			}
+			Vertex Back() noxnd;
+			Vertex Front() noxnd;
+			Vertex operator[](size_t i) noxnd;
+			ConstVertex Back() const noxnd;
+			ConstVertex Front() const noxnd;
+			ConstVertex operator[](size_t i) const noxnd;
 		private:
 			std::vector<char> buffer;
 			VertexLayout layout;

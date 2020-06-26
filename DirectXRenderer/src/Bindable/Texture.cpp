@@ -1,6 +1,8 @@
 #include "drpch.h"
 #include "Texture.h"
 #include "Debug/ThrowMacros.h"
+#include "BindableCodex.h"
+
 
 namespace dr
 {
@@ -8,11 +10,15 @@ namespace dr
 	{
 		namespace wrl = Microsoft::WRL;
 
-		Texture::Texture(Graphics& gfx, const Surface& s, unsigned int slot)
+		Texture::Texture(Graphics& gfx, const std::string& path, UINT slot)
 			:
+			path(path),
 			slot(slot)
 		{
 			INFOMAN(gfx);
+
+			// load surface
+			const auto s = Surface::FromFile(path);
 
 			// create texture resource
 			D3D11_TEXTURE2D_DESC textureDesc = {};
@@ -49,6 +55,19 @@ namespace dr
 		void Texture::Bind(Graphics& gfx) noexcept
 		{
 			GetContext(gfx)->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf());
+		}
+		std::shared_ptr<Bindable> Texture::Resolve(Graphics& gfx, const std::string& path, UINT slot)
+		{
+			return Codex::Resolve<Texture>(gfx, path, slot);
+		}
+		std::string Texture::GenerateUID(const std::string& path, UINT slot)
+		{
+			using namespace std::string_literals;
+			return typeid(Texture).name() + "#"s + path + "#" + std::to_string(slot);
+		}
+		std::string Texture::GetUID() const noexcept
+		{
+			return GenerateUID(path, slot);
 		}
 	}
 }
