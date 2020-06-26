@@ -17,9 +17,9 @@ void f()
 
 	VertexBuffer vb(std::move(
 		VertexLayout{}
-		.Append<VertexLayout::Position3D>()
-		.Append<VertexLayout::Normal>()
-		.Append<VertexLayout::Texture2D>()
+		.Append(VertexLayout::Position3D)
+		.Append(VertexLayout::Normal)
+		.Append(VertexLayout::Texture2D)
 	));
 	vb.EmplaceBack(
 		dx::XMFLOAT3{ 1.0f,1.0f,5.0f },

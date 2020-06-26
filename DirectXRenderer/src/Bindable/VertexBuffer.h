@@ -41,7 +41,7 @@ namespace dr
 				bd.Usage = D3D11_USAGE_DEFAULT;
 				bd.CPUAccessFlags = 0u;
 				bd.MiscFlags = 0u;
-				bd.ByteWidth = UINT(vbuf.Size());
+				bd.ByteWidth = UINT(vbuf.SizeBytes());
 				bd.StructureByteStride = stride;
 				D3D11_SUBRESOURCE_DATA sd = {};
 				sd.pSysMem = vbuf.GetData();
