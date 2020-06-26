@@ -15,5 +15,7 @@ private:
 	dr::Camera3D cam3d;
 	dr::PointLight light;
 
-	dr::Model nano{ wnd.Gfx(),"./asset/models/nano_textured/nanosuit.obj" };
+	dr::Model nano1{ wnd.Gfx(),"./asset/models/nano_textured/nanosuit.obj" };
+	dr::Model nano2{ wnd.Gfx(),"./asset/models/nano_textured/nanosuit.obj" };
+
 };

@@ -11,6 +11,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	light(wnd.Gfx()),
 	Scene("Scene3D")
 {
+
 }
 
 void Scene3D::Update(float dt)
@@ -24,8 +25,9 @@ void Scene3D::Update(float dt)
 
 void Scene3D::Draw(float dt)
 {
+	nano1.Draw(wnd.Gfx());
+	nano2.Draw(wnd.Gfx());
 
-	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 
 	///ImguiWidow
@@ -37,7 +39,8 @@ void Scene3D::SpawnImguiWindow()
 	// imgui window to control camera
 	cam3d.SpawnControlWindow();
 	light.SpawnControlWindow();
-	nano.ShowWindow();
+	nano1.ShowWindow("Model 1");
+	nano2.ShowWindow("Model 2");
 }
 
 

@@ -16,10 +16,15 @@ namespace dr
 		auto model = Sphere::Make();
 
 		model.Transform(dx::XMMatrixScaling(radius, radius, radius));
-		AddBind(std::make_shared<Bind::VertexBuffer>(gfx, model.vertices));
-		AddBind(std::make_shared<IndexBuffer>(gfx, model.indices));
+		//Old Way
+		//AddBind(std::make_shared<Bind::VertexBuffer>(gfx, model.vertices));
+		//AddBind(std::make_shared<IndexBuffer>(gfx, model.indices));
 
-		auto pvs = std::make_shared<VertexShader>(gfx, "./asset/shader/cso/Solid_vs.cso");
+		const auto geometryTag = "$sphere." + std::to_string(radius);
+		AddBind(VertexBuffer::Resolve(gfx, geometryTag, model.vertices));
+		AddBind(IndexBuffer::Resolve(gfx, geometryTag, model.indices));
+
+		auto pvs = VertexShader::Resolve(gfx, "./asset/shader/cso/Solid_vs.cso");
 		auto pvsbc = pvs->GetBytecode();
 		AddBind(std::move(pvs));
 
@@ -30,11 +35,12 @@ namespace dr
 			dx::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
 			float padding;
 		} colorConst;
-		AddBind(std::make_shared<PixelConstantBuffer<PSColorConstant>>(gfx, colorConst));
 
-		AddBind(std::make_shared<InputLayout>(gfx, model.vertices.GetLayout(), pvsbc));
+		AddBind(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst));
 
-		AddBind(std::make_shared<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		AddBind(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+
+		AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 		AddBind(std::make_shared<TransformCbuf>(gfx, *this));
 	}

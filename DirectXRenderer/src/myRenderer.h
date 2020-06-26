@@ -17,6 +17,7 @@
 
 //Bindable 
 #include "Bindable/BindableCommon.h"
+#include "Bindable/BindableCodex.h"
 
 //Drawable
 #include "Drawable/Drawable.h"

@@ -13,9 +13,7 @@ Application::Application()
 	:
 	wnd(1600, 900, "DirectX11 Renderer")
 {
-	auto a = dr::Bind::VertexShader::Resolve(wnd.Gfx(), "./asset/shader/cso/Solid_vs.cso");
-	auto b = dr::Bind::Sampler::Resolve(wnd.Gfx());
-	auto c = dr::Bind::Sampler::Resolve(wnd.Gfx());
+
 
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 900.f / 1600.f, 0.5f, 4000.0f));
 
