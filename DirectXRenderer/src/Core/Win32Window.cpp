@@ -1,8 +1,13 @@
 #include "drpch.h"
-
 #include "Win32Window.h"
-
 #include "Debug/ThrowMacros.h"
+
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+
+
+IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
 namespace dr
 {
@@ -87,12 +92,16 @@ namespace dr
 		// show window
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
+		// Init ImGui Win32 Impl
+		ImGui_ImplWin32_Init(m_hWnd);
+
 		// create graphics object
 		m_pGfx = std::make_unique<Graphics>(m_hWnd,m_width,m_height);
 	}
 
 	Win32Window::~Win32Window()
 	{
+		ImGui_ImplWin32_Shutdown();
 		DestroyWindow(m_hWnd);
 	}
 	
@@ -166,6 +175,11 @@ namespace dr
 
 	LRESULT Win32Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		{
+			return true;
+		}
+
 		switch (msg)
 		{
 		case WM_CLOSE:

@@ -3,6 +3,7 @@
 #include <exception>
 #include <string>
 
+
 namespace dr
 {
 
@@ -23,3 +24,5 @@ namespace dr
 	};
 
 }
+
+#define noxnd noexcept(!IS_DEBUG)

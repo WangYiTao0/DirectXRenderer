@@ -7,7 +7,7 @@
 
 namespace dr
 {
-	void Drawable::Draw(Graphics& gfx) const noexcept(!IS_DEBUG)
+	void Drawable::Draw(Graphics& gfx) const noxnd
 	{
 		for (auto& b : binds)
 		{
@@ -20,13 +20,13 @@ namespace dr
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 	}
 
-	void Drawable::AddBind(std::unique_ptr<Bind::Bindable> bind) noexcept(!IS_DEBUG)
+	void Drawable::AddBind(std::unique_ptr<Bind::Bindable> bind) noxnd
 	{
 		assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(Bind::IndexBuffer));
 		binds.push_back(std::move(bind));
 	}
 
-	void Drawable::AddIndexBuffer(std::unique_ptr<Bind::IndexBuffer> ibuf) noexcept(!IS_DEBUG)
+	void Drawable::AddIndexBuffer(std::unique_ptr<Bind::IndexBuffer> ibuf) noxnd
 	{
 		assert("Attempting to add index buffer a second time" && pIndexBuffer == nullptr);
 		pIndexBuffer = ibuf.get();

@@ -4,7 +4,7 @@
 #include "Scenes/Scene3D.h"
 #include "Scenes/ShaderToyScene.h"
 
-
+#include "imgui.h"
 
 Application::Application()
 	:
@@ -50,6 +50,15 @@ int Application::Run()
 
 void Application::HandleInput(float dt)
 {
+	if (wnd.kbd.KeyIsPressed(VK_SPACE))
+	{
+		wnd.Gfx().DisableImgui();
+	}
+	else
+	{
+		wnd.Gfx().EnableImgui();
+	}
+
 	while (const auto e = wnd.kbd.ReadKey())
 	{
 		if (!e->IsPress())
@@ -106,7 +115,7 @@ void Application::OutputSceneName() const
 void Application::DoFrame()
 {
 	auto dt = timer.Mark();
-	wnd.Gfx().ClearBuffer(0.07f, 0.0f, 0.12f);
+	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 
 	HandleInput(dt);
 	Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
@@ -117,6 +126,12 @@ void Application::DoFrame()
 		b->Update(dt);
 		b->Draw(wnd.Gfx());
 	}
+	// imgui stuff
+	if (show_demo_window)
+	{
+		ImGui::ShowDemoWindow(&show_demo_window);
+	}
+	// present
 
 	wnd.Gfx().EndFrame();
 }

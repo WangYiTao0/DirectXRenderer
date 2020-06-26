@@ -3,6 +3,8 @@
 #include "Debug/dxerr.h"
 
 #include "Debug/ThrowMacros.h"
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
 
 namespace dr
 {
@@ -101,10 +103,28 @@ namespace dr
 		vp.TopLeftX = 0.0f;
 		vp.TopLeftY = 0.0f;
 		m_pContext->RSSetViewports(1u, &vp);
+
+		// init imgui d3d impl
+		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 	}
 
 	void Graphics::EndFrame()
 	{
+		// imgui frame end
+		if (imguiEnabled)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		
+			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
+		}
+
 		HRESULT hr;
 #ifndef NDEBUG
 		infoManager.Set();
@@ -123,14 +143,22 @@ namespace dr
 
 	}
 
-	void Graphics::ClearBuffer(float red, float green, float blue) noexcept
+	void Graphics::BeginFrame(float red, float green, float blue) noexcept
 	{
+		// imgui begin frame
+		if (imguiEnabled)
+		{
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+		}
+
 		const float color[] = { red,green,blue,1.0f };
 		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 		m_pContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
+	void Graphics::DrawIndexed(UINT count) noxnd
 	{
 		GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed(count, 0u, 0u));
 	}
@@ -143,6 +171,21 @@ namespace dr
 	DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 	{
 		return m_projection;
+	}
+
+	void Graphics::EnableImgui() noexcept
+	{
+		imguiEnabled = true;
+	}
+
+	void Graphics::DisableImgui() noexcept
+	{
+		imguiEnabled = false;
+	}
+
+	bool Graphics::IsImguiEnabled() const noexcept
+	{
+		return imguiEnabled;
 	}
 
 	Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept

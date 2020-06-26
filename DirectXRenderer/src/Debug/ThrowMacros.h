@@ -7,7 +7,6 @@
 #define DRWND_LAST_EXCEPT()  dr::Win32Window::HrException( __LINE__,__FILE__,GetLastError() )
 #define DRWND_NOGFX_EXCEPT()  dr::Win32Window::NoGfxException( __LINE__,__FILE__ )
 
-
 //gfx throw macros
 
 // HRESULT hr should exist in the local scope for these macros to work
@@ -36,3 +35,5 @@
 #else
 #define INFOMAN(gfx) HRESULT hr; DxgiInfoManager& infoManager = GetInfoManager((gfx))
 #endif
+
+

@@ -55,6 +55,11 @@ filter "configurations:Debug"
         "IS_DEBUG=true"
     }
 
+    links
+    {
+        "3rdPart/DirectXTex/lib/Debug/DirectXTex.lib"
+    }
+
 filter "configurations:Release"
     defines "DR_RELEASE"
     runtime "Release"
@@ -63,4 +68,9 @@ filter "configurations:Release"
     defines
     {
         "IS_DEBUG=false"
+    }
+
+    links
+    {
+        "3rdPart/DirectXTex/lib/Release/DirectXTex.lib"
     }
