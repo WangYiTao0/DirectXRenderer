@@ -6,6 +6,8 @@
 
 #include "imgui.h"
 
+
+
 Application::Application()
 	:
 	wnd(1600, 900, "DirectX11 Renderer")

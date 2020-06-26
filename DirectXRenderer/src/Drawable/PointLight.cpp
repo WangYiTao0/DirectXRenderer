@@ -2,6 +2,9 @@
 #include "PointLight.h"
 #include <imgui.h>
 
+
+
+
 namespace dr
 {
 	PointLight::PointLight(Graphics& gfx, float radius)

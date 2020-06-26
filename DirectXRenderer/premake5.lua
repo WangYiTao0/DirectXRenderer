@@ -14,8 +14,11 @@ characterset ("MBCS")
 
 files
 {
-    "src/**.h",
-    "src/**.cpp",
+	"src/**.h", 
+	"src/**.c", 
+	"src/**.hpp", 
+	"src/**.cpp" 
+
 }
 
 defines
