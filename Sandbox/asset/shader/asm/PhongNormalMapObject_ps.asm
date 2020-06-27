@@ -4,10 +4,10 @@
 //
 // Buffer Definitions: 
 //
-// cbuffer LightCBuf
+// cbuffer PointLightCBuf
 // {
 //
-//   float3 lightPos;                   // Offset:    0 Size:    12
+//   float3 viewLightPos;               // Offset:    0 Size:    12
 //   float3 ambient;                    // Offset:   16 Size:    12
 //   float3 diffuseColor;               // Offset:   32 Size:    12
 //   float diffuseIntensity;            // Offset:   44 Size:     4
@@ -43,7 +43,7 @@
 // splr                              sampler      NA          NA             s0      1 
 // tex                               texture  float4          2d             t0      1 
 // nmap                              texture  float4          2d             t2      1 
-// LightCBuf                         cbuffer      NA          NA            cb0      1 
+// PointLightCBuf                    cbuffer      NA          NA            cb0      1 
 // ObjectCBuf                        cbuffer      NA          NA            cb1      1 
 // TransformCBuf                     cbuffer      NA          NA            cb2      1 
 //
@@ -65,7 +65,7 @@
 // SV_Target                0   xyzw        0   TARGET   float   xyzw
 //
 ps_5_0
-dcl_globalFlags refactoringAllowed | skipOptimization
+dcl_globalFlags refactoringAllowed
 dcl_constantbuffer CB0[4], immediateIndexed
 dcl_constantbuffer CB1[1], immediateIndexed
 dcl_constantbuffer CB2[3], immediateIndexed
@@ -77,105 +77,48 @@ dcl_input_ps linear v1.xyz
 dcl_input_ps linear v2.xy
 dcl_output o0.xyzw
 dcl_temps 4
-//
-// Initial variable locations:
-//   v0.x <- viewPos.x; v0.y <- viewPos.y; v0.z <- viewPos.z; 
-//   v1.x <- n.x; v1.y <- n.y; v1.z <- n.z; 
-//   v2.x <- tc.x; v2.y <- tc.y; 
-//   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
-//
-#line 36 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMapObject_ps.hlsl"
-ine r0.x, l(0, 0, 0, 0), cb1[0].z
-if_nz r0.x
-
-#line 39
-  sample_indexable(texture2d)(float,float,float,float) r0.xyz, v2.xyxx, t2.xyzw, s0  // r0.x <- normalSample.x; r0.y <- normalSample.y; r0.z <- normalSample.z
-
-#line 40
-  mul r0.x, r0.x, l(2.000000)
-  mov r0.w, l(-1.000000)
-  add r1.x, r0.w, r0.x  // r1.x <- n.x
-
-#line 41
-  mov r0.x, -r0.y
-  mul r0.x, r0.x, l(2.000000)
-  add r1.y, r0.x, l(1.000000)  // r1.y <- n.y
-
-#line 42
-  mov r0.x, -r0.z
-  mul r0.x, r0.x, l(2.000000)
-  add r1.z, r0.x, l(1.000000)  // r1.z <- n.z
-
-#line 43
-  dp3 r0.x, r1.xyzx, cb2[0].xyzx  // r0.x <- n.x
-  dp3 r0.y, r1.xyzx, cb2[1].xyzx  // r0.y <- n.y
-  dp3 r0.z, r1.xyzx, cb2[2].xyzx  // r0.z <- n.z
-
-#line 44
+if_nz cb1[0].z
+  sample_indexable(texture2d)(float,float,float,float) r0.xyz, v2.xyxx, t2.xyzw, s0
+  mad r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000), l(-1.000000, -1.000000, -1.000000, 0.000000)
+  dp3 r1.x, r0.xyzx, cb2[0].xyzx
+  dp3 r1.y, r0.xyzx, cb2[1].xyzx
+  dp3 r1.z, r0.xyzx, cb2[2].xyzx
+  dp3 r0.x, r1.xyzx, r1.xyzx
+  rsq r0.x, r0.x
+  mul r0.xyz, r0.xxxx, r1.xyzx
 else 
-  mov r0.xyz, v1.xyzx  // r0.x <- n.x; r0.y <- n.y; r0.z <- n.z
+  mov r0.xyz, v1.xyzx
 endif 
-
-#line 46
-mov r1.xyz, -v0.xyzx
-add r1.xyz, r1.xyzx, cb0[0].xyzx  // r1.x <- vToL.x; r1.y <- vToL.y; r1.z <- vToL.z
-
-#line 47
+add r1.xyz, -v0.xyzx, cb0[0].xyzx
 dp3 r0.w, r1.xyzx, r1.xyzx
-sqrt r0.w, r0.w  // r0.w <- distToL
-
-#line 48
-div r2.xyz, r1.xyzx, r0.wwww  // r2.x <- dirToL.x; r2.y <- dirToL.y; r2.z <- dirToL.z
-
-#line 50
-mul r1.w, r0.w, cb0[3].y
-add r1.w, r1.w, cb0[3].x
-mul r0.w, r0.w, r0.w
-mul r0.w, r0.w, cb0[3].z
-add r0.w, r0.w, r1.w
-div r0.w, l(1.000000), r0.w  // r0.w <- att
-
-#line 52
+sqrt r1.w, r0.w
+div r2.xyz, r1.xyzx, r1.wwww
+mad r1.w, cb0[3].y, r1.w, cb0[3].x
+mad r0.w, cb0[3].z, r0.w, r1.w
+div r0.w, l(1.000000, 1.000000, 1.000000, 1.000000), r0.w
 mul r3.xyz, cb0[2].wwww, cb0[2].xyzx
 mul r3.xyz, r0.wwww, r3.xyzx
 dp3 r1.w, r2.xyzx, r0.xyzx
 max r1.w, r1.w, l(0.000000)
-mul r2.xyz, r1.wwww, r3.xyzx  // r2.x <- diffuse.x; r2.y <- diffuse.y; r2.z <- diffuse.z
-
-#line 54
-dp3 r1.w, r1.xyzx, r0.xyzx
-mul r0.xyz, r0.xyzx, r1.wwww  // r0.x <- w.x; r0.y <- w.y; r0.z <- w.z
-
-#line 55
-mul r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
-mov r1.xyz, -r1.xyzx
-add r0.xyz, r0.xyzx, r1.xyzx  // r0.x <- r.x; r0.y <- r.y; r0.z <- r.z
-
-#line 57
-mul r1.xyz, cb0[2].wwww, cb0[2].xyzx
-mul r1.xyz, r0.wwww, r1.xyzx
-mul r1.xyz, r1.xyzx, cb1[0].xxxx
-mov r0.xyz, -r0.xyzx
-dp3 r0.w, r0.xyzx, r0.xyzx
-rsq r0.w, r0.w
-mul r0.xyz, r0.wwww, r0.xyzx
-dp3 r0.w, v0.xyzx, v0.xyzx
-rsq r0.w, r0.w
-mul r3.xyz, r0.wwww, v0.xyzx
-dp3 r0.x, r0.xyzx, r3.xyzx
+dp3 r2.x, r1.xyzx, r0.xyzx
+mul r0.xyz, r0.xyzx, r2.xxxx
+mad r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000), -r1.xyzx
+dp3 r1.x, r0.xyzx, r0.xyzx
+rsq r1.x, r1.x
+mul r0.xyz, r0.xyzx, r1.xxxx
+dp3 r1.x, v0.xyzx, v0.xyzx
+rsq r1.x, r1.x
+mul r1.xyz, r1.xxxx, v0.xyzx
+mul r0.w, r0.w, cb1[0].x
+dp3 r0.x, -r0.xyzx, r1.xyzx
 max r0.x, r0.x, l(0.000000)
 log r0.x, r0.x
 mul r0.x, r0.x, cb1[0].y
 exp r0.x, r0.x
-mul r0.xyz, r0.xxxx, r1.xyzx  // r0.x <- specular.x; r0.y <- specular.y; r0.z <- specular.z
-
-#line 59
-add r1.xyz, r2.xyzx, cb0[1].xyzx
-sample_indexable(texture2d)(float,float,float,float) r2.xyz, v2.xyxx, t0.xyzw, s0
-mul r1.xyz, r1.xyzx, r2.xyzx
-add r0.xyz, r0.xyzx, r1.xyzx
-max r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)
-min o0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
+mul r0.x, r0.x, r0.w
+mad r0.yzw, r3.xxyz, r1.wwww, cb0[1].xxyz
+sample_indexable(texture2d)(float,float,float,float) r1.xyz, v2.xyxx, t0.xyzw, s0
+mad_sat o0.xyz, r0.yzwy, r1.xyzx, r0.xxxx
 mov o0.w, l(1.000000)
 ret 
-// Approximately 63 instruction slots used
+// Approximately 44 instruction slots used

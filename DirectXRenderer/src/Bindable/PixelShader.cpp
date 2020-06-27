@@ -2,6 +2,7 @@
 #include "PixelShader.h"
 #include "Debug/ThrowMacros.h"
 #include "BindableCodex.h"
+#include "CommonTool/StringHelper.h"
 
 namespace dr
 {
@@ -14,7 +15,7 @@ namespace dr
 			INFOMAN(gfx);
 
 			Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
-			GFX_THROW_INFO(D3DReadFileToBlob(std::wstring{ path.begin(),path.end() }.c_str(), &pBlob));
+			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(path).c_str(), &pBlob));
 			GFX_THROW_INFO(GetDevice(gfx)->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 		}
 

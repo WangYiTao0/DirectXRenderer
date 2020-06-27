@@ -28,4 +28,5 @@ group ""
 
 include "DirectXRenderer"
 include "Sandbox"
+--include "DrTool"
 

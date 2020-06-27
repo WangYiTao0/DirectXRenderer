@@ -33,14 +33,9 @@
 // SV_Target                0   xyzw        0   TARGET   float   xyzw
 //
 ps_5_0
-dcl_globalFlags refactoringAllowed | skipOptimization
+dcl_globalFlags refactoringAllowed
 dcl_constantbuffer CB1[1], immediateIndexed
 dcl_output o0.xyzw
-//
-// Initial variable locations:
-//   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
-//
-#line 8 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Solid_ps.hlsl"
 mov o0.xyzw, cb1[0].xyzw
 ret 
 // Approximately 2 instruction slots used

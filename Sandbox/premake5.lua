@@ -29,9 +29,9 @@
     {
         "../DirectXRenderer/src",
         "../DirectXRenderer/3rdPart",
-         "../DirectXRenderer/3rdPart/assimp/include",
-         "../DirectXRenderer/3rdPart/DirectXTex/include",
-        "../DirectXRenderer/%{IncludeDir.ImGui}"
+        "../DirectXRenderer/3rdPart/assimp/include",
+        "../DirectXRenderer/3rdPart/DirectXTex/include",
+        "../DirectXRenderer/%{IncludeDir.ImGui}",
     }
 
     links
@@ -76,7 +76,8 @@
 filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
-    symbols "on"
+    --symbols "Full"
+    optimize "Debug"
 
     defines
     {
@@ -100,7 +101,7 @@ filter "configurations:Debug"
 filter "configurations:Release"
     defines "_RELEASE"
     runtime "Release"
-    optimize "on"
+    optimize "Speed"
 
     defines
     {
@@ -110,12 +111,12 @@ filter "configurations:Release"
     links
     {
         "../DirectXRenderer/3rdPart/assimp/bin/Release/assimp-vc142-mt.lib",
-        "../DirectXRenderer/3rdPart/assimp/bin/Release/IrrXMLd.lib",
+        "../DirectXRenderer/3rdPart/assimp/bin/Release/IrrXML.lib",
         "../DirectXRenderer/3rdPart/DirectXTex/lib/Debug/DirectXTex.lib",
-   }
+     }
 
     postbuildcommands 
     {
         '{COPY} "../DirectXRenderer/3rdPart/assimp/bin/Release/assimp-vc142-mt.dll" "%{cfg.targetdir}"',
-        '{COPY} "../DirectXRenderer/3rdPart/assimp/bin/Debug/zlibd1.dll" "%{cfg.targetdir}"',
+        '{COPY} "../DirectXRenderer/3rdPart/assimp/bin/Release/zlib1.dll" "%{cfg.targetdir}"',
     }

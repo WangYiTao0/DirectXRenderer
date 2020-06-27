@@ -15,9 +15,8 @@ private:
 	dr::Camera3D cam3d;
 	dr::PointLight light;
 
-	//dr::Model nano1{ wnd.Gfx(),"./asset/models/nano_textured/nanosuit.obj" };
-	dr::TestPlane tp{ wnd.Gfx(),1.0 };
-	dr::Model wall{ wnd.Gfx(),"./asset/textures/brick_wall/brick_wall.obj" };
-	//dr::TestPlane plane;
-	//dr::TestCube cube;
+
+	dr::Model sponza{ wnd.Gfx(),".\\asset\\Models\\sponza\\sponza.obj" ,1.0f / 20.0f };
+	dr::TestPlane bluePlane{ wnd.Gfx(),6.0f,{ 0.3f,0.3f,1.0f,0.0f } };
+	dr::TestPlane redPlane{ wnd.Gfx(),6.0f,{ 1.0f,0.3f,0.3f,0.0f } };
 };

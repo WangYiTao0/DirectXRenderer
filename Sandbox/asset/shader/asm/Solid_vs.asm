@@ -4,7 +4,7 @@
 //
 // Buffer Definitions: 
 //
-// cbuffer CBuf
+// cbuffer TransformCBuf
 // {
 //
 //   float4x4 modelView;                // Offset:    0 Size:    64 [unused]
@@ -17,7 +17,7 @@
 //
 // Name                                 Type  Format         Dim      HLSL Bind  Count
 // ------------------------------ ---------- ------- ----------- -------------- ------
-// CBuf                              cbuffer      NA          NA            cb0      1 
+// TransformCBuf                     cbuffer      NA          NA            cb0      1 
 //
 //
 //
@@ -35,17 +35,11 @@
 // SV_Position              0   xyzw        0      POS   float   xyzw
 //
 vs_5_0
-dcl_globalFlags refactoringAllowed | skipOptimization
+dcl_globalFlags refactoringAllowed
 dcl_constantbuffer CB0[8], immediateIndexed
 dcl_input v0.xyz
 dcl_output_siv o0.xyzw, position
 dcl_temps 1
-//
-// Initial variable locations:
-//   v0.x <- pos.x; v0.y <- pos.y; v0.z <- pos.z; 
-//   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
-//
-#line 9 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Solid_vs.hlsl"
 mov r0.xyz, v0.xyzx
 mov r0.w, l(1.000000)
 dp4 o0.x, r0.xyzw, cb0[4].xyzw

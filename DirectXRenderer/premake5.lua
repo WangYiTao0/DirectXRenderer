@@ -53,6 +53,7 @@ filter "configurations:Debug"
     defines "DR_DEBUG"
     runtime "Debug"
     symbols "on"
+    optimize "Speed"
     defines
     {
         "IS_DEBUG=true"
@@ -66,7 +67,7 @@ filter "configurations:Debug"
 filter "configurations:Release"
     defines "DR_RELEASE"
     runtime "Release"
-    optimize "on"
+    optimize "Speed"
 
     defines
     {

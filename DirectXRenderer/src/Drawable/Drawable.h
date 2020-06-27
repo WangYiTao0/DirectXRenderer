@@ -18,7 +18,6 @@ namespace dr
 		void Draw(Graphics& gfx) const noxnd;
 		virtual void Update(float dt) noexcept {};
 		virtual ~Drawable() = default;
-	protected:
 		template<class T>
 		T* QueryBindable() noexcept
 		{

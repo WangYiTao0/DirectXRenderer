@@ -7,7 +7,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
+#include <filesystem>
+#include "Core/DynamicConstant.h"
 #include "Debug/ConditionalNoexcept.h"
 
 namespace dr
@@ -37,12 +38,15 @@ namespace dr
 	{
 		friend class Model;
 	public:
-		Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd;
-		//recursive
+		Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs,
+			const DirectX::XMMATRIX& transform) noxnd;
 		void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 		void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
+		const DirectX::XMFLOAT4X4& GetAppliedTransform() const noexcept;
 		int GetId() const noexcept;
 		void ShowTree(Node*& pSelectedNode) const noexcept;
+		const Dcb::Buffer* GetMaterialConstants() const noxnd;
+		void SetMaterialConstants(const Dcb::Buffer&) noxnd;
 	private:
 		void AddChild(std::unique_ptr<Node> pChild) noxnd;
 	private:
@@ -57,13 +61,13 @@ namespace dr
 	class Model
 	{
 	public:
-		Model(Graphics& gfx, const std::string fileName);
+		Model(Graphics& gfx, const std::string& pathString, float scale = 1.0f);
 		void Draw(Graphics& gfx) const noxnd;
-		void ShowWindow(const char* windowName = nullptr) noexcept;
+		void ShowWindow(Graphics& gfx, const char* windowName = nullptr) noexcept;
 		void SetRootTransform(DirectX::FXMMATRIX tf) noexcept;
 		~Model() noexcept;
 	private:
-		static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+		static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials, const std::filesystem::path& path, float scale);
 		std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node) noexcept;
 	private:
 		std::unique_ptr<Node> pRoot;

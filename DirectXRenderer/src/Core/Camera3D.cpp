@@ -91,9 +91,9 @@ namespace dr
 
 	void Camera3D::Reset() noexcept
 	{
-		pos = { 0.0f,0.0f,-10.0f };
+		pos = { -13.5f,6.0f,3.5f };
 		pitch = 0.0f;
-		yaw = 0.0f;
+		yaw = PI / 2.0f;
 	}
 
 	void Camera3D::Rotate(float dx, float dy) noexcept
@@ -114,6 +114,11 @@ namespace dr
 			pos.y + translation.y,
 			pos.z + translation.z
 		};
+	}
+
+	DirectX::XMFLOAT3 Camera3D::GetPos() const noexcept
+	{
+		return pos;
 	}
 
 

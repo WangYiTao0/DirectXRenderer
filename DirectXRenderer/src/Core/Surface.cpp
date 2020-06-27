@@ -1,7 +1,7 @@
 #include "drpch.h"
 #include "Surface.h"
 #include "Win32Window.h"
-
+#include "CommonTool/StringHelper.h"
 #include <cassert>
 
 namespace dr
@@ -78,11 +78,10 @@ namespace dr
 
 	Surface Surface::FromFile(const std::string& name)
 	{
-		wchar_t wideName[512];
-		mbstowcs_s(nullptr, wideName, name.c_str(), _TRUNCATE);
+
 
 		DirectX::ScratchImage scratch;
-		HRESULT hr = DirectX::LoadFromWICFile(wideName, DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+		HRESULT hr = DirectX::LoadFromWICFile(StrH::ToWide(name).c_str(), DirectX::WIC_FLAGS_NONE, nullptr, scratch);
 
 		if (FAILED(hr))
 		{
@@ -138,7 +137,7 @@ namespace dr
 			*scratch.GetImage(0, 0, 0),
 			DirectX::WIC_FLAGS_NONE,
 			GetWICCodec(GetCodecID(filename)),
-			wideName
+			StrH::ToWide(filename).c_str()
 		);
 		if (FAILED(hr))
 		{

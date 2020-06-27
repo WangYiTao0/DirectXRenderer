@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <DirectXMath.h>
 
 namespace dr
 {
@@ -32,4 +33,8 @@ namespace dr
 	{
 		return deg * PI / (T)180.0;
 	}
+
+	DirectX::XMFLOAT3 ExtractEulerAngles(const DirectX::XMFLOAT4X4& matrix);
+
+	DirectX::XMFLOAT3 ExtractTranslation(const DirectX::XMFLOAT4X4& matrix);
 }

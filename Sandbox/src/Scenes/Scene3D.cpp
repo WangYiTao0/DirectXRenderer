@@ -1,4 +1,3 @@
-#include <myRenderer.h>
 #include <memory>
 #include "Scene3D.h"
 #include "imgui.h"
@@ -11,8 +10,8 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	light(wnd.Gfx()),
 	Scene("Scene3D")
 {
-	wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
-	tp.SetPos({ 1.5f,0.0f,0.0f });
+	bluePlane.SetPos(cam3d.GetPos());
+	redPlane.SetPos(cam3d.GetPos());
 }
 
 void Scene3D::Update(float dt)
@@ -26,11 +25,11 @@ void Scene3D::Update(float dt)
 
 void Scene3D::Draw(float dt)
 {
-	wall.Draw(wnd.Gfx());
-	tp.Draw(wnd.Gfx());
-
 	light.Draw(wnd.Gfx());
 
+	sponza.Draw(wnd.Gfx());
+	bluePlane.Draw(wnd.Gfx());
+	redPlane.Draw(wnd.Gfx());
 	///ImguiWidow
 	SpawnImguiWindow();
 }
@@ -41,9 +40,9 @@ void Scene3D::SpawnImguiWindow()
 	cam3d.SpawnControlWindow();
 	light.SpawnControlWindow();
 
-	wall.ShowWindow("Wall");
-	tp.SpawnControlWindow(wnd.Gfx());
-	//nano1.ShowWindow("Model 1");
+	sponza.ShowWindow(wnd.Gfx(), "Sponza");
+	bluePlane.SpawnControlWindow(wnd.Gfx(), "Blue Plane");
+	redPlane.SpawnControlWindow(wnd.Gfx(), "Red Plane");
 }
 
 
