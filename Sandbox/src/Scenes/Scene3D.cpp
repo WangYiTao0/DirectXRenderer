@@ -11,7 +11,8 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	light(wnd.Gfx()),
 	Scene("Scene3D")
 {
-
+	wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
+	tp.SetPos({ 1.5f,0.0f,0.0f });
 }
 
 void Scene3D::Update(float dt)
@@ -25,8 +26,8 @@ void Scene3D::Update(float dt)
 
 void Scene3D::Draw(float dt)
 {
-	nano1.Draw(wnd.Gfx());
-	nano2.Draw(wnd.Gfx());
+	wall.Draw(wnd.Gfx());
+	tp.Draw(wnd.Gfx());
 
 	light.Draw(wnd.Gfx());
 
@@ -39,8 +40,10 @@ void Scene3D::SpawnImguiWindow()
 	// imgui window to control camera
 	cam3d.SpawnControlWindow();
 	light.SpawnControlWindow();
-	nano1.ShowWindow("Model 1");
-	nano2.ShowWindow("Model 2");
+
+	wall.ShowWindow("Wall");
+	tp.SpawnControlWindow(wnd.Gfx());
+	//nano1.ShowWindow("Model 1");
 }
 
 

@@ -16,7 +16,7 @@
 //
 // Name                                 Type  Format         Dim      HLSL Bind  Count
 // ------------------------------ ---------- ------- ----------- -------------- ------
-// CBuf                              cbuffer      NA          NA            cb0      1 
+// CBuf                              cbuffer      NA          NA            cb1      1 
 //
 //
 //
@@ -34,13 +34,13 @@
 //
 ps_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
-dcl_constantbuffer CB0[1], immediateIndexed
+dcl_constantbuffer CB1[1], immediateIndexed
 dcl_output o0.xyzw
 //
 // Initial variable locations:
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
 #line 8 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Solid_ps.hlsl"
-mov o0.xyzw, cb0[0].xyzw
+mov o0.xyzw, cb1[0].xyzw
 ret 
 // Approximately 2 instruction slots used

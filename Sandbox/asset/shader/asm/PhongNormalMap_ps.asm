@@ -20,8 +20,10 @@
 // cbuffer ObjectCBuf
 // {
 //
-//   bool normalMapEnabled;             // Offset:    0 Size:     4
-//   float padding[3];                  // Offset:   16 Size:    36 [unused]
+//   float specularIntensity;           // Offset:    0 Size:     4
+//   float specularPower;               // Offset:    4 Size:     4
+//   bool normalMapEnabled;             // Offset:    8 Size:     4
+//   float padding;                     // Offset:   16 Size:     4 [unused]
 //
 // }
 //
@@ -32,7 +34,6 @@
 // ------------------------------ ---------- ------- ----------- -------------- ------
 // splr                              sampler      NA          NA             s0      1 
 // tex                               texture  float4          2d             t0      1 
-// spec                              texture  float4          2d             t1      1 
 // nmap                              texture  float4          2d             t2      1 
 // LightCBuf                         cbuffer      NA          NA            cb0      1 
 // ObjectCBuf                        cbuffer      NA          NA            cb1      1 
@@ -62,7 +63,6 @@ dcl_constantbuffer CB0[4], immediateIndexed
 dcl_constantbuffer CB1[1], immediateIndexed
 dcl_sampler s0, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
-dcl_resource_texture2d (float,float,float,float) t1
 dcl_resource_texture2d (float,float,float,float) t2
 dcl_input_ps linear v0.xyz
 dcl_input_ps linear v1.xyz
@@ -80,11 +80,11 @@ dcl_temps 5
 //   v4.x <- tc.x; v4.y <- tc.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 28 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongSpecMap_ps.hlsl"
-ine r0.x, l(0, 0, 0, 0), cb1[0].x
+#line 35 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+ine r0.x, l(0, 0, 0, 0), cb1[0].z
 if_nz r0.x
 
-#line 31
+#line 38
   dp3 r0.x, v2.xyzx, v2.xyzx
   rsq r0.x, r0.x
   mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- tanToView._m00; r0.y <- tanToView._m01; r0.z <- tanToView._m02
@@ -103,44 +103,39 @@ if_nz r0.x
   mov r2.x, r0.z  // r2.x <- tanToView._m02
   mov r2.y, r1.z  // r2.y <- tanToView._m12
 
-#line 37
+#line 44
   sample_indexable(texture2d)(float,float,float,float) r0.xyz, v4.xyxx, t2.xyzw, s0  // r0.x <- normalSample.x; r0.y <- normalSample.y; r0.z <- normalSample.z
 
-#line 38
-  mul r0.w, r0.x, l(2.000000)
-  mov r1.x, l(-1.000000)
-  add r0.x, r0.w, r1.x  // r0.x <- n.x
+#line 45
+  mul r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+  mov r1.xyz, l(-1.000000,-1.000000,-1.000000,-0.000000)
+  add r0.xyz, r0.xyzx, r1.xyzx  // r0.x <- n.x; r0.y <- n.y; r0.z <- n.z
 
-#line 39
-  mov r0.w, -r0.y
-  mul r0.w, r0.w, l(2.000000)
-  add r0.y, r0.w, l(1.000000)  // r0.y <- n.y
+#line 46
+  mov r0.w, -r0.y  // r0.w <- n.y
 
-#line 40
-  mov r0.z, r0.z  // r0.z <- n.z
+#line 48
+  dp3 r1.x, r0.xwzx, r3.xyzx  // r1.x <- n.x
+  dp3 r1.y, r0.xwzx, r4.xyzx  // r1.y <- n.y
+  dp3 r1.z, r0.xwzx, r2.xyzx  // r1.z <- n.z
 
-#line 42
-  dp3 r1.x, r0.xyzx, r3.xyzx  // r1.x <- n.x
-  dp3 r1.y, r0.xyzx, r4.xyzx  // r1.y <- n.y
-  dp3 r1.z, r0.xyzx, r2.xyzx  // r1.z <- n.z
-
-#line 43
+#line 49
 else 
   mov r1.xyz, v1.xyzx  // r1.x <- n.x; r1.y <- n.y; r1.z <- n.z
 endif 
 
-#line 45
+#line 51
 mov r0.xyz, -v0.xyzx
 add r0.xyz, r0.xyzx, cb0[0].xyzx  // r0.x <- vToL.x; r0.y <- vToL.y; r0.z <- vToL.z
 
-#line 46
+#line 52
 dp3 r0.w, r0.xyzx, r0.xyzx
 sqrt r0.w, r0.w  // r0.w <- distToL
 
-#line 47
+#line 53
 div r2.xyz, r0.xyzx, r0.wwww  // r2.x <- dirToL.x; r2.y <- dirToL.y; r2.z <- dirToL.z
 
-#line 49
+#line 55
 mul r1.w, r0.w, cb0[3].y
 add r1.w, r1.w, cb0[3].x
 mul r0.w, r0.w, r0.w
@@ -148,59 +143,47 @@ mul r0.w, r0.w, cb0[3].z
 add r0.w, r0.w, r1.w
 div r0.w, l(1.000000), r0.w  // r0.w <- att
 
-#line 51
+#line 57
 mul r3.xyz, cb0[2].wwww, cb0[2].xyzx
 mul r3.xyz, r0.wwww, r3.xyzx
 dp3 r1.w, r2.xyzx, r1.xyzx
 max r1.w, r1.w, l(0.000000)
 mul r2.xyz, r1.wwww, r3.xyzx  // r2.x <- diffuse.x; r2.y <- diffuse.y; r2.z <- diffuse.z
 
-#line 53
+#line 59
 dp3 r1.w, r0.xyzx, r1.xyzx
 mul r1.xyz, r1.wwww, r1.xyzx  // r1.x <- w.x; r1.y <- w.y; r1.z <- w.z
 
-#line 54
+#line 60
 mul r1.xyz, r1.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
 mov r0.xyz, -r0.xyzx
 add r0.xyz, r0.xyzx, r1.xyzx  // r0.x <- r.x; r0.y <- r.y; r0.z <- r.z
 
-#line 56
-sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v4.xyxx, t1.xyzw, s0  // r1.x <- specularSample.x; r1.y <- specularSample.y; r1.z <- specularSample.z; r1.w <- specularSample.w
-
-#line 57
-mov r1.xyz, r1.xyzx  // r1.x <- specularReflectionColor.x; r1.y <- specularReflectionColor.y; r1.z <- specularReflectionColor.z
-
-#line 58
-mul r1.w, r1.w, l(13.000000)
-log r2.w, l(2.000000)
-mul r1.w, r1.w, r2.w
-exp r1.w, r1.w  // r1.w <- specularPower
-
-#line 59
-mul r3.xyz, cb0[2].wwww, cb0[2].xyzx
-mul r3.xyz, r0.wwww, r3.xyzx
+#line 62
+mul r1.xyz, cb0[2].wwww, cb0[2].xyzx
+mul r1.xyz, r0.wwww, r1.xyzx
+mul r1.xyz, r1.xyzx, cb1[0].xxxx
 mov r0.xyz, -r0.xyzx
 dp3 r0.w, r0.xyzx, r0.xyzx
 rsq r0.w, r0.w
 mul r0.xyz, r0.wwww, r0.xyzx
 dp3 r0.w, v0.xyzx, v0.xyzx
 rsq r0.w, r0.w
-mul r4.xyz, r0.wwww, v0.xyzx
-dp3 r0.x, r0.xyzx, r4.xyzx
+mul r3.xyz, r0.wwww, v0.xyzx
+dp3 r0.x, r0.xyzx, r3.xyzx
 max r0.x, r0.x, l(0.000000)
 log r0.x, r0.x
-mul r0.x, r0.x, r1.w
+mul r0.x, r0.x, cb1[0].y
 exp r0.x, r0.x
-mul r0.xyz, r0.xxxx, r3.xyzx  // r0.x <- specular.x; r0.y <- specular.y; r0.z <- specular.z
+mul r0.xyz, r0.xxxx, r1.xyzx  // r0.x <- specular.x; r0.y <- specular.y; r0.z <- specular.z
 
-#line 61
-add r2.xyz, r2.xyzx, cb0[1].xyzx
-sample_indexable(texture2d)(float,float,float,float) r3.xyz, v4.xyxx, t0.xyzw, s0
-mul r2.xyz, r2.xyzx, r3.xyzx
-mul r0.xyz, r1.xyzx, r0.xyzx
-add r0.xyz, r0.xyzx, r2.xyzx
+#line 64
+add r1.xyz, r2.xyzx, cb0[1].xyzx
+sample_indexable(texture2d)(float,float,float,float) r2.xyz, v4.xyxx, t0.xyzw, s0
+mul r1.xyz, r1.xyzx, r2.xyzx
+add r0.xyz, r0.xyzx, r1.xyzx
 max r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)
 min o0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
 mov o0.w, l(1.000000)
 ret 
-// Approximately 84 instruction slots used
+// Approximately 75 instruction slots used

@@ -24,6 +24,8 @@
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
 #include "Drawable/Mesh.h"
+#include "Drawable/TestPlane.h"
+#include "Drawable/TestCube.h"
 
 //CommonTool
 #include "CommonTool/DrMath.h"

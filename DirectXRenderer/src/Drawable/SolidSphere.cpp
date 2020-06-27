@@ -36,7 +36,7 @@ namespace dr
 			float padding;
 		} colorConst;
 
-		AddBind(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst));
+		AddBind(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst,1u));
 
 		AddBind(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 

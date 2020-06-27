@@ -18,6 +18,19 @@ namespace dr
 		void Draw(Graphics& gfx) const noxnd;
 		virtual void Update(float dt) noexcept {};
 		virtual ~Drawable() = default;
+	protected:
+		template<class T>
+		T* QueryBindable() noexcept
+		{
+			for (auto& pb : binds)
+			{
+				if (auto pt = dynamic_cast<T*>(pb.get()))
+				{
+					return pt;
+				}
+			}
+			return nullptr;
+		}
 
 		void AddBind(std::shared_ptr<Bind::Bindable> bind) noxnd;	
 	private:

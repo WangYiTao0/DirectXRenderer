@@ -24,6 +24,8 @@ namespace dr
 				Position3D,
 				Texture2D,
 				Normal,
+				Tangent,
+				Bitangent,
 				Float3Color,
 				Float4Color,
 				BGRAColor,
@@ -57,6 +59,20 @@ namespace dr
 				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 				static constexpr const char* semantic = "Normal";
 				static constexpr const char* code = "N";
+			};
+			template<> struct Map<Tangent>
+			{
+				using SysType = DirectX::XMFLOAT3;
+				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+				static constexpr const char* semantic = "Tangent";
+				static constexpr const char* code = "Nt";
+			};
+			template<> struct Map<Bitangent>
+			{
+				using SysType = DirectX::XMFLOAT3;
+				static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+				static constexpr const char* semantic = "Bitangent";
+				static constexpr const char* code = "Nb";
 			};
 			template<> struct Map<Float3Color>
 			{
@@ -154,6 +170,12 @@ namespace dr
 				case VertexLayout::Normal:
 					SetAttribute<VertexLayout::Normal>(pAttribute, std::forward<T>(val));
 					break;
+				case VertexLayout::Tangent:
+					SetAttribute<VertexLayout::Tangent>(pAttribute, std::forward<T>(val));
+					break;
+				case VertexLayout::Bitangent:
+					SetAttribute<VertexLayout::Bitangent>(pAttribute, std::forward<T>(val));
+					break;
 				case VertexLayout::Float3Color:
 					SetAttribute<VertexLayout::Float3Color>(pAttribute, std::forward<T>(val));
 					break;
@@ -212,9 +234,10 @@ namespace dr
 		class VertexBuffer
 		{
 		public:
-			VertexBuffer(VertexLayout layout) noxnd;
+			VertexBuffer(VertexLayout layout, size_t size = 0u) noxnd;
 			const char* GetData() const noxnd;
 			const VertexLayout& GetLayout() const noexcept;
+			void Resize(size_t newSize) noxnd;
 			size_t Size() const noxnd;
 			size_t SizeBytes() const noxnd;
 			template<typename ...Params>

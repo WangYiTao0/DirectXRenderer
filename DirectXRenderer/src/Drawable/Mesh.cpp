@@ -172,7 +172,8 @@ namespace dr
 			aiProcess_Triangulate |
 			aiProcess_JoinIdenticalVertices|
 			aiProcess_ConvertToLeftHanded |
-			aiProcess_GenNormals
+			aiProcess_GenNormals |
+			aiProcess_CalcTangentSpace
 		);
 
 		if (pScene == nullptr)
@@ -200,6 +201,8 @@ namespace dr
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)
+			.Append(VertexLayout::Tangent)
+			.Append(VertexLayout::Bitangent)
 			.Append(VertexLayout::Texture2D)
 		));
 
@@ -208,6 +211,8 @@ namespace dr
 			vbuf.EmplaceBack(
 				*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mVertices[i]),
 				*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mTangents[i]),
+				*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mBitangents[i]),
 				*reinterpret_cast<dx::XMFLOAT2*>(&mesh.mTextureCoords[0][i])
 			);
 		}
@@ -226,7 +231,8 @@ namespace dr
 		std::vector<std::shared_ptr<Bindable>> bindablePtrs;
 
 		using namespace std::string_literals;
-		const auto base = "./asset/Models/nano_textured/"s;;
+		//const auto base = "./asset/Models/nano_textured/"s;;
+		const auto base = "./asset/textures/brick_wall/"s;;
 
 		bool hasSpecularMap = false;
 		float shininess = 35.0f;
@@ -246,6 +252,10 @@ namespace dr
 			{
 				material.Get(AI_MATKEY_SHININESS, shininess);
 			}
+
+			material.GetTexture(aiTextureType_NORMALS, 0, &texFileName);
+			bindablePtrs.push_back(Texture::Resolve(gfx, base + texFileName.C_Str(), 2));
+
 			bindablePtrs.push_back(Sampler::Resolve(gfx));
 		}
 
@@ -258,7 +268,7 @@ namespace dr
 
 		std::string shader_dir = "./asset/shader/cso/";
 
-		auto pvs = VertexShader::Resolve(gfx, shader_dir + "Phong_vs.cso");
+		auto pvs = VertexShader::Resolve(gfx, shader_dir + "PhongNormalMap_vs.cso");
 		auto pvsbc = pvs->GetBytecode();
 		bindablePtrs.push_back(std::move(pvs));
 
@@ -266,17 +276,27 @@ namespace dr
 
 		if (hasSpecularMap)
 		{
-			bindablePtrs.push_back(PixelShader::Resolve(gfx, shader_dir+"PhongSpecMap_ps.cso"));
+			bindablePtrs.push_back(PixelShader::Resolve(gfx, shader_dir+"PhongSpecNormalMap_ps.cso"));
+
+			struct PSMaterialConstant
+			{
+				BOOL  normalMapEnabled = TRUE;
+				float padding[3];
+			} pmc;
+			// this is CLEARLY an issue... all meshes will share same mat const, but may have different
+			// Ns (specular power) specified for each in the material properties... bad conflict
+			bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 		}
 		else
 		{
-			bindablePtrs.push_back(std::make_shared<PixelShader>(gfx, shader_dir+"Phong_ps.cso"));
+			bindablePtrs.push_back(PixelShader::Resolve(gfx, shader_dir+"PhongNormalMap_ps.cso"));
 			
 			struct PSMaterialConstant
 			{
-				float specularIntensity = 0.8f;
+				float specularIntensity = 0.18f;
 				float specularPower;
-				float padding[2];
+				BOOL  normalMapEnabled = TRUE;
+				float padding[1];
 			} pmc;
 			pmc.specularPower = shininess;
 
@@ -324,6 +344,12 @@ namespace dr
 	{
 		pWindow->Show(windowName, *pRoot);
 	}
+
+	void Model::SetRootTransform(DirectX::FXMMATRIX tf) noexcept
+	{
+		pRoot->SetAppliedTransform(tf);
+	}
+
 	Model::~Model() noexcept
 	{}
 
