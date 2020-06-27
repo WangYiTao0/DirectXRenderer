@@ -367,7 +367,7 @@ namespace dr
 			template<typename T>
 			operator T& () const noxnd
 			{
-				//static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in conversion");
+				static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in conversion");
 				return *reinterpret_cast<T*>(pBytes + offset + pLayout->Resolve<T>());
 			}
 			// assignment for writing to as a supported SysType
@@ -384,6 +384,7 @@ namespace dr
 			const LayoutElement* pLayout;
 			char* pBytes;
 		};
+
 
 		// The buffer object is a combination of a raw byte buffer with a LayoutElement
 		// tree structure which acts as an view/interpretation/overlay for those bytes
@@ -424,3 +425,4 @@ namespace dr
 #ifndef DCB_IMPL_SOURCE
 #undef LEAF_ELEMENT_TYPES
 #endif
+

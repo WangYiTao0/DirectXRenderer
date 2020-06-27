@@ -58,7 +58,7 @@
 // SV_Target                0   xyzw        0   TARGET   float   xyzw
 //
 ps_5_0
-dcl_globalFlags refactoringAllowed
+dcl_globalFlags refactoringAllowed | skipOptimization
 dcl_constantbuffer CB0[4], immediateIndexed
 dcl_constantbuffer CB1[1], immediateIndexed
 dcl_sampler s0, mode_default
@@ -70,57 +70,154 @@ dcl_input_ps linear v2.xyz
 dcl_input_ps linear v3.xyz
 dcl_input_ps linear v4.xy
 dcl_output o0.xyzw
-dcl_temps 4
+dcl_temps 5
+//
+// Initial variable locations:
+//   v0.x <- viewFragPos.x; v0.y <- viewFragPos.y; v0.z <- viewFragPos.z; 
+//   v1.x <- viewNormal.x; v1.y <- viewNormal.y; v1.z <- viewNormal.z; 
+//   v2.x <- viewTan.x; v2.y <- viewTan.y; v2.z <- viewTan.z; 
+//   v3.x <- viewBitan.x; v3.y <- viewBitan.y; v3.z <- viewBitan.z; 
+//   v4.x <- tc.x; v4.y <- tc.y; 
+//   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
+//
+#line 23 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
 dp3 r0.x, v1.xyzx, v1.xyzx
 rsq r0.x, r0.x
-mul r0.xyz, r0.xxxx, v1.xyzx
-if_nz cb1[0].z
+mul r0.xyz, r0.xxxx, v1.xyzx  // r0.x <- viewNormal.x; r0.y <- viewNormal.y; r0.z <- viewNormal.z
+
+#line 25
+ine r0.w, l(0, 0, 0, 0), cb1[0].z
+if_nz r0.w
+
+#line 27
+  nop 
   dp3 r0.w, v2.xyzx, v2.xyzx
   rsq r0.w, r0.w
   mul r1.xyz, r0.wwww, v2.xyzx
   dp3 r0.w, v3.xyzx, v3.xyzx
   rsq r0.w, r0.w
   mul r2.xyz, r0.wwww, v3.xyzx
-  sample_indexable(texture2d)(float,float,float,float) r3.xyz, v4.xyxx, t2.xyzw, s0
-  mad r3.xyz, r3.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000), l(-1.000000, -1.000000, -1.000000, 0.000000)
-  mul r2.xyz, r2.xyzx, r3.yyyy
-  mad r1.xyz, r3.xxxx, r1.xyzx, r2.xyzx
-  mad r1.xyz, r3.zzzz, r0.xyzx, r1.xyzx
-  dp3 r0.w, r1.xyzx, r1.xyzx
+  nop 
+  nop 
+
+#line 10 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Common\ShaderOps.hlsli"
+  mov r3.x, r1.x  // r3.x <- tanToTarget._m00
+  mov r3.y, r2.x  // r3.y <- tanToTarget._m10
+  mov r3.z, r0.x  // r3.z <- tanToTarget._m20
+  mov r4.x, r1.y  // r4.x <- tanToTarget._m01
+  mov r4.y, r2.y  // r4.y <- tanToTarget._m11
+  mov r4.z, r0.y  // r4.z <- tanToTarget._m21
+  mov r0.x, r1.z  // r0.x <- tanToTarget._m02
+  mov r0.y, r2.z  // r0.y <- tanToTarget._m12
+  mov r0.z, r0.z  // r0.z <- tanToTarget._m22
+
+#line 12
+  sample_indexable(texture2d)(float,float,float,float) r1.xyz, v4.xyxx, t2.xyzw, s0  // r1.x <- normalSample.x; r1.y <- normalSample.y; r1.z <- normalSample.z
+
+#line 13
+  mul r1.xyz, r1.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+  mov r2.xyz, l(-1.000000,-1.000000,-1.000000,-0.000000)
+  add r1.xyz, r1.xyzx, r2.xyzx  // r1.x <- tanNormal.x; r1.y <- tanNormal.y; r1.z <- tanNormal.z
+
+#line 15
+  dp3 r2.x, r1.xyzx, r3.xyzx
+  dp3 r2.y, r1.xyzx, r4.xyzx
+  dp3 r2.z, r1.xyzx, r0.xyzx
+  dp3 r0.w, r2.xyzx, r2.xyzx
   rsq r0.w, r0.w
-  mul r0.xyz, r0.wwww, r1.xyzx
+  mul r0.xyz, r0.wwww, r2.xyzx  // r0.x <- <MapNormal return value>.x; r0.y <- <MapNormal return value>.y; r0.z <- <MapNormal return value>.z
+
+#line 27 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+  mov r0.xyz, r0.xyzx  // r0.x <- viewNormal.x; r0.y <- viewNormal.y; r0.z <- viewNormal.z
+
+#line 28
 endif 
-add r1.xyz, -v0.xyzx, cb0[0].xyzx
+
+#line 30
+nop 
+
+#line 11 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Common\LightVectorData.hlsli"
+mov r1.xyz, -v0.xyzx
+add r1.xyz, r1.xyzx, cb0[0].xyzx  // r1.x <- lv.vToL.x; r1.y <- lv.vToL.y; r1.z <- lv.vToL.z
+
+#line 12
 dp3 r0.w, r1.xyzx, r1.xyzx
-sqrt r1.w, r0.w
-div r2.xyz, r1.xyzx, r1.wwww
-mad r1.w, cb0[3].y, r1.w, cb0[3].x
-mad r0.w, cb0[3].z, r0.w, r1.w
-div r0.w, l(1.000000, 1.000000, 1.000000, 1.000000), r0.w
-mul r3.xyz, cb0[2].wwww, cb0[2].xyzx
+sqrt r0.w, r0.w  // r0.w <- lv.distToL
+
+#line 13
+div r2.xyz, r1.xyzx, r0.wwww  // r2.x <- lv.dirToL.x; r2.y <- lv.dirToL.y; r2.z <- lv.dirToL.z
+
+#line 32 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+nop 
+mov r1.w, cb0[3].x
+mov r2.w, cb0[3].y
+mov r3.x, cb0[3].z
+
+#line 20 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Common\ShaderOps.hlsli"
+mul r2.w, r0.w, r2.w
+add r1.w, r1.w, r2.w
+mul r0.w, r0.w, r0.w
+mul r0.w, r0.w, r3.x
+add r0.w, r0.w, r1.w
+div r0.w, l(1.000000), r0.w  // r0.w <- <Attenuate return value>
+
+#line 34 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+nop 
+mov r3.xyz, cb0[2].xyzx
+mov r1.w, cb0[2].w
+
+#line 30 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Common\ShaderOps.hlsli"
+mul r3.xyz, r1.wwww, r3.xyzx
 mul r3.xyz, r0.wwww, r3.xyzx
 dp3 r1.w, r2.xyzx, r0.xyzx
 max r1.w, r1.w, l(0.000000)
-dp3 r2.x, r1.xyzx, r0.xyzx
-mul r0.xyz, r0.xyzx, r2.xxxx
-mad r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000), -r1.xyzx
+mul r2.xyz, r1.wwww, r3.xyzx  // r2.x <- <Diffuse return value>.x; r2.y <- <Diffuse return value>.y; r2.z <- <Diffuse return value>.z
+
+#line 34 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+mov r2.xyz, r2.xyzx  // r2.x <- diffuse.x; r2.y <- diffuse.y; r2.z <- diffuse.z
+
+#line 36
+nop 
+mov r1.w, cb0[2].w
+
+#line 43 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Common\ShaderOps.hlsli"
+dp3 r2.w, r1.xyzx, r0.xyzx
+mul r0.xyz, r0.xyzx, r2.wwww  // r0.x <- w.x; r0.y <- w.y; r0.z <- w.z
+
+#line 44
+mul r0.xyz, r0.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+mov r1.xyz, -r1.xyzx
+add r0.xyz, r0.xyzx, r1.xyzx
 dp3 r1.x, r0.xyzx, r0.xyzx
 rsq r1.x, r1.x
-mul r0.xyz, r0.xyzx, r1.xxxx
+mul r0.xyz, r0.xyzx, r1.xxxx  // r0.x <- r.x; r0.y <- r.y; r0.z <- r.z
+
+#line 46
 dp3 r1.x, v0.xyzx, v0.xyzx
 rsq r1.x, r1.x
-mul r1.xyz, r1.xxxx, v0.xyzx
-mul r2.xyz, r0.wwww, cb0[2].xyzx
-mul r2.xyz, r2.xyzx, cb0[2].wwww
-dp3 r0.x, -r0.xyzx, r1.xyzx
+mul r1.xyz, r1.xxxx, v0.xyzx  // r1.x <- viewCamToFrag.x; r1.y <- viewCamToFrag.y; r1.z <- viewCamToFrag.z
+
+#line 49
+mul r3.xyz, r0.wwww, cb0[2].xyzx
+mul r3.xyz, r1.wwww, r3.xyzx
+mov r0.xyz, -r0.xyzx
+dp3 r0.x, r0.xyzx, r1.xyzx
 max r0.x, r0.x, l(0.000000)
 log r0.x, r0.x
 mul r0.x, r0.x, cb1[0].y
 exp r0.x, r0.x
-mul r0.xyz, r0.xxxx, r2.xyzx
-mad r1.xyz, r3.xyzx, r1.wwww, cb0[1].xyzx
+mul r0.xyz, r0.xxxx, r3.xyzx  // r0.x <- <Speculate return value>.x; r0.y <- <Speculate return value>.y; r0.z <- <Speculate return value>.z
+
+#line 36 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\PhongNormalMap_ps.hlsl"
+mov r0.xyz, r0.xyzx  // r0.x <- specular.x; r0.y <- specular.y; r0.z <- specular.z
+
+#line 41
+add r1.xyz, r2.xyzx, cb0[1].xyzx
 sample_indexable(texture2d)(float,float,float,float) r2.xyz, v4.xyxx, t0.xyzw, s0
-mad_sat o0.xyz, r1.xyzx, r2.xyzx, r0.xyzx
+mul r1.xyz, r1.xyzx, r2.xyzx
+add r0.xyz, r0.xyzx, r1.xyzx
+max r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)
+min o0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
 mov o0.w, l(1.000000)
 ret 
-// Approximately 52 instruction slots used
+// Approximately 91 instruction slots used

@@ -53,7 +53,6 @@ filter "configurations:Debug"
     defines "DR_DEBUG"
     runtime "Debug"
     symbols "on"
-    optimize "Speed"
     defines
     {
         "IS_DEBUG=true"

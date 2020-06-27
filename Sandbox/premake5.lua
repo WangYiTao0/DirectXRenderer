@@ -76,8 +76,8 @@
 filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
-    --symbols "Full"
-    optimize "Debug"
+    symbols "on"
+ 
 
     defines
     {
