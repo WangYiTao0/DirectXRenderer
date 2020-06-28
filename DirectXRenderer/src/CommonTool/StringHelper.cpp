@@ -78,13 +78,16 @@ namespace dr
 			shaderfolder = ".\\asset\\shader\\cso\\";
 			//shaderfolder = "..\\Build\\x64\\Debug\\";
 #else  //x86 (Win32)
-			shaderfolder = "..\\Build\\Win32\\Debug\\";
+			//shaderfolder = "..\\Build\\Win32\\Debug\\";
+			shaderfolder = ".\\asset\\shader\\cso\\";
 #endif
 #else //Release Mode
 #ifdef _WIN64 //x64
-			shaderfolder = "..\\Build\\x64\\Release\\";
+			//shaderfolder = "..\\Build\\x64\\Release\\";
+			shaderfolder = ".\\asset\\shader\\cso\\";
 #else  //x86 (Win32)
-			shaderfolder = "..\\Build\\Win32\\Release\\";
+			//shaderfolder = "..\\Build\\Win32\\Release\\";
+			shaderfolder = ".\\asset\\shader\\cso\\";
 #endif
 #endif
 		}

@@ -8,6 +8,7 @@
 #include "Debug/PerfLog.h"
 #include "Core/DepthStencil.h"
 #include "Core/RenderTarget.h"
+#include "Jobber/Effect/BlurPack.h"
 #include <array>
 
 namespace dr
@@ -19,11 +20,11 @@ namespace dr
 		FrameCommander(Graphics& gfx)
 			:
 			ds(gfx, gfx.GetWidth(), gfx.GetHeight()),
-			rt(gfx, gfx.GetWidth(), gfx.GetHeight())
+			rt1({ gfx,gfx.GetWidth() / downFactor,gfx.GetHeight() / downFactor }),
+			rt2({ gfx,gfx.GetWidth() / downFactor,gfx.GetHeight() / downFactor }),
+			blur(gfx, 7, 2.6f, ".\\asset\\shader\\cso\\BlurOutline_PS.cso")
 		{
 			namespace dx = DirectX;
-
-			std::string shader_dir = StrH::GetShaderRootPath();
 
 			// setup fullscreen geometry
 			Dvtx::VertexLayout lay;
@@ -38,26 +39,26 @@ namespace dr
 			pIbFull = Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices));
 
 			// setup fullscreen shaders
-			pPsFull = Bind::PixelShader::Resolve(gfx, shader_dir+"Blur_PS.cso");
-			pVsFull = Bind::VertexShader::Resolve(gfx, shader_dir+"Fullscreen_VS.cso");
+			pVsFull = Bind::VertexShader::Resolve(gfx, ".\\asset\\shader\\cso\\Fullscreen_VS.cso");
 			pLayoutFull = Bind::InputLayout::Resolve(gfx, lay, pVsFull->GetBytecode());
-			pSamplerFull = Bind::Sampler::Resolve(gfx, false, true);
-			pBlenderFull = Bind::Blender::Resolve(gfx, true);
+			pSamplerFullPoint = Bind::Sampler::Resolve(gfx, false, true);
+			pSamplerFullBilin = Bind::Sampler::Resolve(gfx, true, true);
+			pBlenderMerge = Bind::Blender::Resolve(gfx, true);
 		}
 		void Accept(Job job, size_t target) noexcept
 		{
 			passes[target].Accept(job);
 		}
-		void Execute(Graphics& gfx) const noxnd
+		void Execute(Graphics& gfx) noxnd
 		{
 			using namespace Bind;
-			// normally this would be a loop with each pass defining it setup / etc.
+			// normally this would be a loop with each pass defining its setup / etc.
 			// and later on it would be a complex graph with parallel execution contingent
 			// on input / output requirements
 
 			// setup render target used for normal passes
 			ds.Clear(gfx);
-			rt.Clear(gfx);
+			rt1->Clear(gfx);
 			gfx.BindSwapBuffer(ds);
 			// main phong lighting pass
 			Blender::Resolve(gfx, false)->Bind(gfx);
@@ -68,20 +69,27 @@ namespace dr
 			NullPixelShader::Resolve(gfx)->Bind(gfx);
 			passes[1].Execute(gfx);
 			// outline drawing pass
-			rt.BindAsTarget(gfx);
+			rt1->BindAsTarget(gfx);
 			Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 			passes[2].Execute(gfx);
-			// fullscreen blur + blend pass
-			gfx.BindSwapBuffer(ds);
-			rt.BindAsTexture(gfx, 0);
+			// fullscreen blur h-pass
+			rt2->BindAsTarget(gfx);
+			rt1->BindAsTexture(gfx, 0);
 			pVbFull->Bind(gfx);
 			pIbFull->Bind(gfx);
 			pVsFull->Bind(gfx);
-			pPsFull->Bind(gfx);
 			pLayoutFull->Bind(gfx);
-			pSamplerFull->Bind(gfx);
-			pBlenderFull->Bind(gfx);
+			pSamplerFullPoint->Bind(gfx);
+			blur.Bind(gfx);
+			blur.SetHorizontal(gfx);
+			gfx.DrawIndexed(pIbFull->GetCount());
+			// fullscreen blur v-pass + combine
+			gfx.BindSwapBuffer(ds);
+			rt2->BindAsTexture(gfx, 0u);
+			pBlenderMerge->Bind(gfx);
+			pSamplerFullBilin->Bind(gfx);
 			Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
+			blur.SetVertical(gfx);
 			gfx.DrawIndexed(pIbFull->GetCount());
 		}
 		void Reset() noexcept
@@ -91,16 +99,32 @@ namespace dr
 				p.Reset();
 			}
 		}
+		void ShowWindows(Graphics& gfx)
+		{
+			if (ImGui::Begin("Blur"))
+			{
+				if (ImGui::SliderInt("Down Factor", &downFactor, 1, 16))
+				{
+					rt1.emplace(gfx, gfx.GetWidth() / downFactor, gfx.GetHeight() / downFactor);
+					rt2.emplace(gfx, gfx.GetWidth() / downFactor, gfx.GetHeight() / downFactor);
+				}
+				blur.RenderWidgets(gfx);
+			}
+			ImGui::End();
+		}
 	private:
 		std::array<Pass, 3> passes;
+		int downFactor = 1;
 		DepthStencil ds;
-		RenderTarget rt;
+		std::optional<RenderTarget> rt1;
+		std::optional<RenderTarget> rt2;
+		BlurPack blur;
 		std::shared_ptr<Bind::VertexBuffer> pVbFull;
 		std::shared_ptr<Bind::IndexBuffer> pIbFull;
 		std::shared_ptr<Bind::VertexShader> pVsFull;
-		std::shared_ptr<Bind::PixelShader> pPsFull;
 		std::shared_ptr<Bind::InputLayout> pLayoutFull;
-		std::shared_ptr<Bind::Sampler> pSamplerFull;
-		std::shared_ptr<Bind::Blender> pBlenderFull;
+		std::shared_ptr<Bind::Sampler> pSamplerFullPoint;
+		std::shared_ptr<Bind::Sampler> pSamplerFullBilin;
+		std::shared_ptr<Bind::Blender> pBlenderMerge;
 	};
 }

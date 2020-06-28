@@ -30,6 +30,7 @@ void Scene3D::Draw(float dt)
 	sponza.Submit(fc);
 	cube2.Submit(fc);
 
+
 	fc.Execute(wnd.Gfx());
 
 	///ImguiWidow
@@ -236,7 +237,10 @@ void Scene3D::SpawnImguiWindow()
 	modelProbe.SpawnWindow(sponza);
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
+	fc.ShowWindows(wnd.Gfx());
 
+	// present
+	//wnd.Gfx().EndFrame();
 	fc.Reset();
 }
 

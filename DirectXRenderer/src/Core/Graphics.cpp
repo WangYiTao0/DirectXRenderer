@@ -70,16 +70,6 @@ namespace dr
 		// bind depth state
 		m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
 
-		// configure viewport
-		D3D11_VIEWPORT vp;
-		vp.Width = (float)screenWidth;
-		vp.Height = (float)screenHeight;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0.0f;
-		vp.TopLeftY = 0.0f;
-		m_pContext->RSSetViewports(1u, &vp);
-
 		// init imgui d3d impl
 		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 	}
@@ -141,11 +131,29 @@ namespace dr
 	void Graphics::BindSwapBuffer() noexcept
 	{
 		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
+		// configure viewport
+		D3D11_VIEWPORT vp;
+		vp.Width = (float)screenWidth;
+		vp.Height = (float)screenHeight;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
+		m_pContext->RSSetViewports(1u, &vp);
 	}
 
 	void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
 	{
 		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), ds.pDepthStencilView.Get());
+		// configure viewport
+		D3D11_VIEWPORT vp;
+		vp.Width = (float)screenWidth;
+		vp.Height = (float)screenHeight;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
+		m_pContext->RSSetViewports(1u, &vp);
 	}
 
 	void Graphics::DrawIndexed(UINT count) noxnd
