@@ -222,9 +222,6 @@ namespace dr
 			);
 		}
 
-
-
-
 		Layout::Layout(std::shared_ptr<LayoutElement> pRoot) noexcept
 			:
 			pRoot{ std::move(pRoot) }
@@ -237,7 +234,6 @@ namespace dr
 		{
 			return pRoot->GetSignature();
 		}
-
 
 		RawLayout::RawLayout() noexcept
 			:
@@ -259,7 +255,6 @@ namespace dr
 			*this = RawLayout();
 		}
 
-
 		CookedLayout::CookedLayout(std::shared_ptr<LayoutElement> pRoot) noexcept
 			:
 			Layout(std::move(pRoot))
@@ -276,10 +271,6 @@ namespace dr
 		{
 			return (*pRoot)[key];
 		}
-
-
-
-
 
 		bool ConstElementRef::Exists() const noexcept
 		{
@@ -306,7 +297,6 @@ namespace dr
 		{}
 		ConstElementRef::Ptr::Ptr(const ConstElementRef* ref) noexcept : ref(ref)
 		{}
-
 
 		ElementRef::operator ConstElementRef() const noexcept
 		{
@@ -337,9 +327,6 @@ namespace dr
 		{}
 		ElementRef::Ptr::Ptr(ElementRef* ref) noexcept : ref(ref)
 		{}
-
-
-
 
 		Buffer::Buffer(RawLayout&& lay) noxnd
 			:

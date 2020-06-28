@@ -108,11 +108,11 @@ void TestDynamicConstant()
 			assert(!b["butts"s]["phubar"s].SetIfExists(dx::XMFLOAT3{ 2.0f,2.0f,7.0f }));
 		}
 
-		//const auto& cb = b;
-		//{
-		//	dx::XMFLOAT4X4 act = cb["arr"s][2]["meta"s][5][3];
-		//	assert(act._11 == 1.0f);
-		//}
+		const auto& cb = b;
+		{
+			dx::XMFLOAT4X4 act = cb["arr"s][2]["meta"s][5][3];
+			assert(act._11 == 1.0f);
+		}
 		// this doesn't compile: buffer is const
 		// cb["arr"][2]["booler"] = true;
 		// static_cast<bool&>(cb["arr"][2]["booler"]) = true;

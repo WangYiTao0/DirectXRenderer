@@ -17,6 +17,7 @@
 	X( Float4Color ) \
 	X( BGRAColor ) \
 	X( Count )
+
 namespace dr
 {
 	namespace Dvtx
