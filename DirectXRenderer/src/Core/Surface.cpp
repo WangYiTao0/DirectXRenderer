@@ -78,10 +78,9 @@ namespace dr
 
 	Surface Surface::FromFile(const std::string& name)
 	{
-
-
 		DirectX::ScratchImage scratch;
-		HRESULT hr = DirectX::LoadFromWICFile(StrH::ToWide(name).c_str(), DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+		HRESULT hr = DirectX::LoadFromWICFile(StrH::ToWide(name).c_str(), 
+			DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
 
 		if (FAILED(hr))
 		{

@@ -19,6 +19,10 @@ private:
 
 	void CycleScenes();
 private:
+	const int screenWidth = 1600;
+	const int screenHeight = 900;
+
+
 	dr::ImguiManager imgui;
 	dr::Win32Window wnd;
 	dr::Timer timer;

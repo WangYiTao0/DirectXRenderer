@@ -7,7 +7,7 @@
 // cbuffer CBuf
 // {
 //
-//   float4 color;                      // Offset:    0 Size:    16
+//   float3 materialColor;              // Offset:    0 Size:    12
 //
 // }
 //
@@ -40,7 +40,8 @@ dcl_output o0.xyzw
 // Initial variable locations:
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 8 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Solid_ps.hlsl"
-mov o0.xyzw, cb1[0].xyzw
+#line 8 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Solid_PS.hlsl"
+mov o0.xyz, cb1[0].xyzx
+mov o0.w, l(1.000000)
 ret 
-// Approximately 2 instruction slots used
+// Approximately 3 instruction slots used

@@ -25,9 +25,22 @@
 #include "Drawable/Drawable.h"
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
-#include "Drawable/Mesh.h"
 #include "Drawable/TestPlane.h"
 #include "Drawable/TestCube.h"
+
+#include "Drawable/Model/Mesh.h"
+#include "Drawable/Model/Material.h"
+#include "Drawable/Model/Model.h"
+#include "Drawable/Model/ModelProbe.h"
+#include "Drawable/Model/Node.h"
+
+//jobber
+#include "Jobber/Job.h"
+#include "Jobber/Pass.h"
+#include "Jobber/Step.h"
+#include "Jobber/FrameCommander.h"
+#include "Jobber/Technique.h"
+#include "Jobber/TechniqueProbe.h"
 
 //CommonTool
 #include "CommonTool/DrMath.h"

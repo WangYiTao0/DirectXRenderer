@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ConstantBuffers.h"
-#include "ConstantBufferEx.h"
+#include "ConstantBuffersEx.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "PixelShader.h"
@@ -14,3 +14,5 @@
 #include "Sampler.h"
 #include "Blender.h"
 #include "Rasterizer.h"
+#include "Stencil.h"
+#include "NullPixelShader.h"

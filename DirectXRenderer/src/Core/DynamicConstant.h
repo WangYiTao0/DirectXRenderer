@@ -3,9 +3,9 @@
 #include <cassert>
 #include <DirectXMath.h>
 #include <vector>
-#include <string>
 #include <memory>
 #include <optional>
+#include <string>
 
 // master list of leaf types that generates enum elements and various switches etc.
 
@@ -87,8 +87,8 @@ namespace dr
 		LEAF_ELEMENT_TYPES
 #undef X
 
-		// enables reverse lookup from SysType to leaf type
-		template<typename T>
+			// enables reverse lookup from SysType to leaf type
+			template<typename T>
 		struct ReverseMap
 		{
 			static constexpr bool valid = false;
@@ -367,7 +367,7 @@ namespace dr
 			template<typename T>
 			operator T& () const noxnd
 			{
-				static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in conversion");
+				//static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in conversion");
 				return *reinterpret_cast<T*>(pBytes + offset + pLayout->Resolve<T>());
 			}
 			// assignment for writing to as a supported SysType
@@ -384,6 +384,8 @@ namespace dr
 			const LayoutElement* pLayout;
 			char* pBytes;
 		};
+
+
 
 
 		// The buffer object is a combination of a raw byte buffer with a LayoutElement

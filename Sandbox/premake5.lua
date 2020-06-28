@@ -62,11 +62,11 @@
   flags("ExcludeFromBuild")
   shaderobjectfileoutput(shader_dir_cso.."%{file.basename}"..".cso")
   shaderassembleroutput(shader_dir_asm.."%{file.basename}"..".asm")
-  filter("files:**_ps.hlsl")
+  filter("files:**_PS.hlsl")
   removeflags("ExcludeFromBuild")
   shadertype("Pixel")
 
-  filter("files:**_vs.hlsl")
+  filter("files:**_VS.hlsl")
   removeflags("ExcludeFromBuild")
   shadertype("Vertex")
 

@@ -75,7 +75,8 @@ namespace dr
 		{
 #ifdef _DEBUG //Debug Mode
 #ifdef _WIN64 //x64
-			shaderfolder = "..\\Build\\x64\\Debug\\";
+			shaderfolder = ".\\asset\\shader\\cso\\";
+			//shaderfolder = "..\\Build\\x64\\Debug\\";
 #else  //x86 (Win32)
 			shaderfolder = "..\\Build\\Win32\\Debug\\";
 #endif

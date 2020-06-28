@@ -75,7 +75,7 @@ namespace dr
 		descDepth.Height = screenHeight;
 		descDepth.MipLevels = 1u;
 		descDepth.ArraySize = 1u;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		descDepth.SampleDesc.Count = 1u;
 		descDepth.SampleDesc.Quality = 0u;
 		descDepth.Usage = D3D11_USAGE_DEFAULT;
@@ -84,7 +84,7 @@ namespace dr
 
 		// create view of depth stensil texture
 		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-		descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0u;
 		GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(
@@ -160,7 +160,8 @@ namespace dr
 
 		const float color[] = { red,green,blue,1.0f };
 		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-		m_pContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+		m_pContext->ClearDepthStencilView(m_pDSV.Get(),
+			D3D11_CLEAR_DEPTH| D3D11_CLEAR_STENCIL, 1.0f, 0u);
 	}
 
 	void Graphics::DrawIndexed(UINT count) noxnd

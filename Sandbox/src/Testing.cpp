@@ -1,11 +1,14 @@
-#include "TestDcb.h"
+#include "Testing.h"
 #include <myRenderer.h>
 #include <cstring>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 using namespace dr;
 
 namespace dx = DirectX;
-
 
 void TestDynamicConstant()
 {
@@ -105,11 +108,11 @@ void TestDynamicConstant()
 			assert(!b["butts"s]["phubar"s].SetIfExists(dx::XMFLOAT3{ 2.0f,2.0f,7.0f }));
 		}
 
-		const auto& cb = b;
-		{
-			dx::XMFLOAT4X4 act = cb["arr"s][2]["meta"s][5][3];
-			assert(act._11 == 1.0f);
-		}
+		//const auto& cb = b;
+		//{
+		//	dx::XMFLOAT4X4 act = cb["arr"s][2]["meta"s][5][3];
+		//	assert(act._11 == 1.0f);
+		//}
 		// this doesn't compile: buffer is const
 		// cb["arr"][2]["booler"] = true;
 		// static_cast<bool&>(cb["arr"][2]["booler"]) = true;
@@ -225,4 +228,49 @@ void TestDynamicConstant()
 		auto buf = Dcb::Buffer(std::move(lay));
 		assert(buf.GetSizeInBytes() == 32u);
 	}
+}
+
+void TestDynamicMeshLoading()
+{
+	using namespace Dvtx;
+
+	Assimp::Importer imp;
+	const auto pScene = imp.ReadFile(".\\asset\\Models\\brick_wall\\brick_wall.obj",
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_ConvertToLeftHanded |
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
+	);
+	auto layout = VertexLayout{}
+		.Append(VertexLayout::Position3D)
+		.Append(VertexLayout::Normal)
+		.Append(VertexLayout::Tangent)
+		.Append(VertexLayout::Bitangent)
+		.Append(VertexLayout::Texture2D);
+	VertexBuffer buf{ std::move(layout),*pScene->mMeshes[0] };
+
+	for (auto i = 0ull, end = buf.Size(); i < end; i++)
+	{
+		const auto a = buf[i].Attr<VertexLayout::Position3D>();
+		const auto b = buf[i].Attr<VertexLayout::Normal>();
+		const auto c = buf[i].Attr<VertexLayout::Tangent>();
+		const auto d = buf[i].Attr<VertexLayout::Bitangent>();
+		const auto e = buf[i].Attr<VertexLayout::Texture2D>();
+	}
+}
+
+void TestMaterialSystemLoading(Graphics& gfx)
+{
+	std::string path = "Models\\brick_wall\\brick_wall.obj";
+	Assimp::Importer imp;
+	const auto pScene = imp.ReadFile(path,
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_ConvertToLeftHanded |
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
+	);
+	Material mat{ gfx,*pScene->mMaterials[1],path };
+	dr::Mesh mesh{ gfx,mat,*pScene->mMeshes[0] };
 }

@@ -13,7 +13,8 @@ namespace dr
 		VertexBuffer::VertexBuffer(Graphics& gfx, const std::string& tag, const Dvtx::VertexBuffer& vbuf)
 			:
 			stride((UINT)vbuf.GetLayout().Size()),
-			tag(tag)
+			tag(tag),
+			layout(vbuf.GetLayout())
 		{
 			INFOMAN(gfx);
 
@@ -29,11 +30,17 @@ namespace dr
 			GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bd, &sd, &pVertexBuffer));
 		}
 
+		const dr::Dvtx::VertexLayout& VertexBuffer::GetLayout() const noexcept
+		{
+			return layout;
+		}
+
 		void VertexBuffer::Bind(Graphics& gfx) noexcept
 		{
 			const UINT offset = 0u;
 			GetContext(gfx)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 		}
+
 		std::shared_ptr<VertexBuffer> VertexBuffer::Resolve(Graphics& gfx, const std::string& tag,
 			const Dvtx::VertexBuffer& vbuf)
 		{

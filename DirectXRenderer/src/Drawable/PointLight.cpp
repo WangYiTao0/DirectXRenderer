@@ -1,9 +1,7 @@
 #include "drpch.h"
 #include "PointLight.h"
 #include <imgui.h>
-
-
-
+#include "Jobber/FrameCommander.h"
 
 namespace dr
 {
@@ -23,7 +21,7 @@ namespace dr
 			ImGui::SliderFloat("X", &cbData.pos.x, -60.0f, 60.0f, "%.1f");
 			ImGui::SliderFloat("Y", &cbData.pos.y, -60.0f, 60.0f, "%.1f");
 			ImGui::SliderFloat("Z", &cbData.pos.z, -60.0f, 60.0f, "%.1f");
-			
+
 			ImGui::Text("Intensity/Color");
 			ImGui::SliderFloat("Intensity", &cbData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2);
 			ImGui::ColorEdit3("Diffuse Color", &cbData.diffuseColor.x);
@@ -45,20 +43,20 @@ namespace dr
 	void PointLight::Reset() noexcept
 	{
 		cbData = {
-		{ 10.0f,9.0f,2.5f },
-		{ 0.05f,0.05f,0.05f },
-		{ 1.0f,1.0f,1.0f },
-		1.0f,
-		1.0f,
-		0.045f,
-		0.0075f,
+			{ 10.0f,9.0f,2.5f },
+			{ 0.05f,0.05f,0.05f },
+			{ 1.0f,1.0f,1.0f },
+			1.0f,
+			1.0f,
+			0.045f,
+			0.0075f,
 		};
 	}
 
-	void PointLight::Draw(Graphics& gfx) const noxnd
+	void PointLight::Submit(FrameCommander& frame) const noxnd
 	{
 		mesh.SetPos(cbData.pos);
-		mesh.Draw(gfx);
+		mesh.Submit(frame);
 	}
 
 	void PointLight::Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept

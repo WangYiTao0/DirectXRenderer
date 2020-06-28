@@ -9,13 +9,14 @@
 
 #include "imgui.h"
 
-#include "TestDcb.h"
+#include "Testing.h"
 
 Application::Application()
 	:
-	wnd(1600, 900, "DirectX11 Renderer")
+	wnd(screenWidth, screenHeight, "DirectX11 Renderer")
 {
 	TestDynamicConstant();
+	TestDynamicMeshLoading();
 
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 900.f / 1600.f, 0.5f, 4000.0f));
 
@@ -121,7 +122,6 @@ void Application::DoFrame()
 	HandleInput(dt);
 	Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
 
-	Draw(dt);
 
 	// imgui window to control simulation speed
 	if (ImGui::Begin("Simulation Speed"))
@@ -131,6 +131,8 @@ void Application::DoFrame()
 
 	}
 	ImGui::End();
+
+	Draw(dt);
 
 	// present
 	wnd.Gfx().EndFrame();
