@@ -5,6 +5,8 @@
 #include "Debug/ThrowMacros.h"
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
+#include "DepthStencil.h"
+
 
 namespace dr
 {
@@ -16,8 +18,8 @@ namespace dr
 		screenHeight(height)
 	{
 		DXGI_SWAP_CHAIN_DESC sd = {};
-		sd.BufferDesc.Width = 0;
-		sd.BufferDesc.Height = 0;
+		sd.BufferDesc.Width = width;
+		sd.BufferDesc.Height = height;
 		sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		sd.BufferDesc.RefreshRate.Numerator = 0;
 		sd.BufferDesc.RefreshRate.Denominator = 0;
@@ -67,32 +69,6 @@ namespace dr
 
 		// bind depth state
 		m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
-
-		// create depth stensil texture
-		wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
-		D3D11_TEXTURE2D_DESC descDepth = {};
-		descDepth.Width = screenWidth;
-		descDepth.Height = screenHeight;
-		descDepth.MipLevels = 1u;
-		descDepth.ArraySize = 1u;
-		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		descDepth.SampleDesc.Count = 1u;
-		descDepth.SampleDesc.Quality = 0u;
-		descDepth.Usage = D3D11_USAGE_DEFAULT;
-		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
-
-		// create view of depth stensil texture
-		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		descDSV.Texture2D.MipSlice = 0u;
-		GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(
-			pDepthStencil.Get(), &descDSV, &m_pDSV
-		));
-
-		// bind depth stensil view to OM
-		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDSV.Get());
 
 		// configure viewport
 		D3D11_VIEWPORT vp;
@@ -160,8 +136,17 @@ namespace dr
 
 		const float color[] = { red,green,blue,1.0f };
 		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-		m_pContext->ClearDepthStencilView(m_pDSV.Get(),
-			D3D11_CLEAR_DEPTH| D3D11_CLEAR_STENCIL, 1.0f, 0u);
+		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
+	}
+
+	void Graphics::BindSwapBuffer() noexcept
+	{
+		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
+	}
+
+	void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
+	{
+		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), ds.pDepthStencilView.Get());
 	}
 
 	void Graphics::DrawIndexed(UINT count) noxnd
@@ -201,6 +186,16 @@ namespace dr
 	bool Graphics::IsImguiEnabled() const noexcept
 	{
 		return imguiEnabled;
+	}
+
+	UINT Graphics::GetWidth() const noexcept
+	{
+		return screenWidth;
+	}
+
+	UINT Graphics::GetHeight() const noexcept
+	{
+		return screenHeight;
 	}
 
 	Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept

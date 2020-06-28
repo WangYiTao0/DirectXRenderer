@@ -5,4 +5,4 @@ void TestDynamicConstant();
 
 void TestDynamicMeshLoading();
 
-void TestMaterialSystemLoading(dr::Graphics& gfx);
+//void TestMaterialSystemLoading(dr::Graphics& gfx);

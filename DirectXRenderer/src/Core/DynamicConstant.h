@@ -367,9 +367,7 @@ namespace dr
 			template<typename T>
 			operator T& () const noxnd
 			{
-				static_assert(
-					ReverseMap<std::remove_const_t<T>>::valid, 
-					"Unsupported SysType used in conversion");
+				static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in conversion");
 				return *reinterpret_cast<T*>(pBytes + offset + pLayout->Resolve<T>());
 			}
 			// assignment for writing to as a supported SysType

@@ -8,15 +8,17 @@
 #include <DirectXMath.h>
 #include "Debug/ConditionalNoexcept.h"
 
+
 namespace dr
 {
+	class DepthStencil;
 	namespace Bind
 	{
 		class Bindable;
 	}
 	class Graphics
 	{
-		friend Bind::Bindable;
+		friend class GraphicsResource;
 	public:
 		class Exception : public DrException
 		{
@@ -62,6 +64,8 @@ namespace dr
 		~Graphics();
 		void EndFrame();
 		void BeginFrame(float red, float green, float blue) noexcept;
+		void BindSwapBuffer() noexcept;
+		void BindSwapBuffer(const DepthStencil& ds) noexcept;
 
 		void DrawIndexed(UINT count) noxnd;
 		void SetProjection(DirectX::FXMMATRIX proj)noexcept;
@@ -72,15 +76,17 @@ namespace dr
 		void EnableImgui() noexcept;
 		void DisableImgui() noexcept;
 		bool IsImguiEnabled() const noexcept;
-		
+		UINT GetWidth() const noexcept;
+		UINT GetHeight() const noexcept;
+
 	private:
 		DirectX::XMMATRIX projection;
 		DirectX::XMMATRIX camera;
 		bool imguiEnabled = true;
 		DirectX::XMMATRIX m_projection;
 
-		int screenWidth = 1600;
-		int screenHeight = 900;
+		UINT screenWidth = 1600;
+		UINT screenHeight = 900;
 
 #ifndef NDEBUG
 		DxgiInfoManager infoManager;

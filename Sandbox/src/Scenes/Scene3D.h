@@ -15,7 +15,7 @@ private:
 	dr::Camera3D cam3d;
 	dr::PointLight light;
 
-	dr::FrameCommander fc;
+	dr::FrameCommander fc{ wnd.Gfx() };
 	dr::TestCube cube{ wnd.Gfx(),4.0f };
 	dr::TestCube cube2{ wnd.Gfx(),4.0f };
 	dr::Model sponza{ wnd.Gfx(),".\\asset\\Models\\sponza\\sponza.obj",1.0f / 20.0f };

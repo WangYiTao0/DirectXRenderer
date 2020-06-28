@@ -7,6 +7,9 @@
 #include "Core/Vertex.h"
 #include "Core/DynamicConstant.h"
 #include "Core/LayoutCodex.h"
+#include "Core/GraphicsResource.h"
+#include "Core/RenderTarget.h"
+#include "Core/DepthStencil.h"
 
 //debug
 #include "Debug/DrException.h"

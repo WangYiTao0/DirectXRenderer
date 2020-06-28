@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Graphics.h"
+#include "Core/GraphicsResource.h"
 #include <memory>
 #include <string>
 
@@ -11,7 +12,7 @@ namespace dr
 
 	namespace Bind
 	{
-		class Bindable
+		class Bindable :public GraphicsResource
 		{
 		public:
 			virtual void Bind(Graphics& gfx) noexcept = 0;
@@ -23,10 +24,6 @@ namespace dr
 				return "";
 			}
 			virtual ~Bindable() = default;
-		protected:
-			static ID3D11DeviceContext* GetContext(Graphics& gfx) noexcept;
-			static ID3D11Device* GetDevice(Graphics& gfx) noexcept;
-			static DxgiInfoManager& GetInfoManager(Graphics& gfx);
 		};
 
 		class CloningBindable : public Bindable
