@@ -56,45 +56,57 @@ utof r0.w, r0.w
 div r0.w, l(1.000000), r0.w  // r0.w <- dy
 
 #line 13
-mov r1.xyzw, l(0,0,0,0)  // r1.x <- acc.x; r1.y <- acc.y; r1.z <- acc.z; r1.w <- acc.w
+mov r1.x, l(0)  // r1.x <- accAlpha
 
 #line 14
-mov r2.x, l(-12)  // r2.x <- y
-mov r3.xyzw, r1.xyzw  // r3.x <- acc.x; r3.y <- acc.y; r3.z <- acc.z; r3.w <- acc.w
-mov r2.y, r2.x  // r2.y <- y
-loop 
-  ige r2.z, r0.x, r2.y
-  breakc_z r2.z
+mov r1.yzw, l(0,0,0,0)  // r1.y <- maxColor.x; r1.z <- maxColor.y; r1.w <- maxColor.z
 
-#line 16
-  mov r2.z, l(-12)  // r2.z <- x
-  mov r4.xyzw, r3.xyzw  // r4.x <- acc.x; r4.y <- acc.y; r4.z <- acc.z; r4.w <- acc.w
-  mov r2.w, r2.z  // r2.w <- x
+#line 15
+mov r2.x, l(-12)  // r2.x <- y
+mov r2.yzw, r1.yyzw  // r2.y <- maxColor.x; r2.z <- maxColor.y; r2.w <- maxColor.z
+mov r3.x, r1.x  // r3.x <- accAlpha
+mov r3.y, r2.x  // r3.y <- y
+loop 
+  ige r3.z, r0.x, r3.y
+  breakc_z r3.z
+
+#line 17
+  mov r3.z, l(-12)  // r3.z <- x
+  mov r4.xyz, r2.yzwy  // r4.x <- maxColor.x; r4.y <- maxColor.y; r4.z <- maxColor.z
+  mov r3.w, r3.x  // r3.w <- accAlpha
+  mov r4.w, r3.z  // r4.w <- x
   loop 
-    ige r5.x, r0.x, r2.w
+    ige r5.x, r0.x, r4.w
     breakc_z r5.x
 
-#line 18
-    itof r5.x, r2.w
+#line 19
+    itof r5.x, r4.w
     mul r5.x, r0.z, r5.x
-    itof r5.z, r2.y
+    itof r5.z, r3.y
     mul r5.y, r0.w, r5.z
     add r5.xy, r5.xyxx, v0.xyxx  // r5.x <- tc.x; r5.y <- tc.y
 
-#line 19
-    sample_indexable(texture2d)(float,float,float,float) r5.xyzw, r5.xyxx, t0.xyzw, s0
-    add r4.xyzw, r4.xyzw, r5.xyzw
-
 #line 20
-    iadd r2.w, r2.w, l(1)
-  endloop 
-  mov r3.xyzw, r4.xyzw  // r3.x <- acc.x; r3.y <- acc.y; r3.z <- acc.z; r3.w <- acc.w
+    sample_indexable(texture2d)(float,float,float,float) r5.xyzw, r5.xyxx, t0.xyzw, s0  // r5.x <- s.x; r5.y <- s.y; r5.z <- s.z; r5.w <- s.w
 
 #line 21
-  iadd r2.y, r2.y, l(1)
-endloop 
+    add r3.w, r3.w, r5.w
 
 #line 22
-div o0.xyzw, r3.xyzw, r0.yyyy
+    max r4.xyz, r4.xyzx, r5.xyzx
+
+#line 23
+    iadd r4.w, r4.w, l(1)
+  endloop 
+  mov r2.yzw, r4.xxyz  // r2.y <- maxColor.x; r2.z <- maxColor.y; r2.w <- maxColor.z
+  mov r3.x, r3.w  // r3.x <- accAlpha
+
+#line 24
+  iadd r3.y, r3.y, l(1)
+endloop 
+
+#line 25
+div o0.w, r3.x, r0.y
+mov o0.xyz, r2.yzwy
 ret 
-// Approximately 36 instruction slots used
+// Approximately 42 instruction slots used
