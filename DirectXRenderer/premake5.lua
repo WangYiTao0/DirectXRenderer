@@ -4,6 +4,8 @@ language "c++"
 cppdialect "c++17"
 staticruntime "on"
 
+buildoptions{"/permissive-"}
+
 targetdir("../bin/" .. outputdir .. "/%{prj.name}")
 objdir("../bin-obj/" .. outputdir .. "/%{prj.name}")
 
