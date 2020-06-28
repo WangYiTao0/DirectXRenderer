@@ -37,10 +37,10 @@ dcl_temps 6
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
 #line 4 "F:\MyRepo\DirectXRenderer\Sandbox\asset\shader\Blur_PS.hlsl"
-mov r0.x, l(3)  // r0.x <- r
+mov r0.x, l(12)  // r0.x <- r
 
 #line 5
-itof r0.y, l(49)  // r0.y <- divisor
+itof r0.y, l(625)  // r0.y <- divisor
 
 #line 10
 resinfo_indexable(texture2d)(float,float,float,float)_uint r0.zw, l(0), t0.zwxy
@@ -59,7 +59,7 @@ div r0.w, l(1.000000), r0.w  // r0.w <- dy
 mov r1.xyzw, l(0,0,0,0)  // r1.x <- acc.x; r1.y <- acc.y; r1.z <- acc.z; r1.w <- acc.w
 
 #line 14
-mov r2.x, l(-3)  // r2.x <- y
+mov r2.x, l(-12)  // r2.x <- y
 mov r3.xyzw, r1.xyzw  // r3.x <- acc.x; r3.y <- acc.y; r3.z <- acc.z; r3.w <- acc.w
 mov r2.y, r2.x  // r2.y <- y
 loop 
@@ -67,7 +67,7 @@ loop
   breakc_z r2.z
 
 #line 16
-  mov r2.z, l(-3)  // r2.z <- x
+  mov r2.z, l(-12)  // r2.z <- x
   mov r4.xyzw, r3.xyzw  // r4.x <- acc.x; r4.y <- acc.y; r4.z <- acc.z; r4.w <- acc.w
   mov r2.w, r2.z  // r2.w <- x
   loop 

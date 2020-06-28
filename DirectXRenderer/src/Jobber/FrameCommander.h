@@ -38,10 +38,11 @@ namespace dr
 			pIbFull = Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices));
 
 			// setup fullscreen shaders
-			pPsFull = Bind::PixelShader::Resolve(gfx, shader_dir+"Funk_PS.cso");
+			pPsFull = Bind::PixelShader::Resolve(gfx, shader_dir+"Blur_PS.cso");
 			pVsFull = Bind::VertexShader::Resolve(gfx, shader_dir+"Fullscreen_VS.cso");
 			pLayoutFull = Bind::InputLayout::Resolve(gfx, lay, pVsFull->GetBytecode());
 			pSamplerFull = Bind::Sampler::Resolve(gfx, false, true);
+			pBlenderFull = Bind::Blender::Resolve(gfx, true);
 		}
 		void Accept(Job job, size_t target) noexcept
 		{
@@ -56,8 +57,10 @@ namespace dr
 
 			// setup render target used for normal passes
 			ds.Clear(gfx);
-			rt.BindAsTarget(gfx, ds);
+			rt.Clear(gfx);
+			gfx.BindSwapBuffer(ds);
 			// main phong lighting pass
+			Blender::Resolve(gfx, false)->Bind(gfx);
 			Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 			passes[0].Execute(gfx);
 			// outline masking pass
@@ -65,17 +68,11 @@ namespace dr
 			NullPixelShader::Resolve(gfx)->Bind(gfx);
 			passes[1].Execute(gfx);
 			// outline drawing pass
-			PerfLog::Start("Begin");
-			Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
-			struct SolidColorBuffer
-			{
-				DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
-			} scb;
-			PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u)->Bind(gfx);
-			PerfLog::Mark("Resolve 2x");
+			rt.BindAsTarget(gfx);
+			Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 			passes[2].Execute(gfx);
-			// fullscreen funky pass
-			gfx.BindSwapBuffer();
+			// fullscreen blur + blend pass
+			gfx.BindSwapBuffer(ds);
 			rt.BindAsTexture(gfx, 0);
 			pVbFull->Bind(gfx);
 			pIbFull->Bind(gfx);
@@ -83,8 +80,9 @@ namespace dr
 			pPsFull->Bind(gfx);
 			pLayoutFull->Bind(gfx);
 			pSamplerFull->Bind(gfx);
+			pBlenderFull->Bind(gfx);
+			Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
 			gfx.DrawIndexed(pIbFull->GetCount());
-
 		}
 		void Reset() noexcept
 		{
@@ -103,5 +101,6 @@ namespace dr
 		std::shared_ptr<Bind::PixelShader> pPsFull;
 		std::shared_ptr<Bind::InputLayout> pLayoutFull;
 		std::shared_ptr<Bind::Sampler> pSamplerFull;
+		std::shared_ptr<Bind::Blender> pBlenderFull;
 	};
 }

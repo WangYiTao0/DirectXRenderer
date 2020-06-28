@@ -2,6 +2,7 @@
 #include "RenderTarget.h"
 #include "Debug/ThrowMacros.h"
 #include "DepthStencil.h"
+#include <array>
 
 namespace wrl = Microsoft::WRL;
 
@@ -64,4 +65,13 @@ namespace dr
 		GetContext(gfx)->OMSetRenderTargets(1, pRenderTargetView.GetAddressOf(), depthStencil.pDepthStencilView.Get());
 	}
 
+	void RenderTarget::Clear(Graphics& gfx, const std::array<float, 4>& color) const noexcept
+	{
+		GetContext(gfx)->ClearRenderTargetView(pRenderTargetView.Get(), color.data());
+	}
+
+	void RenderTarget::Clear(Graphics& gfx) const noexcept
+	{
+		Clear(gfx, { 0.0f,0.0f,0.0f,0.0f });
+	}
 }

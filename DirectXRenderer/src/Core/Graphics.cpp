@@ -134,8 +134,7 @@ namespace dr
 			ImGui::NewFrame();
 		}
 
-		const float color[] = { red,green,blue,1.0f };
-		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
+		const float color[] = { red,green,blue,0.0f };
 		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 	}
 
