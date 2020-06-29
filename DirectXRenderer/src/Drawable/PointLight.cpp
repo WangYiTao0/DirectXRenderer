@@ -1,7 +1,6 @@
 #include "drpch.h"
 #include "PointLight.h"
 #include <imgui.h>
-#include "Jobber/FrameCommander.h"
 
 namespace dr
 {
@@ -53,10 +52,11 @@ namespace dr
 		};
 	}
 
-	void PointLight::Submit(FrameCommander& frame) const noxnd
+
+	void PointLight::Submit() const noxnd
 	{
 		mesh.SetPos(cbData.pos);
-		mesh.Submit(frame);
+		mesh.Submit();
 	}
 
 	void PointLight::Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept
@@ -66,5 +66,10 @@ namespace dr
 		DirectX::XMStoreFloat3(&dataCopy.pos, DirectX::XMVector3Transform(pos, view));
 		cbuf.Update(gfx, dataCopy);
 		cbuf.Bind(gfx);
+	}
+
+	void PointLight::LinkTechniques(Rgph::RenderGraph& rg)
+	{
+		mesh.LinkTechniques(rg);
 	}
 }

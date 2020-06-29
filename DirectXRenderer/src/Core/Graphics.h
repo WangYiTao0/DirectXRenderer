@@ -7,15 +7,18 @@
 #include "Debug/DxgiInfoManager.h"
 #include <DirectXMath.h>
 #include "Debug/ConditionalNoexcept.h"
+#include <memory>
 
 
 namespace dr
 {
-	class DepthStencil;
 	namespace Bind
 	{
 		class Bindable;
+		class RenderTarget;
+		class DepthStencil;
 	}
+
 	class Graphics
 	{
 		friend class GraphicsResource;
@@ -34,7 +37,6 @@ namespace dr
 			std::string GetErrorString() const noexcept;
 			std::string GetErrorDescription() const noexcept;
 			std::string GetErrorInfo() const noexcept;
-
 		private:
 			HRESULT hr;
 			std::string info;
@@ -64,37 +66,29 @@ namespace dr
 		~Graphics();
 		void EndFrame();
 		void BeginFrame(float red, float green, float blue) noexcept;
-		void BindSwapBuffer() noexcept;
-		void BindSwapBuffer(const DepthStencil& ds) noexcept;
-
 		void DrawIndexed(UINT count) noxnd;
-		void SetProjection(DirectX::FXMMATRIX proj)noexcept;
+		void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 		DirectX::XMMATRIX GetProjection() const noexcept;
 		void SetCamera(DirectX::FXMMATRIX cam) noexcept;
 		DirectX::XMMATRIX GetCamera() const noexcept;
-
 		void EnableImgui() noexcept;
 		void DisableImgui() noexcept;
 		bool IsImguiEnabled() const noexcept;
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
-
+		std::shared_ptr<Bind::RenderTarget> GetTarget();
 	private:
+		UINT width;
+		UINT height;
 		DirectX::XMMATRIX projection;
 		DirectX::XMMATRIX camera;
 		bool imguiEnabled = true;
-		DirectX::XMMATRIX m_projection;
-
-		UINT screenWidth = 1600;
-		UINT screenHeight = 900;
-
 #ifndef NDEBUG
 		DxgiInfoManager infoManager;
 #endif
-		Microsoft::WRL::ComPtr <ID3D11Device> m_pDevice;
-		Microsoft::WRL::ComPtr <IDXGISwapChain> m_pSwapchain;
-		Microsoft::WRL::ComPtr <ID3D11DeviceContext> m_pContext;
-		Microsoft::WRL::ComPtr <ID3D11RenderTargetView> m_pRenderTargetView;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDSV;
+		Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+		Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
+		std::shared_ptr<Bind::RenderTarget> pTarget;
 	};
 }

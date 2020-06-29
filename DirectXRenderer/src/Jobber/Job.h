@@ -3,13 +3,20 @@
 
 namespace dr
 {
-	class Job
+	class Drawable;
+	class Graphics;
+	class Step;
+
+	namespace Rgph
 	{
-	public:
-		Job(const class Step* pStep, const class Drawable* pDrawable);
-		void Execute(class Graphics& gfx)const noxnd;
-	private:
-		const class Drawable* pDrawable;
-		const class Step* pStep;
-	};
+		class Job
+		{
+		public:
+			Job(const Step* pStep, const Drawable* pDrawable);
+			void Execute(Graphics& gfx) const noxnd;
+		private:
+			const class Drawable* pDrawable;
+			const class Step* pStep;
+		};
+	}
 }

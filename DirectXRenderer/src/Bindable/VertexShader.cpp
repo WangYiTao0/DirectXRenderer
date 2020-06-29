@@ -12,8 +12,9 @@ namespace dr
 		VertexShader::VertexShader(Graphics& gfx, const std::string& path)
 		{
 			INFOMAN(gfx);
+			std::string shader_dir = "asset\\shader\\cso\\";
 
-			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(path).c_str(), &pBytecodeBlob));
+			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(shader_dir + path).c_str(), &pBytecodeBlob));
 			GFX_THROW_INFO(GetDevice(gfx)->CreateVertexShader(
 				pBytecodeBlob->GetBufferPointer(),
 				pBytecodeBlob->GetBufferSize(),
@@ -21,9 +22,10 @@ namespace dr
 				&pVertexShader));
 		}
 
-		void VertexShader::Bind(Graphics& gfx) noexcept
+		void VertexShader::Bind(Graphics& gfx) noxnd
 		{
-			GetContext(gfx)->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+			INFOMAN_NOHR(gfx);
+			GFX_THROW_INFO_ONLY(GetContext(gfx)->VSSetShader(pVertexShader.Get(), nullptr, 0u));
 		}
 
 		ID3DBlob* VertexShader::GetBytecode() const noexcept

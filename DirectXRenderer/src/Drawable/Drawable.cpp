@@ -11,11 +11,11 @@ namespace dr
 {
 	using namespace Bind;
 
-	void Drawable::Submit(FrameCommander& frame) const noexcept
+	void Drawable::Submit() const noexcept
 	{
 		for (const auto& tech : techniques)
 		{
-			tech.Submit(frame, *this);
+			tech.Submit(*this);
 		}
 	}
 
@@ -37,7 +37,7 @@ namespace dr
 		techniques.push_back(std::move(tech_in));
 	}
 
-	void Drawable::Bind(Graphics& gfx) const noexcept
+	void Drawable::Bind(Graphics& gfx) const noxnd
 	{
 		pTopology->Bind(gfx);
 		pIndices->Bind(gfx);
@@ -55,6 +55,14 @@ namespace dr
 	UINT Drawable::GetIndexCount() const noxnd
 	{
 		return pIndices->GetCount();
+	}
+
+	void Drawable::LinkTechniques(Rgph::RenderGraph& rg)
+	{
+		for (auto& tech : techniques)
+		{
+			tech.Link(rg);
+		}
 	}
 
 	Drawable::~Drawable()

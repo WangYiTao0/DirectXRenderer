@@ -15,7 +15,8 @@
 	X( Float3 ) \
 	X( Float4 ) \
 	X( Matrix ) \
-	X( Bool )
+	X( Bool ) \
+	X( Integer )
 
 namespace dr
 {
@@ -25,9 +26,9 @@ namespace dr
 
 		enum Type
 		{
-			#define X(el) el,
+#define X(el) el,
 			LEAF_ELEMENT_TYPES
-			#undef X
+#undef X
 			Struct,
 			Array,
 			Empty,
@@ -81,14 +82,21 @@ namespace dr
 			static constexpr const char* code = "BL";
 			static constexpr bool valid = true;
 		};
+		template<> struct Map<Integer>
+		{
+			using SysType = int;
+			static constexpr size_t hlslSize = sizeof(SysType);
+			static constexpr const char* code = "IN";
+			static constexpr bool valid = true;
+		};
 
 		// ensures that every leaf type in master list has an entry in the static attribute map
 #define X(el) static_assert(Map<el>::valid,"Missing map implementation for " #el);
 		LEAF_ELEMENT_TYPES
 #undef X
 
-		// enables reverse lookup from SysType to leaf type
-		template<typename T>
+			// enables reverse lookup from SysType to leaf type
+			template<typename T>
 		struct ReverseMap
 		{
 			static constexpr bool valid = false;
@@ -384,6 +392,8 @@ namespace dr
 			const LayoutElement* pLayout;
 			char* pBytes;
 		};
+
+
 
 
 		// The buffer object is a combination of a raw byte buffer with a LayoutElement

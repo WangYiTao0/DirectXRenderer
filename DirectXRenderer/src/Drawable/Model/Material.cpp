@@ -12,9 +12,6 @@ namespace dr
 	{
 		using namespace Bind;
 		const auto rootPath = path.parent_path().string() + "\\";
-
-		std::string shader_dir = StrH::GetShaderRootPath();
-
 		{
 			aiString tempName;
 			material.Get(AI_MATKEY_NAME, tempName);
@@ -23,7 +20,7 @@ namespace dr
 		// phong technique
 		{
 			Technique phong{ "Phong" };
-			Step step(0);
+			Step step("lambertian");
 			std::string shaderCode = "Phong";
 			aiString texFileName;
 
@@ -90,11 +87,10 @@ namespace dr
 			// common (post)
 			{
 				step.AddBindable(std::make_shared<TransformCbuf>(gfx, 0u));
-				step.AddBindable(Blender::Resolve(gfx, false));
-				auto pvs = VertexShader::Resolve(gfx, shader_dir + shaderCode + "_VS.cso");
+				auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS.cso");
 				auto pvsbc = pvs->GetBytecode();
 				step.AddBindable(std::move(pvs));
-				step.AddBindable(PixelShader::Resolve(gfx, shader_dir + shaderCode + "_PS.cso"));
+				step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS.cso"));
 				step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
 				if (hasTexture)
 				{
@@ -134,14 +130,10 @@ namespace dr
 		{
 			Technique outline("Outline", false);
 			{
-				Step mask(1);
-
-				auto pvs = VertexShader::Resolve(gfx, shader_dir + "Solid_VS.cso");
-				auto pvsbc = pvs->GetBytecode();
-				mask.AddBindable(std::move(pvs));
+				Step mask("outlineMask");
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+				mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout, VertexShader::Resolve(gfx, "Solid_VS.cso")->GetBytecode()));
 
 				mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -150,15 +142,7 @@ namespace dr
 				outline.AddStep(std::move(mask));
 			}
 			{
-				Step draw(2);
-
-				// these can be pass-constant (tricky due to layout issues)
-				auto pvs = VertexShader::Resolve(gfx, shader_dir + "Offset_VS.cso");
-				auto pvsbc = pvs->GetBytecode();
-				draw.AddBindable(std::move(pvs));
-
-				// this can be pass-constant
-				draw.AddBindable(PixelShader::Resolve(gfx, shader_dir + "Solid_PS.cso"));
+				Step draw("outlineDraw");
 
 				{
 					Dcb::RawLayout lay;
@@ -168,16 +152,8 @@ namespace dr
 					draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 				}
 
-				//{
-				//	Dcb::RawLayout lay;
-				//	lay.Add<Dcb::Float>("offset");
-				//	auto buf = Dcb::Buffer(std::move(lay));
-				//	buf["offset"] = 0.1f;
-				//	draw.AddBindable(std::make_shared<Bind::CachingVertexConstantBufferEx>(gfx, buf, 1u));
-				//}
-
 				// TODO: better sub-layout generation tech for future consideration maybe
-				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, VertexShader::Resolve(gfx, "Solid_VS.cso")->GetBytecode()));
 
 				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 

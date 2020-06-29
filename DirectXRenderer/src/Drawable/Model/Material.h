@@ -9,6 +9,11 @@ struct aiMaterial;
 struct aiMesh;
 namespace dr
 {
+	namespace Bind
+	{
+		class VertexBuffer;
+		class IndexBuffer;
+	}
 
 	class Material
 	{

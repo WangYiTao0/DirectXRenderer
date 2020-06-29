@@ -6,12 +6,12 @@ namespace dr
 {
 	ID3D11DeviceContext* GraphicsResource::GetContext(Graphics& gfx) noexcept
 	{
-		return gfx.m_pContext.Get();
+		return gfx.pContext.Get();
 	}
 
 	ID3D11Device* GraphicsResource::GetDevice(Graphics& gfx) noexcept
 	{
-		return gfx.m_pDevice.Get();
+		return gfx.pDevice.Get();
 	}
 
 	DxgiInfoManager& GraphicsResource::GetInfoManager(Graphics& gfx)

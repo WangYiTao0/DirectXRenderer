@@ -39,8 +39,8 @@ includedirs
 links
 {
     "ImGui",
-    "d3d11.lib",
-    "D3DCompiler.lib",
+   -- "d3d11.lib",
+    --"D3DCompiler.lib",
 }
 
 filter "system:windows"

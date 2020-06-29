@@ -5,17 +5,20 @@
 #include "Debug/ThrowMacros.h"
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
-#include "DepthStencil.h"
+#include "Bindable/DepthStencil.h"
+#include "Bindable/RenderTarget.h"
 
+namespace wrl = Microsoft::WRL;
+namespace dx = DirectX;
 
+#pragma comment(lib,"d3d11.lib")
+#pragma comment(lib,"D3DCompiler.lib")
 namespace dr
 {
-	namespace wrl = Microsoft::WRL;
-
-	Graphics::Graphics(HWND hWnd,int width, int height)
+	Graphics::Graphics(HWND hWnd, int width, int height)
 		:
-		screenWidth(width),
-		screenHeight(height)
+		width(width),
+		height(height)
 	{
 		DXGI_SWAP_CHAIN_DESC sd = {};
 		sd.BufferDesc.Width = width;
@@ -39,39 +42,42 @@ namespace dr
 		swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
+		// for checking results of d3d functions
+		HRESULT hr;
+
 		// create device and front/back buffers, and swap chain and rendering context
-		HRESULT hr = D3D11CreateDeviceAndSwapChain(
-			nullptr,D3D_DRIVER_TYPE_HARDWARE,
-			nullptr, swapCreateFlags,nullptr,0,
+		GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			swapCreateFlags,
+			nullptr,
+			0,
 			D3D11_SDK_VERSION,
 			&sd,
-			m_pSwapchain.GetAddressOf(),
-			m_pDevice.GetAddressOf(),
+			&pSwap,
+			&pDevice,
 			nullptr,
-			m_pContext.GetAddressOf()
-		);
-
-		GFX_THROW_INFO(hr);
+			&pContext
+		));
 
 		// gain access to texture subresource in swap chain (back buffer)
-		wrl::ComPtr<ID3D11Resource> pBackBuffer;
-		GFX_THROW_INFO(m_pSwapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
-		GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(),nullptr,m_pRenderTargetView.GetAddressOf()));
-	
-	
-		// create depth stensil state
-		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-		dsDesc.DepthEnable = TRUE;
-		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		wrl::ComPtr<ID3D11DepthStencilState> pDSState;
-		GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
+		wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
+		GFX_THROW_INFO(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
+		pTarget = std::shared_ptr<Bind::RenderTarget>{ new Bind::OutputOnlyRenderTarget(*this,pBackBuffer.Get()) };
 
-		// bind depth state
-		m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
+		// viewport always fullscreen (for now)
+		D3D11_VIEWPORT vp;
+		vp.Width = (float)width;
+		vp.Height = (float)height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
+		pContext->RSSetViewports(1u, &vp);
 
 		// init imgui d3d impl
-		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+		ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
 	}
 
 	Graphics::~Graphics()
@@ -84,34 +90,25 @@ namespace dr
 		// imgui frame end
 		if (imguiEnabled)
 		{
-			ImGuiIO& io = ImGui::GetIO();
-
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-		
-			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-			{
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-			}
 		}
 
 		HRESULT hr;
 #ifndef NDEBUG
 		infoManager.Set();
 #endif
-		if (FAILED(hr = m_pSwapchain->Present(1u, 0u)))
+		if (FAILED(hr = pSwap->Present(1u, 0u)))
 		{
 			if (hr == DXGI_ERROR_DEVICE_REMOVED)
 			{
-				throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+				throw GFX_DEVICE_REMOVED_EXCEPT(pDevice->GetDeviceRemovedReason());
 			}
 			else
 			{
 				throw GFX_EXCEPT(hr);
 			}
 		}
-
 	}
 
 	void Graphics::BeginFrame(float red, float green, float blue) noexcept
@@ -123,52 +120,21 @@ namespace dr
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 		}
-
-		const float color[] = { red,green,blue,0.0f };
-		m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-	}
-
-	void Graphics::BindSwapBuffer() noexcept
-	{
-		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
-		// configure viewport
-		D3D11_VIEWPORT vp;
-		vp.Width = (float)screenWidth;
-		vp.Height = (float)screenHeight;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0.0f;
-		vp.TopLeftY = 0.0f;
-		m_pContext->RSSetViewports(1u, &vp);
-	}
-
-	void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
-	{
-		m_pContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), ds.pDepthStencilView.Get());
-		// configure viewport
-		D3D11_VIEWPORT vp;
-		vp.Width = (float)screenWidth;
-		vp.Height = (float)screenHeight;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0.0f;
-		vp.TopLeftY = 0.0f;
-		m_pContext->RSSetViewports(1u, &vp);
 	}
 
 	void Graphics::DrawIndexed(UINT count) noxnd
 	{
-		GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed(count, 0u, 0u));
+		GFX_THROW_INFO_ONLY(pContext->DrawIndexed(count, 0u, 0u));
 	}
 
 	void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
 	{
-		m_projection = proj;
+		projection = proj;
 	}
 
 	DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 	{
-		return m_projection;
+		return projection;
 	}
 
 	void Graphics::SetCamera(DirectX::FXMMATRIX cam) noexcept
@@ -180,6 +146,7 @@ namespace dr
 	{
 		return camera;
 	}
+
 	void Graphics::EnableImgui() noexcept
 	{
 		imguiEnabled = true;
@@ -197,14 +164,21 @@ namespace dr
 
 	UINT Graphics::GetWidth() const noexcept
 	{
-		return screenWidth;
+		return width;
 	}
 
 	UINT Graphics::GetHeight() const noexcept
 	{
-		return screenHeight;
+		return height;
 	}
 
+	std::shared_ptr<Bind::RenderTarget> Graphics::GetTarget()
+	{
+		return pTarget;
+	}
+
+
+	// Graphics exception stuff
 	Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
 		:
 		Exception(line, file),
@@ -242,7 +216,7 @@ namespace dr
 
 	const char* Graphics::HrException::GetType() const noexcept
 	{
-		return "DR Graphics Exception";
+		return "Dr Graphics Exception";
 	}
 
 	HRESULT Graphics::HrException::GetErrorCode() const noexcept
@@ -267,11 +241,11 @@ namespace dr
 		return info;
 	}
 
+
 	const char* Graphics::DeviceRemovedException::GetType() const noexcept
 	{
-		return "DR Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
+		return "Dr Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
 	}
-
 	Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept
 		:
 		Exception(line, file)
@@ -287,8 +261,8 @@ namespace dr
 		{
 			info.pop_back();
 		}
-
 	}
+
 
 	const char* Graphics::InfoException::what() const noexcept
 	{
@@ -302,12 +276,11 @@ namespace dr
 
 	const char* Graphics::InfoException::GetType() const noexcept
 	{
-		return "DR Graphics Info Exception";
+		return "Dr Graphics Info Exception";
 	}
 
 	std::string Graphics::InfoException::GetErrorInfo() const noexcept
 	{
 		return info;
 	}
-
 }

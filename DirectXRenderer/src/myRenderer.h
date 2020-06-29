@@ -8,8 +8,6 @@
 #include "Core/DynamicConstant.h"
 #include "Core/LayoutCodex.h"
 #include "Core/GraphicsResource.h"
-#include "Core/RenderTarget.h"
-#include "Core/DepthStencil.h"
 
 //debug
 #include "Debug/DrException.h"
@@ -38,12 +36,8 @@
 #include "Drawable/Model/Node.h"
 
 //jobber
-#include "Jobber/Job.h"
-#include "Jobber/Pass.h"
-#include "Jobber/Step.h"
-#include "Jobber/FrameCommander.h"
-#include "Jobber/Technique.h"
-#include "Jobber/TechniqueProbe.h"
+#include "Jobber/JobCommon.h"
+
 
 //CommonTool
 #include "CommonTool/DrMath.h"

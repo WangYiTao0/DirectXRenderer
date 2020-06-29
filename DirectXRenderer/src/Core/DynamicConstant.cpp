@@ -20,6 +20,7 @@ namespace dr
 			struct Array : public LayoutElement::ExtraDataBase
 			{
 				std::optional<LayoutElement> layoutElement;
+				size_t element_size;
 				size_t size;
 			};
 		};
@@ -49,7 +50,7 @@ namespace dr
 			assert("Indexing into non-array" && type == Array);
 			const auto& data = static_cast<ExtraData::Array&>(*pExtraData);
 			assert(index < data.size);
-			return { offset + data.layoutElement->GetSizeInBytes() * index,&*data.layoutElement };
+			return { offset + data.element_size * index,&*data.layoutElement };
 		}
 		LayoutElement& LayoutElement::operator[](const std::string& key) noxnd
 		{
@@ -195,6 +196,7 @@ namespace dr
 			assert(data.size != 0u);
 			offset = AdvanceToBoundary(offsetIn);
 			data.layoutElement->Finalize(*offset);
+			data.element_size = LayoutElement::AdvanceToBoundary(data.layoutElement->GetSizeInBytes());
 			return GetOffsetEnd();
 		}
 		bool LayoutElement::CrossesBoundary(size_t offset, size_t size) noexcept
@@ -222,6 +224,9 @@ namespace dr
 			);
 		}
 
+
+
+
 		Layout::Layout(std::shared_ptr<LayoutElement> pRoot) noexcept
 			:
 			pRoot{ std::move(pRoot) }
@@ -234,6 +239,7 @@ namespace dr
 		{
 			return pRoot->GetSignature();
 		}
+
 
 		RawLayout::RawLayout() noexcept
 			:
@@ -255,6 +261,7 @@ namespace dr
 			*this = RawLayout();
 		}
 
+
 		CookedLayout::CookedLayout(std::shared_ptr<LayoutElement> pRoot) noexcept
 			:
 			Layout(std::move(pRoot))
@@ -271,6 +278,10 @@ namespace dr
 		{
 			return (*pRoot)[key];
 		}
+
+
+
+
 
 		bool ConstElementRef::Exists() const noexcept
 		{
@@ -297,6 +308,7 @@ namespace dr
 		{}
 		ConstElementRef::Ptr::Ptr(const ConstElementRef* ref) noexcept : ref(ref)
 		{}
+
 
 		ElementRef::operator ConstElementRef() const noexcept
 		{
@@ -327,6 +339,9 @@ namespace dr
 		{}
 		ElementRef::Ptr::Ptr(ElementRef* ref) noexcept : ref(ref)
 		{}
+
+
+
 
 		Buffer::Buffer(RawLayout&& lay) noxnd
 			:
