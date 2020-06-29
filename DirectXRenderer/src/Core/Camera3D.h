@@ -6,7 +6,8 @@ namespace dr
 	class Camera3D
 	{
 	public:
-		Camera3D() noexcept;
+		Camera3D(DirectX::XMFLOAT3 homePos = { 0.0f,0.0f,0.0f }, 
+			float homePitch = 0.0f, float homeYaw = 0.0f) noexcept;
 		DirectX::XMMATRIX GetMatrix() const noexcept;
 		void SpawnControlWindow() noexcept;
 		void Camera3DController(Win32Window& wnd, float dt);
@@ -15,6 +16,9 @@ namespace dr
 		void Translate(DirectX::XMFLOAT3 translation) noexcept;
 		DirectX::XMFLOAT3 GetPos() const noexcept;
 	private:
+		DirectX::XMFLOAT3 homePos;
+		float homePitch;
+		float homeYaw;
 		DirectX::XMFLOAT3 pos;
 		float pitch;
 		float yaw;

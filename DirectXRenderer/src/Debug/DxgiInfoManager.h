@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Win.h"
 #include <string>
-#include <wrl.h>
+#include "Debug/DrWRL.h"
 #include <vector>
 #include <dxgidebug.h>
 

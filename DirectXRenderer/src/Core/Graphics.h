@@ -2,7 +2,7 @@
 #include "Win.h"
 #include "Debug/DrException.h"
 #include <d3d11.h>
-#include <wrl.h>
+#include "Debug/DrWRL.h"
 #include <vector>
 #include "Debug/DxgiInfoManager.h"
 #include <DirectXMath.h>

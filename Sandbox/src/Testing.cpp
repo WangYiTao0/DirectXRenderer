@@ -260,6 +260,54 @@ void TestDynamicMeshLoading()
 	}
 }
 
+void D3DTestScratchPad(dr::Win32Window& wnd)
+{
+	namespace dx = DirectX;
+	using namespace Dvtx;
+
+	const auto RenderWithVS = [&gfx = wnd.Gfx()](const std::string& vsName)
+	{
+		const auto bitop = Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		const auto layout = VertexLayout{}
+			.Append(VertexLayout::Position2D)
+			.Append(VertexLayout::Float3Color);
+
+		VertexBuffer vb(layout, 3);
+		vb[0].Attr<VertexLayout::Position2D>() = dx::XMFLOAT2{ 0.0f,0.5f };
+		vb[0].Attr<VertexLayout::Float3Color>() = dx::XMFLOAT3{ 1.0f,0.0f,0.0f };
+		vb[1].Attr<VertexLayout::Position2D>() = dx::XMFLOAT2{ 0.5f,-0.5f };
+		vb[1].Attr<VertexLayout::Float3Color>() = dx::XMFLOAT3{ 0.0f,1.0f,0.0f };
+		vb[2].Attr<VertexLayout::Position2D>() = dx::XMFLOAT2{ -0.5f,-0.5f };
+		vb[2].Attr<VertexLayout::Float3Color>() = dx::XMFLOAT3{ 0.0f,0.0f,1.0f };
+		const auto bivb = Bind::VertexBuffer::Resolve(gfx, "##?", vb);
+
+		const std::vector<unsigned short> idx = { 0,1,2 };
+		const auto biidx = Bind::IndexBuffer::Resolve(gfx, "##?", idx);
+
+		const auto bips = Bind::PixelShader::Resolve(gfx, "Test_PS.cso");
+
+		const auto bivs = Bind::VertexShader::Resolve(gfx, vsName);
+		const auto bilay = Bind::InputLayout::Resolve(gfx, layout, *bivs);
+		auto rt = Bind::ShaderInputRenderTarget{ gfx,1280,720,0 };
+
+		biidx->Bind(gfx);
+		bivb->Bind(gfx);
+		bitop->Bind(gfx);
+		bips->Bind(gfx);
+		bivs->Bind(gfx);
+		bilay->Bind(gfx);
+		rt.Clear(gfx, { 0.0f,0.0f,0.0f,1.0f });
+		rt.BindAsBuffer(gfx);
+		gfx.DrawIndexed(biidx->GetCount());
+		gfx.GetTarget()->BindAsBuffer(gfx);
+		rt.ToSurface(gfx).Save("Test_" + vsName + ".png");
+	};
+
+	RenderWithVS("Test1_VS.cso");
+	RenderWithVS("Test2_VS.cso");
+}
+
 //void TestMaterialSystemLoading(dr:Graphics& gfx)
 //{
 //	std::string path = "Models\\brick_wall\\brick_wall.obj";

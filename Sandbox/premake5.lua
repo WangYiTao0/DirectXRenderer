@@ -7,8 +7,9 @@
 
     buildoptions
     {
-    "/permissive-",
-    "/sdl"
+        "/permissive-",
+        "/sdl",
+        "/w34265",
     }
 
 	targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
@@ -119,7 +120,7 @@ filter "configurations:Release"
     {
         "../DirectXRenderer/3rdPart/assimp/bin/Release/assimp-vc142-mt.lib",
         "../DirectXRenderer/3rdPart/assimp/bin/Release/IrrXML.lib",
-        "../DirectXRenderer/3rdPart/DirectXTex/lib/Debug/DirectXTex.lib",
+        "../DirectXRenderer/3rdPart/DirectXTex/lib/Release/DirectXTex.lib",
      }
 
     postbuildcommands 

@@ -7,11 +7,14 @@ namespace dr
 {
 	namespace dx = DirectX;
 
-	Camera3D::Camera3D() noexcept
+	Camera3D::Camera3D(DirectX::XMFLOAT3 homePos, float homePitch, float homeYaw) noexcept
+		:
+		homePos(homePos),
+		homePitch(homePitch),
+		homeYaw(homeYaw)
 	{
 		Reset();
 	}
-
 	DirectX::XMMATRIX Camera3D::GetMatrix() const noexcept
 	{
 
@@ -91,9 +94,9 @@ namespace dr
 
 	void Camera3D::Reset() noexcept
 	{
-		pos = { -13.5f,6.0f,3.5f };
-		pitch = 0.0f;
-		yaw = PI / 2.0f;
+		pos = homePos;
+		pitch = homePitch;
+		yaw = homeYaw;
 	}
 
 	void Camera3D::Rotate(float dx, float dy) noexcept

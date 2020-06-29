@@ -5,6 +5,7 @@
 namespace dr
 {
 	class GraphicsResource;
+	class Surface;
 
 	namespace Bind
 	{
@@ -35,6 +36,7 @@ namespace dr
 		public:
 			ShaderInputRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot);
 			void Bind(Graphics& gfx) noxnd override;
+			Surface ToSurface(Graphics& gfx) const;
 		private:
 			UINT slot;
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView;

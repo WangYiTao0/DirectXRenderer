@@ -7,7 +7,8 @@ staticruntime "on"
 buildoptions
 {
     "/permissive-",
-    "/sdl"
+    "/sdl",
+    "/w34265",
 }
 
 targetdir("../bin/" .. outputdir .. "/%{prj.name}")
