@@ -75,7 +75,7 @@ void Scene3D::SpawnImguiWindow()
 	gobberProbe.SpawnWindow(gobber);
 	nanoProbe.SpawnWindow(nano);
 
-	cameras.SpawnWindow();
+	cameras.SpawnWindow(wnd.Gfx());
 	light.SpawnControlWindow();
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");

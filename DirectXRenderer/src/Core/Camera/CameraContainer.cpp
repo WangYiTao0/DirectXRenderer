@@ -8,7 +8,7 @@
 namespace dr
 {
 
-	void CameraContainer::SpawnWindow()
+	void CameraContainer::SpawnWindow(Graphics& gfx)
 	{
 		if (ImGui::Begin("Cameras"))
 		{
@@ -25,7 +25,7 @@ namespace dr
 				ImGui::EndCombo();
 			}
 
-			GetCamera().SpawnControlWidgets();
+			GetCamera().SpawnControlWidgets(gfx);
 		}
 		ImGui::End();
 	}

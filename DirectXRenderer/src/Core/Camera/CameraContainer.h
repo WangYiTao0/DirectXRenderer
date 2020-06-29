@@ -16,7 +16,7 @@ namespace dr
 	class CameraContainer
 	{
 	public:
-		void SpawnWindow();
+		void SpawnWindow(Graphics& gfx);
 		void Bind(Graphics& gfx);
 		void AddCamera(std::unique_ptr<Camera3D> pCam);
 		Camera3D& GetCamera();
