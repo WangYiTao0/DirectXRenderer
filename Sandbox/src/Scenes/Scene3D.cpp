@@ -1,3 +1,4 @@
+#include <myRenderer.h>
 #include <memory>
 #include "Scene3D.h"
 #include "imgui.h"
@@ -11,6 +12,9 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	light(wnd.Gfx()),
 	Scene("Scene3D")
 {
+	cameras.AddCamera(std::make_unique<dr::Camera3D>("A", dx::XMFLOAT3{ -13.5f,6.0f,3.5f }, 0.0f, dr::PI / 2.0f));
+	cameras.AddCamera(std::make_unique<dr::Camera3D>("B", dx::XMFLOAT3{ -13.5f,28.8f,-6.4f }, dr::PI / 180.0f * 13.0f, dr::PI / 180.0f * 61.0f));
+
 	cube.SetPos({ 4.0f,0.0f,0.0f });
 	cube2.SetPos({ 0.0f,4.0f,0.0f });
 
@@ -34,10 +38,10 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 
 void Scene3D::Update(float dt)
 {
-	wnd.Gfx().SetCamera(cam3d.GetMatrix());
-	light.Bind(wnd.Gfx(), cam3d.GetMatrix());
+	wnd.Gfx().SetCamera(cameras.GetCamera().GetMatrix());
+	light.Bind(wnd.Gfx(), cameras.GetCamera().GetMatrix());
 
-	cam3d.Camera3DController(wnd, dt);
+	cameras.GetCamera().Camera3DController(wnd, dt);
 
 }
 
@@ -69,7 +73,7 @@ void Scene3D::SpawnImguiWindow()
 	gobberProbe.SpawnWindow(gobber);
 	nanoProbe.SpawnWindow(nano);
 
-	cam3d.SpawnControlWindow();
+	cameras.SpawnWindow();
 	light.SpawnControlWindow();
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");

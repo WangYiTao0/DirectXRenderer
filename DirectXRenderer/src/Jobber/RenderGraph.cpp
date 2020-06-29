@@ -120,14 +120,22 @@ namespace dr
 				}
 				else // find source from within existing passes
 				{
+					bool bound = false;
 					for (auto& existingPass : passes)
 					{
 						if (existingPass->GetName() == inputSourcePassName)
 						{
 							auto& source = existingPass->GetSource(si->GetOutputName());
 							si->Bind(source);
+							bound = true;
 							break;
 						}
+					}
+					if (!bound)
+					{
+						std::ostringstream oss;
+						oss << "Pass named [" << inputSourcePassName << "] not found";
+						throw RGC_EXCEPTION(oss.str());
 					}
 				}
 			}

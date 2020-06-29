@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 
+
 class Scene3D :public Scene
 {
 public:
@@ -12,7 +13,7 @@ private:
 	void SpawnImguiWindow();
 private:
 	dr::Win32Window& wnd;
-	dr::Camera3D cam3d{ {-13.5f,6.0f,3.5f},0.0f,dr::PI / 2.0f };
+	dr::CameraContainer cameras;
 	dr::PointLight light;
 
 
