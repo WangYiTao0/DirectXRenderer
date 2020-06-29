@@ -18,7 +18,7 @@ namespace dr
 	public:
 		void SpawnWindow(Graphics& gfx);
 		void Bind(Graphics& gfx);
-		void AddCamera(std::unique_ptr<Camera3D> pCam);
+		void AddCamera(std::shared_ptr<Camera3D> pCam);
 		Camera3D* operator->();
 		~CameraContainer();
 
@@ -27,7 +27,7 @@ namespace dr
 	private:
 		Camera3D& GetControlledCamera();
 	private:
-		std::vector<std::unique_ptr<Camera3D>> cameras;
+		std::vector<std::shared_ptr<Camera3D>> cameras;
 		int active = 0;
 		int controlled = 0;
 	};

@@ -15,7 +15,8 @@ namespace dr
 				Off,
 				Write,
 				Mask, 
-				DepthOff
+				DepthOff,
+				DepthReversed
 			};
 			Stencil(Graphics& gfx, Mode mode)
 				:
@@ -45,6 +46,10 @@ namespace dr
 				{
 					dsDesc.DepthEnable = FALSE;
 					dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+				}
+				else if (mode == Mode::DepthReversed)
+				{
+					dsDesc.DepthFunc = D3D11_COMPARISON_GREATER;
 				}
 
 

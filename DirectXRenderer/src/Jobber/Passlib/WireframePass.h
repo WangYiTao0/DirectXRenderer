@@ -25,7 +25,7 @@ namespace dr
 				RegisterSink(DirectBufferSink<DepthStencil>::Make("depthStencil", depthStencil));
 				RegisterSource(DirectBufferSource<RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSource(DirectBufferSource<DepthStencil>::Make("depthStencil", depthStencil));
-				AddBind(Stencil::Resolve(gfx, Stencil::Mode::DepthOff));
+				AddBind(Stencil::Resolve(gfx, Stencil::Mode::DepthReversed));
 			}
 		};
 	}

@@ -1,6 +1,7 @@
 #include "drpch.h"
 #include "PointLight.h"
 #include <imgui.h>
+#include "Core/Camera/Camera3D.h"
 
 namespace dr
 {
@@ -10,16 +11,24 @@ namespace dr
 		cbuf(gfx)
 	{
 		Reset();
+		pCamera = std::make_shared<Camera3D>(gfx, "Light", cbData.pos, 0.0f, 0.0f, true);
 	}
 
 	void PointLight::SpawnControlWindow() noexcept
 	{
 		if (ImGui::Begin("Light"))
 		{
-			ImGui::Text("Position");
-			ImGui::SliderFloat("X", &cbData.pos.x, -60.0f, 60.0f, "%.1f");
-			ImGui::SliderFloat("Y", &cbData.pos.y, -60.0f, 60.0f, "%.1f");
-			ImGui::SliderFloat("Z", &cbData.pos.z, -60.0f, 60.0f, "%.1f");
+			bool dirtyPos = false;
+			const auto d = [&dirtyPos](bool dirty) {dirtyPos = dirtyPos || dirty; };
+		
+			d(ImGui::SliderFloat("X", &cbData.pos.x, -60.0f, 60.0f, "%.1f"));
+			d(ImGui::SliderFloat("Y", &cbData.pos.y, -60.0f, 60.0f, "%.1f"));
+			d(ImGui::SliderFloat("Z", &cbData.pos.z, -60.0f, 60.0f, "%.1f"));
+
+			if (dirtyPos)
+			{
+				pCamera->SetPos(cbData.pos);
+			}
 
 			ImGui::Text("Intensity/Color");
 			ImGui::SliderFloat("Intensity", &cbData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2);
@@ -72,4 +81,10 @@ namespace dr
 	{
 		mesh.LinkTechniques(rg);
 	}
+
+	std::shared_ptr<Camera3D> PointLight::ShareCamera() const noexcept
+	{
+		return pCamera;
+	}
+
 }

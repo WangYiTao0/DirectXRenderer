@@ -6,6 +6,8 @@
 
 namespace dr
 {
+	class Camera3D;
+
 	namespace Rgph
 	{
 		class RenderGraph;
@@ -19,6 +21,7 @@ namespace dr
 		void Submit() const noxnd;
 		void Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept;
 		void LinkTechniques(Rgph::RenderGraph&);
+		std::shared_ptr<Camera3D> ShareCamera() const noexcept;
 	private:
 		struct PointLightCBuf
 		{
@@ -34,5 +37,6 @@ namespace dr
 		PointLightCBuf cbData;
 		mutable SolidSphere mesh;
 		mutable Bind::PixelConstantBuffer<PointLightCBuf> cbuf;
+		std::shared_ptr<Camera3D> pCamera;
 	};
 }
