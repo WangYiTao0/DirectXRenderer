@@ -8,6 +8,11 @@ namespace dr
 	class Camera3D;
 	class Graphics;
 
+	namespace Rgph
+	{
+		class RenderGraph;
+	}
+
 	class CameraContainer
 	{
 	public:
@@ -16,6 +21,9 @@ namespace dr
 		void AddCamera(std::unique_ptr<Camera3D> pCam);
 		Camera3D& GetCamera();
 		~CameraContainer();
+
+		void LinkTechniques(Rgph::RenderGraph& rg);
+		void Submit() const;
 	private:
 		std::vector<std::unique_ptr<Camera3D>> cameras;
 		int selected = 0;

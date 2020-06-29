@@ -2,16 +2,22 @@
 #include <DirectXMath.h>
 #include <string>
 #include "Projection.h"
-#include "Core/Win32Window.h"]
+#include "Core/Win32Window.h"
+#include "Drawable/CameraIndicator.h"
 
 namespace dr
 {
 	class Graphics;
 
+	namespace Rgph
+	{
+		class RenderGraph;
+	}
+
 	class Camera3D
 	{
 	public:
-		Camera3D(std::string name, DirectX::XMFLOAT3 homePos = { 0.0f,0.0f,0.0f }, float homePitch = 0.0f, float homeYaw = 0.0f) noexcept;
+		Camera3D(Graphics& gfx,std::string name, DirectX::XMFLOAT3 homePos = { 0.0f,0.0f,0.0f }, float homePitch = 0.0f, float homeYaw = 0.0f) noexcept;
 		void BindToGraphics(Graphics& gfx) const;
 		DirectX::XMMATRIX GetMatrix() const noexcept;
 		void SpawnControlWidgets() noexcept;
@@ -21,6 +27,8 @@ namespace dr
 		void Translate(DirectX::XMFLOAT3 translation) noexcept;
 		DirectX::XMFLOAT3 GetPos() const noexcept;
 		const std::string& GetName() const noexcept;
+		void LinkTechniques(Rgph::RenderGraph& rg);
+		void Submit() const;
 	private:
 		std::string name;
 		DirectX::XMFLOAT3 homePos;
@@ -32,5 +40,6 @@ namespace dr
 		static constexpr float travelSpeed = 12.0f;
 		static constexpr float rotationSpeed = 0.004f;
 		Projection proj;
+		CameraIndicator indicator;
 	};
 }

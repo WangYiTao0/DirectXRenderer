@@ -3,12 +3,14 @@
 //Core
 #include "Core/Win32Window.h"
 #include "Core/Timer.h"
-#include "Core/Camera3D.h"
-#include "Core/CameraContainer.h"
 #include "Core/Vertex.h"
 #include "Core/DynamicConstant.h"
 #include "Core/LayoutCodex.h"
 #include "Core/GraphicsResource.h"
+
+//Camera
+#include "Core/Camera/Camera3D.h"
+#include "Core/Camera/CameraContainer.h"
 
 //debug
 #include "Debug/DrException.h"

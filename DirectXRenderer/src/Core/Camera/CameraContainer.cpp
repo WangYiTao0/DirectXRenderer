@@ -2,7 +2,8 @@
 #include "CameraContainer.h"
 #include "imgui/imgui.h"
 #include "Camera3D.h"
-#include "Graphics.h"
+#include "Core/Graphics.h"
+#include "Jobber/RenderGraph.h"
 
 namespace dr
 {
@@ -46,5 +47,24 @@ namespace dr
 
 	CameraContainer::~CameraContainer()
 	{}
+
+	void CameraContainer::LinkTechniques(Rgph::RenderGraph& rg)
+	{
+		for (auto& pcam : cameras)
+		{
+			pcam->LinkTechniques(rg);
+		}
+	}
+
+	void CameraContainer::Submit() const
+	{
+		for (size_t i = 0; i < cameras.size(); i++)
+		{
+			if (i != selected)
+			{
+				cameras[i]->Submit();
+			}
+		}
+	}
 
 }
