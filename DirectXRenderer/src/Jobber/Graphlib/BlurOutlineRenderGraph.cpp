@@ -8,6 +8,7 @@
 #include "Jobber/Passlib/HorizontalBlurPass.h"
 #include "Jobber/Passlib/VerticalBlurPass.h"
 #include "Jobber/Passlib/BlurOutlineDrawingPass.h"
+#include "Jobber/Passlib/WireframePass.h"
 #include "Bindable/BindableCommon.h"
 #include "CommonTool/DrMath.h"
 #include <imgui/imgui.h>
@@ -83,7 +84,14 @@ namespace dr
 				pass->SetSinkLinkage("direction", "$.blurDirection");
 				AppendPass(std::move(pass));
 			}
-			SetSinkTarget("backbuffer", "vertical.renderTarget");
+			{
+				auto pass = std::make_unique<WireframePass>(gfx, "wireframe");
+				pass->SetSinkLinkage("renderTarget", "vertical.renderTarget");
+				pass->SetSinkLinkage("depthStencil", "vertical.depthStencil");
+				AppendPass(std::move(pass));
+			}
+
+			SetSinkTarget("backbuffer","wireframe.renderTarget");
 
 			Finalize();
 		}
