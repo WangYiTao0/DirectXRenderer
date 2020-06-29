@@ -36,6 +36,8 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	gobber.LinkTechniques(rg);
 	nano.LinkTechniques(rg);
 	cameras.LinkTechniques(rg);
+
+	savingDepth = true;
 }
 
 void Scene3D::Update(float dt)
@@ -44,6 +46,8 @@ void Scene3D::Update(float dt)
 	light.Bind(wnd.Gfx(), cameras->GetMatrix());
 
 	cameras->Camera3DController(wnd, dt);
+
+
 
 }
 
@@ -82,10 +86,13 @@ void Scene3D::SpawnImguiWindow()
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
 	rg.RenderWidgets(wnd.Gfx());
 
-	/// <summary>
-	/// 
-	/// </summary>
 	rg.Reset();
+
+	if (savingDepth)
+	{
+		rg.StoreDepth(wnd.Gfx(), "depth.png");
+		savingDepth = false;
+	}
 }
 
 

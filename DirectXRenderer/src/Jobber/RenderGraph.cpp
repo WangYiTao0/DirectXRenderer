@@ -10,7 +10,6 @@
 
 namespace dr
 {
-
 	namespace Rgph
 	{
 		RenderGraph::RenderGraph(Graphics& gfx)
@@ -186,6 +185,10 @@ namespace dr
 				throw RGC_EXCEPTION("In RenderGraph::GetRenderQueue, pass was not RenderQueuePass: " + passName);
 			}
 			throw RGC_EXCEPTION("In RenderGraph::GetRenderQueue, pass not found: " + passName);
+		}
+		void dr::Rgph::RenderGraph::StoreDepth(Graphics& gfx, const std::string& path)
+		{
+			masterDepth->ToSurface(gfx).Save(path);
 		}
 	}
 }
