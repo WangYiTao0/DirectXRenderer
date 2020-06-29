@@ -1,5 +1,7 @@
 #include "TexturePreprocessor.h"
 #include <sstream>
+#include <assimp/Importer.hpp>
+#include "Drawable/Model/ModelException.h"
 
 using namespace dr;
 template<typename F>
@@ -34,7 +36,7 @@ void TexturePreprocessor::FlipYAllNormalMapsInObj(const std::string& objPath)
 	const auto pScene = imp.ReadFile(objPath.c_str(), 0u);
 	if (pScene == nullptr)
 	{
-		throw ModelException(__LINE__, __FILE__, imp.GetErrorString());
+		throw dr::ModelException(__LINE__, __FILE__, imp.GetErrorString());
 	}
 
 	// loop through materials and process any normal maps

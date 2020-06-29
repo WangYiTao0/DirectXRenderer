@@ -14,10 +14,22 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	cube.SetPos({ 4.0f,0.0f,0.0f });
 	cube2.SetPos({ 0.0f,4.0f,0.0f });
 
+	nano.SetRootTransform(
+		dx::XMMatrixRotationY(dr::PI / 2.f) *
+		dx::XMMatrixTranslation(27.f, -0.56f, 1.7f)
+	);
+	gobber.SetRootTransform(
+		dx::XMMatrixRotationY(-dr::PI / 2.f) *
+		dx::XMMatrixTranslation(-8.f, 10.f, 0.f)
+	);
+
+
 	cube.LinkTechniques(rg);
 	cube2.LinkTechniques(rg);
 	light.LinkTechniques(rg);
 	sponza.LinkTechniques(rg);
+	gobber.LinkTechniques(rg);
+	nano.LinkTechniques(rg);
 }
 
 void Scene3D::Update(float dt)
@@ -35,6 +47,8 @@ void Scene3D::Draw(float dt)
 	cube.Submit();
 	sponza.Submit();
 	cube2.Submit();
+	gobber.Submit();
+	nano.Submit();
 
 	rg.Execute(wnd.Gfx());
 
@@ -46,20 +60,24 @@ void Scene3D::SpawnImguiWindow()
 {
 
 	// Mesh techniques window
-
-	static dr::MP modelProbe;
-	modelProbe.SpawnWindow(sponza);
+	static dr::MP sponzeProbe{ "Sponza" };
+	static dr::MP gobberProbe{ "Gobber" };
+	static dr::MP nanoProbe{ "Nano" };
 
 	// imgui window to control camera
+	sponzeProbe.SpawnWindow(sponza);
+	gobberProbe.SpawnWindow(gobber);
+	nanoProbe.SpawnWindow(nano);
+
 	cam3d.SpawnControlWindow();
 	light.SpawnControlWindow();
-	modelProbe.SpawnWindow(sponza);
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
-	//fc.ShowWindows(wnd.Gfx());
+	rg.RenderWidgets(wnd.Gfx());
 
-	// present
-	//wnd.Gfx().EndFrame();
+	/// <summary>
+	/// 
+	/// </summary>
 	rg.Reset();
 }
 

@@ -4,7 +4,11 @@ language "c++"
 cppdialect "c++17"
 staticruntime "on"
 
-buildoptions{"/permissive-"}
+buildoptions
+{
+    "/permissive-",
+    "/sdl"
+}
 
 targetdir("../bin/" .. outputdir .. "/%{prj.name}")
 objdir("../bin-obj/" .. outputdir .. "/%{prj.name}")
@@ -72,7 +76,8 @@ filter "configurations:Release"
 
     defines
     {
-        "IS_DEBUG=false"
+        "IS_DEBUG=false",
+        "NDEBUG"
     }
 
     links

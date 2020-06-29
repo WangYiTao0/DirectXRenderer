@@ -9,5 +9,15 @@
         "stripeWidth": 4
       }
     }
+  ],
+
+  "enabled": false,
+  "commands": [
+    {
+      "command": "publish",
+      "params": {
+        "dest": "C:\\Users\\Chili\\Desktop\\PubTest"
+      }
+    }
   ]
 }

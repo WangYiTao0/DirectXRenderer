@@ -7,6 +7,11 @@ namespace dr
 {
 	ImguiManager::ImguiManager()
 	{
+		namespace fs = std::filesystem;
+		if (!fs::exists("imgui.ini") && fs::exists("imgui_default.ini"))
+		{
+			fs::copy_file("imgui_default.ini", "imgui.ini");
+		}
 		// Setup Dear ImGui context
 		ImGui_ImplWin32_EnableDpiAwareness();
 

@@ -1,5 +1,5 @@
 project "DrTool"
-kind "ConsoleApp"
+kind "WindowedApp"
 language "C++"
 cppdialect "C++17"
 staticruntime "on"
@@ -7,6 +7,11 @@ staticruntime "on"
 targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
 objdir ("../bin-obj/" .. outputdir .. "/%{prj.name}")
 
+buildoptions
+{
+    "/permissive-",
+    "/sdl"
+}
 
 characterset ("MBCS")
 
@@ -33,7 +38,7 @@ includedirs
 
 links
 {
-"DirectXRenderer",
+    "DirectXRenderer",
 }
 
 filter "system:windows"
@@ -61,7 +66,8 @@ filter "configurations:Release"
 
     defines
     {
-        "IS_DEBUG=false"
+        "IS_DEBUG=false",
+        "NDEBUG"
     }
 
     links

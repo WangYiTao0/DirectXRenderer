@@ -14,8 +14,6 @@ namespace dx = DirectX;
 namespace dr
 {
 	Model::Model(Graphics& gfx, const std::string& pathString, const float scale)
-		//:
-		//pWindow( std::make_unique<ModelWindow>() )
 	{
 		Assimp::Importer imp;
 		const auto pScene = imp.ReadFile(pathString.c_str(),

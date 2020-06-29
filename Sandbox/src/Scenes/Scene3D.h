@@ -20,9 +20,8 @@ private:
 	dr::TestCube cube{ wnd.Gfx(),4.0f };
 	dr::TestCube cube2{ wnd.Gfx(),4.0f };
 	dr::Model sponza{ wnd.Gfx(),"asset\\Models\\sponza\\sponza.obj",1.0f / 20.0f };
-	//TestPlane bluePlane{ wnd.Gfx(),6.0f,{ 0.3f,0.3f,1.0f,0.0f } };
-	//TestPlane redPlane{ wnd.Gfx(),6.0f,{ 1.0f,0.3f,0.3f,0.0f } };
-
+	dr::Model gobber{ wnd.Gfx(),"asset\\Models\\gobber\\GoblinX.obj",4.0f };
+	dr::Model nano{ wnd.Gfx(),"asset\\Models\\nano_textured\\nanosuit.obj",2.0f };
 	//dr::Model sponza{ wnd.Gfx(),".\\asset\\Models\\sponza\\sponza.obj" ,1.0f / 20.0f };
 
 };
