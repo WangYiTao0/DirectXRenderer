@@ -2,6 +2,7 @@
 #include "Camera3D.h"
 #include "imgui.h"
 #include "CommonTool/DrMath.h"
+#include "Core/Graphics.h"
 
 namespace dr
 {
@@ -12,10 +13,17 @@ namespace dr
 		name(std::move(name)),
 		homePos(homePos),
 		homePitch(homePitch),
-		homeYaw(homeYaw)
+		homeYaw(homeYaw),
+		proj(1.0f, 9.0f / 16.0f, 0.5f, 400.0f)
 	{
 		Reset();
 	}
+	void Camera3D::BindToGraphics(Graphics& gfx) const
+	{
+		gfx.SetCamera(GetMatrix());
+		gfx.SetProjection(proj.GetMatrix());
+	}
+
 	DirectX::XMMATRIX Camera3D::GetMatrix() const noexcept
 	{
 
@@ -47,6 +55,7 @@ namespace dr
 		{
 			Reset();
 		}
+		proj.RenderWidgets();
 	}
 
 	void Camera3D::Camera3DController(Win32Window& wnd,float dt)

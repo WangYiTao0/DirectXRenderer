@@ -38,7 +38,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 
 void Scene3D::Update(float dt)
 {
-	wnd.Gfx().SetCamera(cameras.GetCamera().GetMatrix());
+	cameras.GetCamera().BindToGraphics(wnd.Gfx());
 	light.Bind(wnd.Gfx(), cameras.GetCamera().GetMatrix());
 
 	cameras.GetCamera().Camera3DController(wnd, dt);
