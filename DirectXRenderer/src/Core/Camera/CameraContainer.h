@@ -19,14 +19,17 @@ namespace dr
 		void SpawnWindow(Graphics& gfx);
 		void Bind(Graphics& gfx);
 		void AddCamera(std::unique_ptr<Camera3D> pCam);
-		Camera3D& GetCamera();
+		Camera3D* operator->();
 		~CameraContainer();
 
 		void LinkTechniques(Rgph::RenderGraph& rg);
 		void Submit() const;
 	private:
+		Camera3D& GetControlledCamera();
+	private:
 		std::vector<std::unique_ptr<Camera3D>> cameras;
-		int selected = 0;
+		int active = 0;
+		int controlled = 0;
 	};
 
 }

@@ -22,7 +22,7 @@ namespace dr
 		DirectX::XMMATRIX GetMatrix() const noexcept;
 		void SpawnControlWidgets(Graphics& gfx) noexcept;
 		void Camera3DController(Win32Window& wnd, float dt);
-		void Reset() noexcept;
+		void Reset(Graphics& gfx) noexcept;
 		void Rotate(float dx, float dy) noexcept;
 		void Translate(DirectX::XMFLOAT3 translation) noexcept;
 		DirectX::XMFLOAT3 GetPos() const noexcept;
@@ -39,6 +39,8 @@ namespace dr
 		float yaw;
 		static constexpr float travelSpeed = 12.0f;
 		static constexpr float rotationSpeed = 0.004f;
+		bool enableCameraIndicator = true;
+		bool enableFrustumIndicator = true;
 		Projection proj;
 		CameraIndicator indicator;
 	};

@@ -12,27 +12,40 @@ namespace dr
 	{
 		if (ImGui::Begin("Cameras"))
 		{
-			if (ImGui::BeginCombo("Active Camera", cameras[selected]->GetName().c_str()))
+			if (ImGui::BeginCombo("Active Camera", (*this)->GetName().c_str()))
 			{
 				for (int i = 0; i < std::size(cameras); i++)
 				{
-					const bool isSelected = i == selected;
+					const bool isSelected = i == active;
 					if (ImGui::Selectable(cameras[i]->GetName().c_str(), isSelected))
 					{
-						selected = i;
+						active = i;
 					}
 				}
 				ImGui::EndCombo();
 			}
 
-			GetCamera().SpawnControlWidgets(gfx);
+			if (ImGui::BeginCombo("Controlled Camera", GetControlledCamera().GetName().c_str()))
+			{
+				for (int i = 0; i < std::size(cameras); i++)
+				{
+					const bool isSelected = i == controlled;
+					if (ImGui::Selectable(cameras[i]->GetName().c_str(), isSelected))
+					{
+						controlled = i;
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			GetControlledCamera().SpawnControlWidgets(gfx);
 		}
 		ImGui::End();
 	}
 
 	void CameraContainer::Bind(Graphics& gfx)
 	{
-		gfx.SetCamera(GetCamera().GetMatrix());
+		gfx.SetCamera((*this)->GetMatrix());
 	}
 
 	void CameraContainer::AddCamera(std::unique_ptr<Camera3D> pCam)
@@ -40,9 +53,9 @@ namespace dr
 		cameras.push_back(std::move(pCam));
 	}
 
-	Camera3D& CameraContainer::GetCamera()
+	Camera3D* CameraContainer::operator->()
 	{
-		return *cameras[selected];
+		return cameras[active].get();
 	}
 
 	CameraContainer::~CameraContainer()
@@ -60,11 +73,16 @@ namespace dr
 	{
 		for (size_t i = 0; i < cameras.size(); i++)
 		{
-			if (i != selected)
+			if (i != active)
 			{
 				cameras[i]->Submit();
 			}
 		}
+	}
+
+	Camera3D& CameraContainer::GetControlledCamera()
+	{
+		return *cameras[controlled];
 	}
 
 }
