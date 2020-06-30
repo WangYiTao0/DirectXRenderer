@@ -21,3 +21,4 @@
 #include "BufferResource.h"
 
 #include "ShadowCameraCBuf.h"
+#include "ShadowSampler.h"

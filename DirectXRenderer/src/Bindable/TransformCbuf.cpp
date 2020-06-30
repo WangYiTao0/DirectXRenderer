@@ -42,12 +42,14 @@ namespace dr
 		TransformCbuf::Transforms TransformCbuf::GetTransforms(Graphics& gfx) noxnd
 		{
 			assert(pParent != nullptr);
-			const auto modelView = pParent->GetTransformXM() * gfx.GetCamera();
+			const auto model = pParent->GetTransformXM();
+			const auto modelView = model * gfx.GetCamera();
 			return {
-				DirectX::XMMatrixTranspose(modelView),
-				DirectX::XMMatrixTranspose(
-					modelView *
-					gfx.GetProjection()
+			DirectX::XMMatrixTranspose(model),
+			DirectX::XMMatrixTranspose(modelView),
+			DirectX::XMMatrixTranspose(
+				modelView *
+				gfx.GetProjection()
 				)
 			};
 		}

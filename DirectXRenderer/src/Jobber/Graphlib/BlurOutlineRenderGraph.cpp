@@ -188,18 +188,18 @@ namespace dr
 			}
 			ImGui::End();
 		}
-		void Rgph::BlurOutlineRenderGraph::BindMainCamera(Camera3D& cam)
-		{
-			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).
-				BindMainCamera(cam);
-		}
-		void dr::Rgph::BlurOutlineRenderGraph::BindShadowCamera(Camera3D& cam)
-		{
-			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).BindShadowCamera(cam);
-		}
-		void dr::Rgph::BlurOutlineRenderGraph::DumpShadowMap(Graphics& gfx, const std::string& path)
+		void Rgph::BlurOutlineRenderGraph::DumpShadowMap(Graphics& gfx, const std::string& path)
 		{
 			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).DumpShadowMap(gfx, path);
+		}
+		void Rgph::BlurOutlineRenderGraph::BindMainCamera(Camera3D& cam)
+		{
+			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).BindMainCamera(cam);
+		}
+		void Rgph::BlurOutlineRenderGraph::BindShadowCamera(Camera3D& cam)
+		{
+			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).BindShadowCamera(cam);
+			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).BindShadowCamera(cam);
 		}
 	}
 }

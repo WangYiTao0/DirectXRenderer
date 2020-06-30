@@ -35,9 +35,7 @@ namespace dr
 
 		const dx::XMVECTOR forwardBaseVector = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		// apply the camera rotations to a base vector
-		const auto lookVector = XMVector3Transform(forwardBaseVector,
-			XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f)
-		);
+		const auto lookVector = XMVector3Transform(forwardBaseVector,XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f));
 		// generate camera transform (applied to all objects to arrange them relative
 		// to camera position/orientation in world) from cam position and direction
 		// camera "top" always faces towards +Y (cannot do a barrel roll)
