@@ -8,5 +8,7 @@
 
 #include "Graphlib/BlurOutlineRenderGraph.h"
 #include "Graphlib/ScaleOutlineRenderGraph.h"
+#include "Jobber/Graphlib/Channels.h"
 
 #include "Passlib/Base/Pass.h"
+

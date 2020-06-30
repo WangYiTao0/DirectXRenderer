@@ -4,6 +4,7 @@
 #include "Debug/ThrowMacros.h"
 #include "Core/Vertex.h"
 #include "Geometry/Sphere.h"
+#include "Jobber/Graphlib/Channels.h"
 
 
 namespace dx = DirectX;
@@ -46,7 +47,7 @@ namespace dr
 		pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 		{
-			Technique line;
+			Technique line{ Chan::main };
 			{
 				Step unoccluded("lambertian");
 

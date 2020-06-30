@@ -3,6 +3,7 @@
 #include "Core/DynamicConstant.h"
 #include "Bindable/ConstantBuffersEx.h"
 #include "CommonTool/StringHelper.h"
+#include "Jobber/Graphlib/Channels.h"
 
 namespace dr
 {
@@ -19,7 +20,7 @@ namespace dr
 		}
 		// phong technique
 		{
-			Technique phong{ "Phong" };
+			Technique phong{ "Phong",Chan::main };
 			Step step("lambertian");
 			std::string shaderCode = "Phong";
 			aiString texFileName;
@@ -127,7 +128,7 @@ namespace dr
 		}
 		// outline technique
 		{
-			Technique outline("Outline", false);
+			Technique outline{ "Outline",Chan::main,false };
 			{
 				Step mask("outlineMask");
 

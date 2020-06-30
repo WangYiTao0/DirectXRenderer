@@ -4,6 +4,7 @@
 #include "Bindable/BindableCommon.h"
 #include "Imgui/imgui.h"
 #include "CommonTool/StringHelper.h"
+#include "Jobber/Graphlib/Channels.h"
 
 namespace dr
 {
@@ -23,7 +24,7 @@ namespace dr
 		auto tcb = std::make_shared<TransformCbuf>(gfx);
 
 		{
-			Technique shade("Shade");
+			Technique shade("Shade",Chan::main);
 			{
 				Step only("lambertian");
 
@@ -56,7 +57,7 @@ namespace dr
 		}
 
 		{
-			Technique outline("Outline");
+			Technique outline("Outline", Chan::main);
 			{
 				Step mask("outlineMask");
 

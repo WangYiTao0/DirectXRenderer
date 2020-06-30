@@ -37,7 +37,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	nano.LinkTechniques(rg);
 	cameras.LinkTechniques(rg);
 
-	savingDepth = true;
+	//savingDepth = true;
 }
 
 void Scene3D::Update(float dt)
@@ -47,19 +47,22 @@ void Scene3D::Update(float dt)
 
 	cameras->Camera3DController(wnd, dt);
 
-
+	if (wnd.kbd.KeyIsPressed('P'))
+	{
+		savingDepth  = true;
+	}
 
 }
 
 void Scene3D::Draw(float dt)
 {
-	light.Submit();
-	cube.Submit();
-	sponza.Submit();
-	cube2.Submit();
-	gobber.Submit();
-	nano.Submit();
-	cameras.Submit();
+	light.Submit(dr::Chan::main);
+	cube.Submit(dr::Chan::main);
+	sponza.Submit(dr::Chan::main);
+	cube2.Submit(dr::Chan::main);
+	gobber.Submit(dr::Chan::main);
+	nano.Submit(dr::Chan::main);
+	cameras.Submit(dr::Chan::main);
 
 	rg.Execute(wnd.Gfx());
 

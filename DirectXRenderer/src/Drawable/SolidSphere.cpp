@@ -5,6 +5,7 @@
 #include "Core/Vertex.h"
 #include "Geometry/Sphere.h"
 #include "CommonTool/StringHelper.h"
+#include "Jobber/Graphlib/Channels.h"
 
 namespace dr
 {
@@ -23,7 +24,7 @@ namespace dr
 		pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		{
-			Technique solid;
+			Technique solid{ Chan::main };
 			Step only("lambertian");
 
 			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
