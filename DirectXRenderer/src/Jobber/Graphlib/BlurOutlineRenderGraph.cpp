@@ -38,6 +38,7 @@ namespace dr
 			}
 			{
 				auto pass = std::make_unique<LambertianPass>(gfx, "lambertian");
+				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
 				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
 				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
 				AppendPass(std::move(pass));

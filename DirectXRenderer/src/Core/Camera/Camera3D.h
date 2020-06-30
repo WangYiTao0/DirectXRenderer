@@ -23,6 +23,7 @@ namespace dr
 			float homeYaw = 0.0f, bool tethered = false) noexcept;
 		void BindToGraphics(Graphics& gfx) const;
 		DirectX::XMMATRIX GetMatrix() const noexcept;
+		DirectX::XMMATRIX GetProjection() const noexcept;
 		void SpawnControlWidgets(Graphics& gfx) noexcept;
 		void Camera3DController(Win32Window& wnd, float dt);
 		void Reset(Graphics& gfx) noexcept;

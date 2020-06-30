@@ -46,6 +46,11 @@ namespace dr
 		return XMMatrixLookAtLH(camPosition, camTarget, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	}
 
+	DirectX::XMMATRIX Camera3D::GetProjection() const noexcept
+	{
+		return proj.GetMatrix();
+	}
+
 	void Camera3D::SpawnControlWidgets(Graphics& gfx) noexcept
 	{
 		bool rotDirty = false;

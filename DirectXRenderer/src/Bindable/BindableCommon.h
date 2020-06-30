@@ -19,3 +19,5 @@
 #include "DepthStencil.h"
 #include "RenderTarget.h"
 #include "BufferResource.h"
+
+#include "ShadowCameraCBuf.h"
