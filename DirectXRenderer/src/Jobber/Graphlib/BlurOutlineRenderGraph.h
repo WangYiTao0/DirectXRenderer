@@ -7,6 +7,8 @@
 namespace dr
 {
 	class Graphics;
+	class Camera3D;
+
 	namespace Bind
 	{
 		class Bindable;
@@ -20,6 +22,8 @@ namespace dr
 		public:
 			BlurOutlineRenderGraph(Graphics& gfx);
 			void RenderWidgets(Graphics& gfx);
+			void BindMainCamera(Camera3D& cam);
+			void BindShadowCamera(Camera3D& cam);
 		private:
 			// private functions
 			void SetKernelGauss(int radius, float sigma) noxnd;

@@ -55,7 +55,7 @@ namespace dr
 
 	Camera3D* CameraContainer::operator->()
 	{
-		return cameras[active].get();
+		return &GetActiveCamera();
 	}
 
 	CameraContainer::~CameraContainer()
@@ -78,6 +78,11 @@ namespace dr
 				cameras[i]->Submit(channels);
 			}
 		}
+	}
+
+	Camera3D& CameraContainer::GetActiveCamera()
+	{
+		return *cameras[active];
 	}
 
 	Camera3D& CameraContainer::GetControlledCamera()

@@ -62,7 +62,7 @@ void Scene3D::Draw(float dt)
 	cube2.Submit(dr::Chan::main);
 	gobber.Submit(dr::Chan::main);
 	nano.Submit(dr::Chan::main);
-	cameras.Submit(dr::Chan::main);
+	rg.BindMainCamera(cameras.GetActiveCamera());
 
 	rg.Execute(wnd.Gfx());
 

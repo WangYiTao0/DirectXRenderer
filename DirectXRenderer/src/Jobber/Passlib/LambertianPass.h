@@ -6,6 +6,7 @@
 #include "Base/Source.h"
 #include "Bindable/BindableCommon.h"
 #include "Bindable/Stencil.h"
+#include "Core/Camera/Camera3D.h"
 
 namespace dr
 {
@@ -17,6 +18,10 @@ namespace dr
 		class LambertianPass : public RenderQueuePass
 		{
 		public:
+			void BindMainCamera(const Camera3D& cam) noexcept
+			{
+				pMainCamera = &cam;
+			}
 			LambertianPass(Graphics& gfx, std::string name)
 				:
 				RenderQueuePass(std::move(name))
@@ -28,6 +33,14 @@ namespace dr
 				RegisterSource(DirectBufferSource<dr::Bind::DepthStencil>::Make("depthStencil", depthStencil));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
 			}
+			void Execute(Graphics& gfx) const noxnd override
+			{
+				assert(pMainCamera);
+				pMainCamera->BindToGraphics(gfx);
+				RenderQueuePass::Execute(gfx);
+			}
+		private:
+			const Camera3D* pMainCamera = nullptr;
 		};
 	}
 }

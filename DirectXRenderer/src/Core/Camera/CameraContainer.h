@@ -24,6 +24,7 @@ namespace dr
 
 		void LinkTechniques(Rgph::RenderGraph& rg);
 		void Submit(size_t channels) const;
+		Camera3D& GetActiveCamera();
 	private:
 		Camera3D& GetControlledCamera();
 	private:

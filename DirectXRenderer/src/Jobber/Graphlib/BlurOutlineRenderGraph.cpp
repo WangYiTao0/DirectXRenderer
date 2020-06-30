@@ -182,5 +182,13 @@ namespace dr
 			}
 			ImGui::End();
 		}
+		void Rgph::BlurOutlineRenderGraph::BindMainCamera(Camera3D& cam)
+		{
+			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).
+				BindMainCamera(cam);
+		}
+		void dr::Rgph::BlurOutlineRenderGraph::BindShadowCamera(Camera3D& cam)
+		{
+		}
 	}
 }
