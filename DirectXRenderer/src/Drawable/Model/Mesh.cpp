@@ -14,10 +14,10 @@ namespace dr
 	Drawable(gfx, mat, mesh, scale)
 	{}
 
-	void Mesh::Submit(dx::FXMMATRIX accumulatedTranform) const noxnd
+	void Mesh::Submit(size_t channels, dx::FXMMATRIX accumulatedTranform) const noxnd
 	{
 		dx::XMStoreFloat4x4(&transform, accumulatedTranform);
-		Drawable::Submit();
+		Drawable::Submit(channels);
 	}
 
 	DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept

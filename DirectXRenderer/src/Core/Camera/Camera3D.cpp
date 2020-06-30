@@ -191,15 +191,15 @@ namespace dr
 		proj.LinkTechniques(rg);
 	}
 
-	void Camera3D::Submit() const
+	void Camera3D::Submit(size_t channels) const
 	{
 		if (enableCameraIndicator)
 		{
-			indicator.Submit();
+			indicator.Submit(channels);
 		}
 		if (enableFrustumIndicator)
 		{
-			proj.Submit();
+			proj.Submit(channels);
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace dr
 		~CameraContainer();
 
 		void LinkTechniques(Rgph::RenderGraph& rg);
-		void Submit() const;
+		void Submit(size_t channels) const;
 	private:
 		Camera3D& GetControlledCamera();
 	private:

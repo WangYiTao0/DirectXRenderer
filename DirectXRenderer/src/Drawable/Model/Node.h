@@ -12,7 +12,7 @@ namespace dr
 		friend Model;
 	public:
 		Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd;
-		void Submit(DirectX::FXMMATRIX accumulatedTransform) const noxnd;
+		void Submit(size_t channels, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 		void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
 		const DirectX::XMFLOAT4X4& GetAppliedTransform() const noexcept;
 		int GetId() const noexcept;

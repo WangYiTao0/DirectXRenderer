@@ -32,7 +32,7 @@ namespace dr
 		DirectX::XMFLOAT3 GetPos() const noexcept;
 		const std::string& GetName() const noexcept;
 		void LinkTechniques(Rgph::RenderGraph& rg);
-		void Submit() const;
+		void Submit(size_t channel) const;
 	private:
 		bool tethered;
 		std::string name;
