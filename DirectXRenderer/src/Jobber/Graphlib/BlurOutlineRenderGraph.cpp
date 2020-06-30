@@ -9,6 +9,7 @@
 #include "Jobber/Passlib/VerticalBlurPass.h"
 #include "Jobber/Passlib/BlurOutlineDrawingPass.h"
 #include "Jobber/Passlib/WireframePass.h"
+#include "Jobber/Passlib/ShadowMappingPass.h"
 #include "Bindable/BindableCommon.h"
 #include "CommonTool/DrMath.h"
 #include <imgui/imgui.h>
@@ -29,6 +30,10 @@ namespace dr
 			{
 				auto pass = std::make_unique<BufferClearPass>("clearDS");
 				pass->SetSinkLinkage("buffer", "$.masterDepth");
+				AppendPass(std::move(pass));
+			}
+			{
+				auto pass = std::make_unique<ShadowMappingPass>(gfx, "shadowMap");
 				AppendPass(std::move(pass));
 			}
 			{
@@ -189,6 +194,11 @@ namespace dr
 		}
 		void dr::Rgph::BlurOutlineRenderGraph::BindShadowCamera(Camera3D& cam)
 		{
+			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).BindShadowCamera(cam);
+		}
+		void dr::Rgph::BlurOutlineRenderGraph::DumpShadowMap(Graphics& gfx, const std::string& path)
+		{
+			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).DumpShadowMap(gfx, path);
 		}
 	}
 }

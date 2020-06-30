@@ -37,7 +37,7 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	nano.LinkTechniques(rg);
 	cameras.LinkTechniques(rg);
 
-	//savingDepth = true;
+	rg.BindShadowCamera(*light.ShareCamera());
 }
 
 void Scene3D::Update(float dt)
@@ -56,6 +56,8 @@ void Scene3D::Update(float dt)
 
 void Scene3D::Draw(float dt)
 {
+	using namespace dr;
+
 	light.Submit(dr::Chan::main);
 	cube.Submit(dr::Chan::main);
 	sponza.Submit(dr::Chan::main);
@@ -64,7 +66,20 @@ void Scene3D::Draw(float dt)
 	nano.Submit(dr::Chan::main);
 	rg.BindMainCamera(cameras.GetActiveCamera());
 
+	sponza.Submit(Chan::shadow);
+	cube.Submit(Chan::shadow);
+	sponza.Submit(Chan::shadow);
+	cube2.Submit(Chan::shadow);
+	gobber.Submit(Chan::shadow);
+	nano.Submit(Chan::shadow);
+
 	rg.Execute(wnd.Gfx());
+
+	if (savingDepth)
+	{
+		rg.DumpShadowMap(wnd.Gfx(), "shadow.png");
+		savingDepth = false;
+	}
 
 	///ImguiWidow
 	SpawnImguiWindow();
@@ -90,12 +105,6 @@ void Scene3D::SpawnImguiWindow()
 	rg.RenderWidgets(wnd.Gfx());
 
 	rg.Reset();
-
-	if (savingDepth)
-	{
-		rg.StoreDepth(wnd.Gfx(), "depth.png");
-		savingDepth = false;
-	}
 }
 
 

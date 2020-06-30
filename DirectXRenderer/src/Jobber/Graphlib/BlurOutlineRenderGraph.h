@@ -24,6 +24,7 @@ namespace dr
 			void RenderWidgets(Graphics& gfx);
 			void BindMainCamera(Camera3D& cam);
 			void BindShadowCamera(Camera3D& cam);
+			void DumpShadowMap(Graphics& gfx, const std::string& path);
 		private:
 			// private functions
 			void SetKernelGauss(int radius, float sigma) noxnd;
