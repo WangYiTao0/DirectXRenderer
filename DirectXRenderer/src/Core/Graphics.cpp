@@ -120,6 +120,10 @@ namespace dr
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 		}
+		// clearing shader inputs to prevent simultaneous in/out bind carried over from prev frame
+		ID3D11ShaderResourceView* const pNullTex = nullptr;
+		pContext->PSSetShaderResources(0, 1, &pNullTex); // fullscreen input texture
+		pContext->PSSetShaderResources(3, 1, &pNullTex); // shadow map texture
 	}
 
 	void Graphics::DrawIndexed(UINT count) noxnd
