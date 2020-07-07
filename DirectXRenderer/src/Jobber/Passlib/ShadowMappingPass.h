@@ -5,7 +5,7 @@
 #include "Bindable/BindableCommon.h"
 #include "Base/Source.h"
 #include "Core/Camera/Camera3D.h"
-
+#include "Bindable/ShadowRasterizer.h"
 
 namespace dr
 {
@@ -31,7 +31,7 @@ namespace dr
 				AddBind(NullPixelShader::Resolve(gfx));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
 				AddBind(Blender::Resolve(gfx, false));
-				AddBindSink<Bind::Bindable>("shadowRasterizer");
+				AddBind(std::make_shared<Bind::ShadowRasterizer>(gfx, 50, 2.0f, 0.1f));
 				RegisterSource(DirectBindableSource<Bind::DepthStencil>::Make("map", depthStencil));
 			}
 			void Execute(Graphics& gfx) const noxnd override
