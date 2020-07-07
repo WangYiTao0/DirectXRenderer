@@ -102,7 +102,7 @@ void Scene3D::SpawnImguiWindow()
 	light.SpawnControlWindow();
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
-	rg.RenderWidgets(wnd.Gfx());
+	rg.RenderWindows(wnd.Gfx());
 
 	rg.Reset();
 }

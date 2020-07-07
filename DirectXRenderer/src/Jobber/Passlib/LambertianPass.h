@@ -30,6 +30,7 @@ namespace dr
 				RegisterSink(DirectBufferSink<RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSink(DirectBufferSink<dr::Bind::DepthStencil>::Make("depthStencil", depthStencil));
 				AddBindSink<Bind::Bindable>("shadowMap");
+				AddBindSink<Bind::Bindable>("shadowControl");
 				RegisterSource(DirectBufferSource<RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSource(DirectBufferSource<dr::Bind::DepthStencil>::Make("depthStencil", depthStencil));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
