@@ -42,8 +42,8 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 
 void Scene3D::Update(float dt)
 {
-	cameras->BindToGraphics(wnd.Gfx());
 	light.Bind(wnd.Gfx(), cameras->GetMatrix());
+	rg.BindMainCamera(cameras.GetActiveCamera());
 
 	cameras->Camera3DController(wnd, dt);
 
@@ -64,7 +64,7 @@ void Scene3D::Draw(float dt)
 	cube2.Submit(dr::Chan::main);
 	gobber.Submit(dr::Chan::main);
 	nano.Submit(dr::Chan::main);
-	rg.BindMainCamera(cameras.GetActiveCamera());
+	cameras.Submit(dr::Chan::main);
 
 	sponza.Submit(Chan::shadow);
 	cube.Submit(Chan::shadow);
