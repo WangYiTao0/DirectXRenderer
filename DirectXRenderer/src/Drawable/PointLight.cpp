@@ -2,6 +2,7 @@
 #include "PointLight.h"
 #include <imgui.h>
 #include "Core/Camera/Camera3D.h"
+#include "CommonTool/DrMath.h"
 
 namespace dr
 {
@@ -20,7 +21,7 @@ namespace dr
 			0.0075f,
 		};
 		Reset();
-		pCamera = std::make_shared<Camera3D>(gfx, "Light", cbData.pos, 0.0f, 0.0f, true);
+		pCamera = std::make_shared<Camera3D>(gfx, "Light", cbData.pos, 0.0f, dr::PI / 2.0f, true);
 	}
 
 	void PointLight::SpawnControlWindow() noexcept

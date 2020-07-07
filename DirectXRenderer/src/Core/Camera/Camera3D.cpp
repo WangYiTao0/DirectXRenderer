@@ -20,6 +20,12 @@ namespace dr
 		indicator(gfx),
 		tethered(tethered)
 	{
+		if (tethered)
+		{
+			pos = homePos;
+			indicator.SetPos(pos);
+			proj.SetPos(pos);
+		}
 		Reset(gfx);
 	}
 	void Camera3D::BindToGraphics(Graphics& gfx) const
