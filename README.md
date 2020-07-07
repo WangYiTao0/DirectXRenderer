@@ -1,5 +1,7 @@
 # DirectXRenderer
 
-using  git clone --recursive https://github.com/WangYiTao0/DirectXRenderer download project  
-cd DirectXRenderer  
-Scripts/Win-GenProjects.bat  
+To get started:
+```
+git clone --recursive https://github.com/WangYiTao0/DirectXRenderer    
+cd DirectXRenderer   
+Scripts/Win-GenProjects.bat    
