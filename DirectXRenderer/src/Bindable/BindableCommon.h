@@ -22,3 +22,5 @@
 
 #include "ShadowCameraCBuf.h"
 #include "ShadowSampler.h"
+#include "SkyboxTransformCbuf.h"
+#include "CubeTexture.h"

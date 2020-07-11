@@ -13,7 +13,7 @@
 #include "Bindable/BindableCommon.h"
 #include "CommonTool/DrMath.h"
 #include <imgui/imgui.h>
-
+#include "Jobber/Passlib/SkyboxPass.h"
 
 namespace dr
 {
@@ -48,8 +48,14 @@ namespace dr
 				AppendPass(std::move(pass));
 			}
 			{
-				auto pass = std::make_unique<OutlineMaskGenerationPass>(gfx, "outlineMask");
+				auto pass = std::make_unique<SkyboxPass>(gfx, "skybox");
+				pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
 				pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
+				AppendPass(std::move(pass));
+			}
+			{
+				auto pass = std::make_unique<OutlineMaskGenerationPass>(gfx, "outlineMask");
+				pass->SetSinkLinkage("depthStencil", "skybox.depthStencil");
 				AppendPass(std::move(pass));
 			}
 
@@ -87,7 +93,7 @@ namespace dr
 			}
 			{
 				auto pass = std::make_unique<VerticalBlurPass>("vertical", gfx);
-				pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
+				pass->SetSinkLinkage("renderTarget", "skybox.renderTarget");
 				pass->SetSinkLinkage("depthStencil", "outlineMask.depthStencil");
 				pass->SetSinkLinkage("scratchIn", "horizontal.scratchOut");
 				pass->SetSinkLinkage("kernel", "$.blurKernel");
@@ -207,6 +213,7 @@ namespace dr
 		void Rgph::BlurOutlineRenderGraph::BindMainCamera(Camera3D& cam)
 		{
 			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).BindMainCamera(cam);
+			dynamic_cast<SkyboxPass&>(FindPassByName("skybox")).BindMainCamera(cam);
 		}
 		void Rgph::BlurOutlineRenderGraph::BindShadowCamera(Camera3D& cam)
 		{
