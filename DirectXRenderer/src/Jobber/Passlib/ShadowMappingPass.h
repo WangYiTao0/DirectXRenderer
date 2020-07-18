@@ -27,7 +27,7 @@ namespace dr
 			{
 				using namespace Bind;
 				depthStencil = std::make_unique<ShaderInputDepthStencil>(gfx, 3, DepthStencil::Usage::ShadowDepth);
-				AddBind(VertexShader::Resolve(gfx, "Solid_VS.cso"));
+				AddBind(VertexShader::Resolve(gfx, "Solid_VS"));
 				AddBind(NullPixelShader::Resolve(gfx));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
 				AddBind(Blender::Resolve(gfx, false));

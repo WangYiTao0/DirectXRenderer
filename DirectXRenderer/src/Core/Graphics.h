@@ -69,8 +69,14 @@ namespace dr
 		void DrawIndexed(UINT count) noxnd;
 		void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 		DirectX::XMMATRIX GetProjection() const noexcept;
-		void SetCamera(DirectX::FXMMATRIX cam) noexcept;
-		DirectX::XMMATRIX GetCamera() const noexcept;
+		void SetCamera3D(DirectX::FXMMATRIX cam) noexcept;
+		DirectX::XMMATRIX GetCamera3D() const noexcept;
+		void SetCamera2D(DirectX::FXMMATRIX cam) noexcept;
+		DirectX::XMMATRIX GetCamera2D() const noexcept;
+		void SetOrthProjection(DirectX::FXMMATRIX proj) noexcept;
+		DirectX::XMMATRIX GetOrthProjection() const noexcept;
+		
+
 		void EnableImgui() noexcept;
 		void DisableImgui() noexcept;
 		bool IsImguiEnabled() const noexcept;
@@ -81,7 +87,9 @@ namespace dr
 		UINT width;
 		UINT height;
 		DirectX::XMMATRIX projection;
-		DirectX::XMMATRIX camera;
+		DirectX::XMMATRIX camera3D;
+		DirectX::XMMATRIX orthProjection;
+		DirectX::XMMATRIX camera2D;
 		bool imguiEnabled = true;
 #ifndef NDEBUG
 		DxgiInfoManager infoManager;

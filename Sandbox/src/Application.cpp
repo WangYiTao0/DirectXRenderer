@@ -15,13 +15,12 @@ Application::Application()
 	:
 	wnd(screenWidth, screenHeight, "DirectX11 Renderer")
 {
-	TestDynamicConstant();
-	TestDynamicMeshLoading();
+	//TestDynamicConstant();
+	//TestDynamicMeshLoading();
 
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 900.f / 1600.f, 0.5f, 4000.0f));
 
-	m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
 	m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
+	//m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
 
 	m_CurScene = m_Scenes.begin();
 
@@ -136,4 +135,6 @@ void Application::DoFrame()
 
 	// present
 	wnd.Gfx().EndFrame();
+
+	(*m_CurScene)->Reset();
 }

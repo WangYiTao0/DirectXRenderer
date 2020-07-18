@@ -30,7 +30,7 @@ namespace dr
 	}
 	void Camera3D::BindToGraphics(Graphics& gfx) const
 	{
-		gfx.SetCamera(GetMatrix());
+		gfx.SetCamera3D(GetMatrix());
 		gfx.SetProjection(proj.GetMatrix());
 	}
 

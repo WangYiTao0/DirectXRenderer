@@ -20,8 +20,8 @@ namespace dr
 			{
 				using namespace Bind;
 				renderTarget = std::make_unique<ShaderInputRenderTarget>(gfx, fullWidth / 2, fullHeight / 2, 0);
-				AddBind(VertexShader::Resolve(gfx, "Solid_VS.cso"));
-				AddBind(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+				AddBind(VertexShader::Resolve(gfx, "Solid_VS"));
+				AddBind(PixelShader::Resolve(gfx, "Solid_PS"));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Mask));
 				AddBind(Blender::Resolve(gfx, false));
 				RegisterSource(DirectBindableSource<Bind::RenderTarget>::Make("scratchOut", renderTarget));

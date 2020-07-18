@@ -45,7 +45,7 @@ namespace dr
 
 	void CameraContainer::Bind(Graphics& gfx)
 	{
-		gfx.SetCamera((*this)->GetMatrix());
+		gfx.SetCamera3D((*this)->GetMatrix());
 	}
 
 	void CameraContainer::AddCamera(std::shared_ptr<Camera3D> pCam)

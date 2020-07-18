@@ -15,7 +15,7 @@ namespace dr
 			INFOMAN(gfx);
 			std::string shader_dir = "asset\\shader\\cso\\";
 			Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
-			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(shader_dir + path).c_str(), &pBlob));
+			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(shader_dir + path + ".cso").c_str(), &pBlob));
 			GFX_THROW_INFO(GetDevice(gfx)->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 		}
 

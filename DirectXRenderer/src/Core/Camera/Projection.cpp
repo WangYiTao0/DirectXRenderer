@@ -20,6 +20,11 @@ namespace dr
 		return DirectX::XMMatrixPerspectiveLH(width, height, nearZ, farZ);
 	}
 
+	DirectX::XMMATRIX Projection::GetOrthoMatrix() const
+	{
+		return DirectX::XMMatrixOrthographicOffCenterLH(0.0f, width, height, 0.0f, nearZ, farZ);
+	}
+
 	void Projection::RenderWidgets(Graphics& gfx)
 	{
 		bool dirty = false;

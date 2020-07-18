@@ -12,7 +12,7 @@ public:
 	{}
 	virtual void Update(float dt) = 0;
 	virtual void Draw(float dt) = 0;
-	virtual void DrawDepth() {};
+	virtual void Reset() = 0;
 	virtual ~Scene() = default;
 	const std::string& GetName() const
 	{

@@ -141,14 +141,34 @@ namespace dr
 		return projection;
 	}
 
-	void Graphics::SetCamera(DirectX::FXMMATRIX cam) noexcept
+	void Graphics::SetCamera3D(DirectX::FXMMATRIX cam) noexcept
 	{
-		camera = cam;
+		camera3D = cam;
 	}
 
-	DirectX::XMMATRIX Graphics::GetCamera() const noexcept
+	DirectX::XMMATRIX Graphics::GetCamera3D() const noexcept
 	{
-		return camera;
+		return camera3D;
+	}
+
+	void Graphics::SetCamera2D(DirectX::FXMMATRIX cam2D) noexcept
+	{
+		camera2D = cam2D;
+	}
+
+	DirectX::XMMATRIX dr::Graphics::GetCamera2D() const noexcept
+	{
+		return camera2D;
+	}
+
+	void Graphics::SetOrthProjection(DirectX::FXMMATRIX orthProj) noexcept
+	{
+		orthProjection = orthProj;
+	}
+
+	DirectX::XMMATRIX dr::Graphics::GetOrthProjection() const noexcept
+	{
+		return orthProjection;
 	}
 
 	void Graphics::EnableImgui() noexcept

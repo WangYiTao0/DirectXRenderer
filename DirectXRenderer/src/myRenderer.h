@@ -10,6 +10,7 @@
 
 //Camera
 #include "Core/Camera/Camera3D.h"
+#include "Core/Camera/Camera2D.h"
 #include "Core/Camera/CameraContainer.h"
 
 //debug
@@ -29,7 +30,7 @@
 #include "Drawable/Drawable.h"
 #include "Drawable/SolidSphere.h"
 #include "Drawable/PointLight.h"
-#include "Drawable/TestPlane.h"
+#include "Drawable/Tex2D.h"
 #include "Drawable/TestCube.h"
 
 #include "Drawable/Model/Mesh.h"

@@ -21,6 +21,7 @@ namespace dr
 
 			D3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC{ CD3D11_DEFAULT{} };
 			auto& brt = blendDesc.RenderTarget[0];
+			//brt.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 			if (blending)
 			{
 				brt.BlendEnable = TRUE;

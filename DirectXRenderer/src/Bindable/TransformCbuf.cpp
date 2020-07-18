@@ -43,7 +43,7 @@ namespace dr
 		{
 			assert(pParent != nullptr);
 			const auto model = pParent->GetTransformXM();
-			const auto modelView = model * gfx.GetCamera();
+			const auto modelView = model * gfx.GetCamera3D();
 			return {
 			DirectX::XMMatrixTranspose(model),
 			DirectX::XMMatrixTranspose(modelView),

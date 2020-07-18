@@ -24,7 +24,7 @@ namespace dr
 			std::vector<unsigned short> indices = { 0,1,2,1,3,2 };
 			AddBind(Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices)));
 			// setup other common fullscreen bindables
-			auto vs = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS.cso");
+			auto vs = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS");
 			AddBind(Bind::InputLayout::Resolve(gfx, lay, *vs));
 			AddBind(std::move(vs));
 			AddBind(Bind::Topology::Resolve(gfx));

@@ -14,7 +14,7 @@ namespace Rgph
 		:
 		FullscreenPass(std::move(name), gfx)
 	{
-		AddBind(PixelShader::Resolve(gfx, "BlurOutline_PS.cso"));
+		AddBind(PixelShader::Resolve(gfx, "BlurOutline_PS"));
 		AddBind(Blender::Resolve(gfx, false));
 		AddBind(Sampler::Resolve(gfx, Sampler::Type::Point, true));
 

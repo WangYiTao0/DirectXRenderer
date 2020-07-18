@@ -25,7 +25,7 @@ namespace dr
 		SkyboxTransformCbuf::Transforms SkyboxTransformCbuf::GetTransforms(Graphics& gfx) noxnd
 		{
 			return {
-				DirectX::XMMatrixTranspose(gfx.GetCamera() * gfx.GetProjection())
+				DirectX::XMMatrixTranspose(gfx.GetCamera3D() * gfx.GetProjection())
 			};
 		}
 	}
