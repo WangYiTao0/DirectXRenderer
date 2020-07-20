@@ -8,7 +8,7 @@
 namespace dr
 {
 
-	Tex2D::Tex2D(Graphics& gfx, std::string path, float width, float height)
+	Tex2D::Tex2D(Graphics& gfx, std::string path, std::string vs_name, std::string ps_name, float width, float height)
 	{
 		using namespace Bind;
 		namespace dx = DirectX;
@@ -20,7 +20,6 @@ namespace dr
 		pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
 		pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-
 		{
 			Technique shade2D("Shade2D", Chan::Orth);
 			
@@ -29,11 +28,11 @@ namespace dr
 			only.AddBindable(Texture::Resolve(gfx, path));
 			only.AddBindable(Sampler::Resolve(gfx));
 
-			auto pvs = VertexShader::Resolve(gfx, "Texture2D_VS");
+			auto pvs = VertexShader::Resolve(gfx, vs_name);
 			only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *pvs));
 			only.AddBindable(std::move(pvs));
 
-			only.AddBindable(PixelShader::Resolve(gfx, "Texture2D_PS"));
+			only.AddBindable(PixelShader::Resolve(gfx, ps_name));
 
 			only.AddBindable(std::make_shared<TransformCbuf2D>(gfx));
 
@@ -42,6 +41,43 @@ namespace dr
 
 			shade2D.AddStep(std::move(only));
 			
+			AddTechnique(std::move(shade2D));
+		}
+	}
+
+	Tex2D::Tex2D(Graphics& gfx, std::string vs_name, std::string ps_name, float width, float height, ID3D11ShaderResourceView* pSRV)
+	{
+		using namespace Bind;
+		namespace dx = DirectX;
+
+		auto model = Plane::Make2DTextured();
+		model.Transform(dx::XMMatrixScaling(width, height, 1.0f));
+		const auto geometryTag = "$plane." + std::to_string(width);
+		pVertices = VertexBuffer::Resolve(gfx, geometryTag, model.vertices);
+		pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
+		pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		{
+			Technique shade2D("Shade2D", Chan::Orth);
+
+			Step only("texture2D");
+
+			only.AddBindable(TextureSRV::Resolve(gfx, pSRV));
+			only.AddBindable(Sampler::Resolve(gfx));
+
+			auto pvs = VertexShader::Resolve(gfx, vs_name);
+			only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *pvs));
+			only.AddBindable(std::move(pvs));
+
+			only.AddBindable(PixelShader::Resolve(gfx, ps_name));
+
+			only.AddBindable(std::make_shared<TransformCbuf2D>(gfx));
+
+			only.AddBindable(Rasterizer::Resolve(gfx, false));
+			only.AddBindable(Blender::Resolve(gfx, true));
+
+			shade2D.AddStep(std::move(only));
+
 			AddTechnique(std::move(shade2D));
 		}
 	}

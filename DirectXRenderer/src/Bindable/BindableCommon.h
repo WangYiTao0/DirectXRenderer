@@ -12,6 +12,7 @@
 #include "VertexBuffer.h"
 #include "VertexShader.h"
 #include "Texture.h"
+#include "TextureSRV.h"
 #include "Sampler.h"
 #include "Blender.h"
 #include "Rasterizer.h"

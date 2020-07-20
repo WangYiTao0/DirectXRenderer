@@ -1,11 +1,12 @@
 #include "Drawable.h"
+#include <d3d11.h>
 namespace dr
 {
 	class Tex2D : public Drawable
 	{
 	public:
-		Tex2D(Graphics& gfx, std::string path, float width, float height);
-		//Tex2D(Graphics& gfx, std::string path, float width, float height);
+		Tex2D(Graphics& gfx, std::string path, std:: string vs_name,std::string ps_name,float width, float height);
+		Tex2D(Graphics& gfx, std::string vs_name, std::string ps_name, float width, float height, ID3D11ShaderResourceView* pSRV);
 		void SetPos(DirectX::XMFLOAT3 pos) noexcept;
 		void SetRotation(float roll, float pitch, float yaw) noexcept;
 		DirectX::XMMATRIX GetTransformXM() const noexcept override;

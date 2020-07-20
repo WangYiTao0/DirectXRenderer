@@ -21,13 +21,21 @@ namespace dr
 		return orthoMatrix;
 	}
 
-	DirectX::XMMATRIX Camera2D::GetWorldMatrix() const noexcept
+	DirectX::XMMATRIX Camera2D::GetWorldMatrix() const 
 	{
 		dx::XMMATRIX translationOffsetMatrix = dx::XMMatrixTranslation(-pos.x, -pos.y, 0.0f); //z component irrelevant for 2d camera
 		dx::XMMATRIX camRotationMatrix = dx::XMMatrixRotationRollPitchYaw(rollPitchYaw.x, rollPitchYaw.y, rollPitchYaw.z);
 		dx::XMMATRIX worldMatrix = camRotationMatrix * translationOffsetMatrix;
 
 		return worldMatrix;
+	}
+
+	void Camera2D::Camera2DController(Win32Window& wnd, float dt)
+	{
+	}
+
+	void Camera2D::Reset(Graphics& gfx) noexcept
+	{
 	}
 
 	void Camera2D::BindToGraphics(Graphics& gfx) const
@@ -37,9 +45,5 @@ namespace dr
 
 	}
 
-	void Camera2D::Camera2DController(Win32Window& win, float dt)
-	{
-
-	}
 
 }

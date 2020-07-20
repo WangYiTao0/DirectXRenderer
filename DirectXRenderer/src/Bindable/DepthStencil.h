@@ -40,6 +40,7 @@ namespace dr
 		public:
 			ShaderInputDepthStencil(Graphics& gfx, UINT slot, Usage usage = Usage::DepthStencil);
 			ShaderInputDepthStencil(Graphics& gfx, UINT width, UINT height, UINT slot, Usage usage = Usage::DepthStencil);
+			ID3D11ShaderResourceView* GetShaderInputSRV() { return pShaderResourceView.Get(); }
 			void Bind(Graphics& gfx) noxnd override;
 		private:
 			UINT slot;

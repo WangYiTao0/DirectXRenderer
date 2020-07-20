@@ -8,6 +8,7 @@ namespace dr
 {
 	class Graphics;
 	class Camera3D;
+	class Camera2D;
 
 	namespace Bind
 	{
@@ -26,6 +27,7 @@ namespace dr
 			void RenderWindows(Graphics& gfx);
 			void BindMainCamera(Camera3D& cam);
 			void BindShadowCamera(Camera3D& cam);
+			void BindCamera2D(Camera2D& cam);
 			void DumpShadowMap(Graphics& gfx, const std::string& path);
 		private:
 			void RenderKernelWindow(Graphics& gfx);

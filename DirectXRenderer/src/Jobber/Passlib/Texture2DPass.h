@@ -6,6 +6,7 @@
 #include "Base/Source.h"
 #include "Bindable/Stencil.h"
 #include "Bindable/Blender.h"
+#include "Core/Camera/Camera2D.h"
 
 namespace dr
 {
@@ -28,11 +29,18 @@ namespace dr
 				RegisterSource(DirectBufferSource<DepthStencil>::Make("depthStencil", depthStencil));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
 
-			}			
+			}
+			void Bind2DCamera(const Camera2D& cam)
+			{
+				p2DCamera = &cam;
+			}
 			void Execute(Graphics& gfx) const noxnd override
 			{
+				//p2DCamera->BindToGraphics(gfx);
 				RenderQueuePass::Execute(gfx);
 			}
+		private:
+			const Camera2D* p2DCamera = nullptr;
 		};
 	}
 }

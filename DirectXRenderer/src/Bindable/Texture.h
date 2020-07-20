@@ -21,7 +21,7 @@ namespace dr
 		protected:
 			bool hasAlpha = false;
 			std::string path;
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTexture_SRV;
 		};
 	}
 }

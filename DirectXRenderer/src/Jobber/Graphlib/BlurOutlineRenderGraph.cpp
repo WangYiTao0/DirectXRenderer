@@ -14,6 +14,7 @@
 #include "CommonTool/DrMath.h"
 #include <imgui/imgui.h>
 #include "Jobber/Passlib/SkyboxPass.h"
+#include "Jobber/Passlib/Texture2DPass.h"
 
 namespace dr
 {
@@ -153,6 +154,11 @@ namespace dr
 			RenderKernelWindow(gfx);
 		}
 
+
+		void BlurOutlineRenderGraph::BindCamera2D(Camera2D& cam)
+		{
+			dynamic_cast<Texture2DPass&>(FindPassByName("texture2D")).Bind2DCamera(cam);
+		}
 
 		void BlurOutlineRenderGraph::RenderKernelWindow(Graphics& gfx)
 		{

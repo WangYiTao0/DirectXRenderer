@@ -54,17 +54,19 @@ namespace dr
 			srvDesc.Texture2D.MostDetailedMip = 0;
 			srvDesc.Texture2D.MipLevels = -1;
 			GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(
-				pTexture.Get(), &srvDesc, &pTextureView
+				pTexture.Get(), &srvDesc, &pTexture_SRV
 			));
 
 			// generate the mip chain using the gpu rendering pipeline
-			GetContext(gfx)->GenerateMips(pTextureView.Get());
+			GetContext(gfx)->GenerateMips(pTexture_SRV.Get());
 		}
+
+
 
 		void Texture::Bind(Graphics& gfx) noxnd
 		{
 			INFOMAN_NOHR(gfx);
-			GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf()));
+			GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetShaderResources(slot, 1u, pTexture_SRV.GetAddressOf()));
 		}
 		std::shared_ptr<Texture> Texture::Resolve(Graphics& gfx, const std::string& path, UINT slot)
 		{

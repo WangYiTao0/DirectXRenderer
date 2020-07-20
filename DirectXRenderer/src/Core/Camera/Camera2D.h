@@ -2,6 +2,7 @@
 #include <string>
 #include <DirectXMath.h>
 #include "Core/Win32Window.h"
+#include "Projection.h"
 
 
 namespace dr
@@ -14,13 +15,15 @@ namespace dr
 		Camera2D(Graphics& gfx,std::string name);
 		void SetOrthoProjection(float width, float height, float nearZ, float farZ);
 		const DirectX::XMMATRIX& GetOrthoMatrix() const noexcept;
-		DirectX::XMMATRIX GetWorldMatrix()const noexcept;
+		DirectX::XMMATRIX GetWorldMatrix()const;
+		void Reset(Graphics& gfx) noexcept;
 		void BindToGraphics(Graphics& gfx) const;
 		void Camera2DController(Win32Window& win, float dt);
 	private:
 		DirectX::XMMATRIX orthoMatrix;
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 rollPitchYaw;
+		//Projection proj;
 	
 	};
 }
