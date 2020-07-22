@@ -40,12 +40,19 @@ namespace dr
 				AppendPass(std::move(pass));
 			}
 
+			{
+				auto pass = std::make_unique<Texture2DPass>(gfx, "texture2D");
+				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
+				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
+				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
+				AppendPass(std::move(pass));
+			}
 
 			{
 				auto pass = std::make_unique<LambertianPass>(gfx, "lambertian");
 				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
-				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
-				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
+				pass->SetSinkLinkage("renderTarget", "texture2D.renderTarget");
+				pass->SetSinkLinkage("depthStencil", "texture2D.depthStencil");
 				AppendPass(std::move(pass));
 			}
 			{

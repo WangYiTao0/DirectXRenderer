@@ -19,8 +19,8 @@ Application::Application()
 	//TestDynamicMeshLoading();
 
 
-	m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
-	//m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
+	//m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
+	m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
 
 	m_CurScene = m_Scenes.begin();
 

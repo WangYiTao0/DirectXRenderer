@@ -10,14 +10,14 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	:
 	wnd(wnd),
 	light(wnd.Gfx(), { 10.0f,5.0f,0.0f }),
+	cam2d(wnd.Gfx(), "cam2d"),
 	Scene("Scene3D")
 {
-	//wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, (float)wnd.Gfx().GetWidth() / (float)wnd.Gfx().GetHeight(), 0.5f, 4000.0f));
-
-
 	cameras.AddCamera(std::make_unique<dr::Camera3D>(wnd.Gfx(), "A", dx::XMFLOAT3{ -13.5f,6.0f,3.5f }, 0.0f, dr::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<dr::Camera3D>(wnd.Gfx(), "B", dx::XMFLOAT3{ -13.5f,28.8f,-6.4f }, dr::PI / 180.0f * 13.0f, dr::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.ShareCamera());
+
+	cam2d.SetOrthoProjection((float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(), 0.0f, 1.0f);
 
 	cube.SetPos({ 10.0f,5.0f,6.0f });
 	cube2.SetPos({ 10.0f,5.0f,14.0f });
@@ -35,10 +35,13 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	cube.LinkTechniques(rg);
 	cube2.LinkTechniques(rg);
 	light.LinkTechniques(rg);
-	//sponza.LinkTechniques(rg);
+	sponza.LinkTechniques(rg);
 	//gobber.LinkTechniques(rg);
 	//nano.LinkTechniques(rg);
 	//cameras.LinkTechniques(rg);
+
+	shadowViewTexture.SetPos({ 100,100,0 });
+	shadowViewTexture.LinkTechniques(rg);
 
 	rg.BindShadowCamera(*light.ShareCamera());
 }
@@ -47,6 +50,7 @@ void Scene3D::Update(float dt)
 {
 	light.Bind(wnd.Gfx(), cameras->GetMatrix());
 	rg.BindMainCamera(cameras.GetActiveCamera());
+	rg.BindCamera2D(cam2d);
 
 	cameras->Camera3DController(wnd, dt);
 
@@ -63,17 +67,19 @@ void Scene3D::Draw(float dt)
 	cube.Submit(dr::Chan::main);
 	cube2.Submit(dr::Chan::main);
 	light.Submit(dr::Chan::main);
-	//sponza.Submit(dr::Chan::main);
+	sponza.Submit(dr::Chan::main);
 	//gobber.Submit(dr::Chan::main);
 	//nano.Submit(dr::Chan::main);
 	//cameras.Submit(dr::Chan::main);
 
-	//cube.Submit(Chan::shadow);
-	//cube2.Submit(Chan::shadow);
-	//sponza.Submit(Chan::shadow);
+	cube.Submit(Chan::shadow);
+	cube2.Submit(Chan::shadow);
+	sponza.Submit(Chan::shadow);
 	//sponza.Submit(Chan::shadow);
 	//gobber.Submit(Chan::shadow);
 	//nano.Submit(Chan::shadow);
+
+	shadowViewTexture.Submit(dr::Chan::Orth);
 
 	rg.Execute(wnd.Gfx());
 
@@ -103,7 +109,7 @@ void Scene3D::SpawnImguiWindow()
 	// imgui window to control camera
 	//cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	//cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
-	//light.SpawnControlWindow();
+	light.SpawnControlWindow();
 	//sponzeProbe.SpawnWindow(sponza);
 	//gobberProbe.SpawnWindow(gobber);
 	//nanoProbe.SpawnWindow(nano);

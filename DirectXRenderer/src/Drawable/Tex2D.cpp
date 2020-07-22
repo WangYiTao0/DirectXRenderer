@@ -45,7 +45,7 @@ namespace dr
 		}
 	}
 
-	Tex2D::Tex2D(Graphics& gfx, std::string vs_name, std::string ps_name, float width, float height, ID3D11ShaderResourceView* pSRV)
+	Tex2D::Tex2D(Graphics& gfx, std::string vs_name, std::string ps_name, float width, float height)
 	{
 		using namespace Bind;
 		namespace dx = DirectX;
@@ -62,7 +62,7 @@ namespace dr
 
 			Step only("texture2D");
 
-			only.AddBindable(TextureSRV::Resolve(gfx, pSRV));
+			//only.AddBindable(TextureSRV::Resolve(gfx, pSRV));
 			only.AddBindable(Sampler::Resolve(gfx));
 
 			auto pvs = VertexShader::Resolve(gfx, vs_name);

@@ -5,8 +5,10 @@ struct PSIn
     float2 tc : Texcoord;
 };
 
-Texture2D tex : register(t0);
+Texture2D tex : register(t3);
 SamplerState splr : register(s0);
+
+
 
 float4 main(PSIn psi) : SV_TARGET
 {
