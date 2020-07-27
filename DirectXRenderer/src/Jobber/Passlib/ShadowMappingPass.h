@@ -37,7 +37,7 @@ namespace dr
 			void Execute(Graphics& gfx) const noxnd override
 			{
 				depthStencil->Clear(gfx);
-				pShadowCamera->BindToGraphics(gfx);
+				//pShadowCamera->BindToGraphics(gfx);
 				RenderQueuePass::Execute(gfx);
 			}
 			void DumpShadowMap(Graphics& gfx, const std::string& path) const

@@ -1,11 +1,10 @@
 #pragma once
 #include "Base/RenderQueuePass.h"
 #include "Jobber/Job.h"
-#include <vector>
 #include "Base/Sink.h"
 #include "Base/Source.h"
 #include "Bindable/BindableCommon.h"
-#include "Bindable/Stencil.h"
+#include <vector>
 #include "Core/Camera/Camera3D.h"
 
 namespace dr

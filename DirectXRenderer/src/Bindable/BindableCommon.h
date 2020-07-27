@@ -26,3 +26,5 @@
 #include "ShadowSampler.h"
 #include "SkyboxTransformCbuf.h"
 #include "CubeTexture.h"
+
+#include "MultiRenderTarget.h"

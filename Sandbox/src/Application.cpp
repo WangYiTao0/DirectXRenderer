@@ -6,6 +6,7 @@
 
 #include "Scenes/Scene3D.h"
 #include "Scenes/ShaderToyScene.h"
+#include "Scenes/DeferredScene.h"
 
 #include "imgui.h"
 
@@ -19,8 +20,9 @@ Application::Application()
 	//TestDynamicMeshLoading();
 
 
-	//m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
-	m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
+	m_Scenes.push_back(std::make_unique<ShaderToyScene>(wnd));
+	//m_Scenes.push_back(std::make_unique<Scene3D>(wnd));
+	//m_Scenes.push_back(std::make_unique<DeferredScene>(wnd));
 
 	m_CurScene = m_Scenes.begin();
 

@@ -28,6 +28,8 @@ namespace dr
 			}
 			std::shared_ptr<Bind::RenderTarget> renderTarget;
 			std::shared_ptr<Bind::DepthStencil> depthStencil;
+
+			std::shared_ptr<Bind::MultiRenderTarget> renderTargets;
 		private:
 			void BindBufferResources(Graphics& gfx) const noxnd;
 		private:

@@ -2,16 +2,17 @@
 #include "Bindable.h"
 #include "BufferResource.h"
 
+const UINT bufferCount = 4;
+
 namespace dr
 {
 	class GraphicsResource;
-	class Surface;
 
 	namespace Bind
 	{
 		class DepthStencil;
 
-		class RenderTarget : public Bindable, public BufferResource
+		class MultiRenderTarget : public Bindable, public BufferResource
 		{
 		public:
 			void BindAsBuffer(Graphics& gfx) noxnd override;
@@ -24,33 +25,32 @@ namespace dr
 		private:
 			void BindAsBuffer(Graphics& gfx, ID3D11DepthStencilView* pDepthStencilView) noxnd;
 		protected:
-			RenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture);
-			RenderTarget(Graphics& gfx, UINT width, UINT height);
+			MultiRenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture[bufferCount]);
+			MultiRenderTarget(Graphics& gfx, UINT width, UINT height);
 			UINT width;
 			UINT height;
-			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTargetView;
+			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTargetView[bufferCount];
 		};
 
-		class ShaderInputRenderTarget : public RenderTarget
+		class ShaderInputMultiRenderTarget : public MultiRenderTarget
 		{
 		public:
-			ShaderInputRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot);
+			ShaderInputMultiRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot);
 			void Bind(Graphics& gfx) noxnd override;
-			Surface ToSurface(Graphics& gfx) const;
 		private:
 			UINT slot;
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView;
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView[bufferCount];
 		};
 
 		// RT for Graphics to create RenderTarget for the back buffer
-		class OutputOnlyRenderTarget : public RenderTarget
+		class OutputOnlyMultiRenderTarget : public MultiRenderTarget
 		{
 			friend Graphics;
 		public:
 			void Bind(Graphics& gfx) noxnd override;
 		private:
-			OutputOnlyRenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture);
+			OutputOnlyMultiRenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture[bufferCount]);
 		};
-
 	}
+
 }

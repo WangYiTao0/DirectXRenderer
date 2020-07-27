@@ -9,19 +9,20 @@ ShaderToyScene::ShaderToyScene(dr::Win32Window& wnd)
 {
 	cam2d.SetOrthoProjection((float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(), 0.0, 1.0);
 	
-	t2d.SetPos({ 100,100,0 });
+	t2d.SetPos({ (float)wnd.Gfx().GetWidth()/2.0f,(float)wnd.Gfx().GetHeight()/2.f,0 });
 	
 	t2d.LinkTechniques(rg);
 }
 
 void ShaderToyScene::Update(float dt)
 {
-	cam2d.BindToGraphics(wnd.Gfx());
+	rg.BindCamera2D(cam2d);
 }
 
 void ShaderToyScene::Draw(float dt)
 {
 	t2d.Submit(dr::Chan::Orth);
+	rg.UpdatePSCB(wnd, dt);
 	rg.Execute(wnd.Gfx());
 }
 

@@ -11,6 +11,7 @@
 #include "Graphlib/ScaleOutlineRenderGraph.h"
 #include "Jobber/Graphlib/Channels.h"
 #include "Graphlib/ShaderToyRenderGraph.h"
+#include "Graphlib/DeferredRenderGraph.h"
 
 #include "Passlib/Base/Pass.h"
 
