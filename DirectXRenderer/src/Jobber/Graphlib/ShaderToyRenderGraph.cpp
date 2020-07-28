@@ -3,6 +3,7 @@
 #include "Jobber/Passlib/BufferClearPass.h"
 #include "Jobber/Passlib/Texture2DPass.h"
 #include "Jobber/Passlib/ShadowMappingPass.h"
+#include "Jobber/Passlib/BufferAPass.h"
 
 namespace dr
 {
@@ -47,13 +48,18 @@ namespace dr
 				AddGlobalSource(DirectBindableSource<Bind::CachingPixelConstantBufferEx>::Make("shaderToy", shaderToy));
 			}
 
+			{
+				auto pass = std::make_unique<BufferAPass>(gfx, "BufferA",gfx.GetWidth(),gfx.GetHeight());
+				AppendPass(std::move(pass));
+			}
 
 			{
 				auto pass = std::make_unique<Texture2DPass>(gfx, "texture2D");
 				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
 				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
 				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
-				pass->SetSinkLinkage("shaderToy", "$.shaderToy");
+				pass->SetSinkLinkage("bufferA", "BufferA.scratchOut");
+				//pass->SetSinkLinkage("shaderToy", "$.shaderToy");
 				AppendPass(std::move(pass));
 			}
 

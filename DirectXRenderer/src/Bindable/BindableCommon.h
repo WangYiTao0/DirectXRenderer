@@ -28,3 +28,5 @@
 #include "CubeTexture.h"
 
 #include "MultiRenderTarget.h"
+
+#include "ShaderToySampler.h"

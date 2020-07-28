@@ -15,6 +15,7 @@ private:
 	dr::Camera2D cam2d;
 	dr::Rgph::ShaderToyRenderGraph rg{ wnd.Gfx() };
 
-	dr::Tex2D t2d {wnd.Gfx(),"asset//textures//brickwall.jpg","Texture2D_VS", "Texture2D_PS",(float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight()};
+	dr::Tex2D bufferA {wnd.Gfx(),"asset//textures//whiteNoise256x256.png","Texture2D_VS", (float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight()};
+	dr::Tex2D Final { wnd.Gfx(),"Texture2D_VS", (float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight() };
 
 };

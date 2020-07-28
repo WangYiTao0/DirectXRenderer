@@ -1,24 +1,24 @@
+//#include "ShaderToy/2D_Clouds.hlsli"
+//#include "ShaderToy/Elevated.hlsli"
+#include "ShaderToy/Clouds.hlsli"
 
-#include "ShaderToy/ShaderToy.hlsli"
 
-struct PSIn
+float4 main(float2 tc : Texcoord, float4 pos : SV_Position) : SV_TARGET
 {
-    float4 pos : SV_POSITION;
-    float2 tc : Texcoord;
-};
-
-
-Texture2D tex : register(t0);
-SamplerState splr : register(s0);
-
-
-float4 main(PSIn psi) : SV_TARGET
-{
+    float4 fragColor = { 0.0, 0.0, 0.0, 0.0 };
+    
+    float4 tempColor;
     // Time varying pixel color
-    float3 col = 0.5 + 0.5 * cos(iTime + psi.tc.xyx + float3(0, 2, 4));
+    float3 col = 0.5 + 0.5 * cos(iTime + tc.xyx + float3(0, 2, 4));
 
     // Output to screen
-    float4 fragColor = float4(col, 1.0);
+    tempColor = iChannel0.Sample(splr, tc);
+
+    fragColor = tempColor;
+     
+    Clouds(tempColor, tc);
+    
+    fragColor += tempColor;
     
     return fragColor;
 }

@@ -1,10 +1,13 @@
 //#define SHADERTOY
 
+//#include "defines.hlsli"
+//#include "shaderToy.hlsli"
+
 ///**** TWEAK *****************************************************************/
 //#define COVERAGE		.50
 //#define THICKNESS		15.
 //#define ABSORPTION		1.030725
-//#define WIND			float3(0, 0, -u_time * .2)
+//#define WIND			vec3(0, 0, -u_time * .2)
 
 //#define FBM_FREQ		2.76434
 //#define NOISE_VALUE
@@ -13,7 +16,7 @@
 
 ////#define SIMULATE_LIGHT
 //#define FAKE_LIGHT
-//#define SUN_DIR			normalize(float3(0, abs(sin(u_time * .3)), -1))
+//#define SUN_DIR			normalize(vec3(0, abs(sin(u_time * .3)), -1))
 
 //#define STEPS			25
 ///******************************************************************************/
@@ -49,7 +52,7 @@
 //#define _mutable(T) static T
 //#define _constant(T) static const T
 //#define vec2 float2
-//#define float3 float3
+//#define vec3 float3
 //#define vec4 float4
 //#define mat2 float2x2
 //#define mat3 float3x3
@@ -89,21 +92,21 @@
 
 //struct ray_t
 //{
-//    float3 origin;
-//    float3 direction;
+//    vec3 origin;
+//    vec3 direction;
 //};
 //#define BIAS 1e-4 // small offset to avoid self-intersections
 
 //struct sphere_t
 //{
-//    float3 origin;
+//    vec3 origin;
 //    float radius;
 //    int material;
 //};
 
 //struct plane_t
 //{
-//    float3 direction;
+//    vec3 direction;
 //    float distance;
 //    int material;
 //};
@@ -112,15 +115,15 @@
 //{
 //    float t;
 //    int material_id;
-//    float3 normal;
-//    float3 origin;
+//    vec3 normal;
+//    vec3 origin;
 //};
 //#define max_dist 1e8
 //_constant(hit_t) no_hit = _begin(hit_t)
 //	float(max_dist + 1e1), // 'infinite' distance
 //	-1, // material id
-//	float3(0., 0., 0.), // normal
-//	float3(0., 0., 0.) // origin
+//	vec3(0., 0., 0.), // normal
+//	vec3(0., 0., 0.) // origin
 //_end;
 
 //// ----------------------------------------------------------------------------
@@ -128,13 +131,13 @@
 //// ----------------------------------------------------------------------------
 
 //ray_tget_primary_ray(
-//	_in(float3) cam_local_point,
-//	_inout(float3) cam_origin,
-//	_inout(float3) cam_look_at
+//	_in(vec3) cam_local_point,
+//	_inout(vec3) cam_origin,
+//	_inout(vec3) cam_look_at
 //){
-//float3 fwd = normalize(cam_look_at - cam_origin);
-//float3 up = float3(0, 1, 0);
-//float3 right = cross(up, fwd);
+//vec3 fwd = normalize(cam_look_at - cam_origin);
+//vec3 up = vec3(0, 1, 0);
+//vec3 right = cross(up, fwd);
 //	up = cross(fwd, right);
 
 //ray_t r = _begin(ray_t)
@@ -181,19 +184,19 @@
 //	return mat3(1, 0, 0, 0, _cos, -_sin, 0, _sin, _cos);
 //}
 
-//float3 corect_gamma(
-//	_in( float3) color,
+//vec3 corect_gamma(
+//	_in( vec3) color,
 //	_in(float) gamma
 //){
 //float p = 1.0 / gamma;
-//	return float3(pow(color.r, p), pow(color.g, p), pow(color.b, p));
+//	return vec3(pow(color.r, p), pow(color.g, p), pow(color.b, p));
 //}
 
 //#ifdef __cplusplus
-//float3 faceforward(
-//	_in(float3) N,
-//	_in(float3) I,
-//	_in(float3) Nref
+//vec3 faceforward(
+//	_in(vec3) N,
+//	_in(vec3) I,
+//	_in(vec3) Nref
 //){
 //	return dot(Nref, I) < 0 ? N : -N;
 //}
@@ -228,7 +231,7 @@
 //	_in(sphere_t) sphere,
 //	_inout(hit_t) hit
 //){
-//float3 rc = sphere.origin - ray.origin;
+//vec3 rc = sphere.origin - ray.origin;
 //float radius2 = sphere.radius * sphere.radius;
 //float tca = dot(rc, ray.direction);
 ////	if (tca < 0.) return;
@@ -246,7 +249,7 @@
 //	if (t0 > hit.t)
 //		return;
 
-//float3 impact = ray.origin + ray.direction * t0;
+//vec3 impact = ray.origin + ray.direction * t0;
 
 //	hit.t =
 //t0;
@@ -272,7 +275,7 @@
 //float denom = dot(p.direction, ray.direction);
 //	if (denom < 1e-6) return;
 
-//float3 P0 = float3(p.distance, p.distance, p.distance);
+//vec3 P0 = vec3(p.distance, p.distance, p.distance);
 //float t = dot(P0 - ray.origin, p.direction) / denom;
 //	if (t < 0. || t > hit.t) return;
 	
@@ -296,10 +299,10 @@
 //}
 
 //float noise_iq(
-//	_in( float3) x
+//	_in( vec3) x
 //){
-//float3 p = floor(x);
-//float3 f = fract(x);
+//vec3 p = floor(x);
+//vec3 f = fract(x);
 //	f = f*f*(3.0 - 2.0*f);
 
 //#if 0
@@ -318,13 +321,13 @@
 //// Noise function by iq from https://www.shadertoy.com/view/ldl3Dl
 //// ----------------------------------------------------------------------------
 
-//float3 hash_w(
-//	_in( float3) x
+//vec3 hash_w(
+//	_in( vec3) x
 //){
 //#if 0
-//	float3 xx = float3(dot(x, float3(127.1, 311.7, 74.7)),
-//		dot(x, float3(269.5, 183.3, 246.1)),
-//		dot(x, float3(113.5, 271.9, 124.6)));
+//	vec3 xx = vec3(dot(x, vec3(127.1, 311.7, 74.7)),
+//		dot(x, vec3(269.5, 183.3, 246.1)),
+//		dot(x, vec3(113.5, 271.9, 124.6)));
 
 //	return fract(sin(xx)*43758.5453123);
 //#else
@@ -334,11 +337,11 @@
 //}
 
 //// returns closest, second closest, and cell id
-//float3 noise_w(
-//	_in( float3) x
+//vec3 noise_w(
+//	_in( vec3) x
 //){
-//float3 p = floor(x);
-//float3 f = fract(x);
+//vec3 p = floor(x);
+//vec3 f = fract(x);
 
 //float id = 0.0;
 //vec2 res = vec2(100.0, 100.0);
@@ -349,13 +352,13 @@
 //			for (
 //int i = -1;i <= 1; i++)
 //			{
-//float3 b = float3(float(i), float(j), float(k));
-//float3 r = float3(b) - f + hash_w(p + b);
+//vec3 b = vec3(float(i), float(j), float(k));
+//vec3 r = vec3(b) - f + hash_w(p + b);
 //float d = dot(r, r);
 
 //				if (d < res.x)
 //				{
-//					id = dot(p + b, float3(1.0, 57.0, 113.0));
+//					id = dot(p + b, vec3(1.0, 57.0, 113.0));
 //					res = vec2(d, res.x);
 //				}
 //				else if (d < res.y)
@@ -365,7 +368,7 @@
 //				}
 //			}
 
-//	return float3(sqrt(res), abs(id));
+//	return vec3(sqrt(res), abs(id));
 //}
 ////
 //// GLSL textureless classic 3D noise "cnoise",
@@ -381,7 +384,7 @@
 //// https://github.com/ashima/webgl-noise
 ////
 
-//float3 mod289(float3 x)
+//vec3 mod289(vec3 x)
 //{
 //    return x - floor(x * (1.0 / 289.0)) * 289.0;
 //}
@@ -401,20 +404,20 @@
 //    return 1.79284291400159 - 0.85373472095314 * r;
 //}
 
-//float3 fade(float3 t)
+//vec3 fade(vec3 t)
 //{
 //    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 //}
 
 //// Classic Perlin noise
-//float cnoise(float3 P)
+//float cnoise(vec3 P)
 //{
-//    float3 Pi0 = floor(P); // Integer part for indexing
-//    float3 Pi1 = Pi0 + float3(1, 1, 1); // Integer part + 1
+//    vec3 Pi0 = floor(P); // Integer part for indexing
+//    vec3 Pi1 = Pi0 + vec3(1, 1, 1); // Integer part + 1
 //    Pi0 = mod289(Pi0);
 //    Pi1 = mod289(Pi1);
-//    float3 Pf0 = fract(P); // Fractional part for interpolation
-//    float3 Pf1 = Pf0 - float3(1, 1, 1); // Fractional part - 1.0
+//    vec3 Pf0 = fract(P); // Fractional part for interpolation
+//    vec3 Pf1 = Pf0 - vec3(1, 1, 1); // Fractional part - 1.0
 //    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
 //    vec4 iy = vec4(Pi0.yy, Pi1.yy);
 //    vec4 iz0 = Pi0.zzzz;
@@ -440,14 +443,14 @@
 //    gx1 -= sz1 * (step(0.0, gx1) - 0.5);
 //    gy1 -= sz1 * (step(0.0, gy1) - 0.5);
 
-//    float3 g000 = float3(gx0.x, gy0.x, gz0.x);
-//    float3 g100 = float3(gx0.y, gy0.y, gz0.y);
-//    float3 g010 = float3(gx0.z, gy0.z, gz0.z);
-//    float3 g110 = float3(gx0.w, gy0.w, gz0.w);
-//    float3 g001 = float3(gx1.x, gy1.x, gz1.x);
-//    float3 g101 = float3(gx1.y, gy1.y, gz1.y);
-//    float3 g011 = float3(gx1.z, gy1.z, gz1.z);
-//    float3 g111 = float3(gx1.w, gy1.w, gz1.w);
+//    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);
+//    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);
+//    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);
+//    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);
+//    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);
+//    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);
+//    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);
+//    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);
 
 //    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
 //    g000 *= norm0.x;
@@ -461,15 +464,15 @@
 //    g111 *= norm1.w;
 
 //    float n000 = dot(g000, Pf0);
-//    float n100 = dot(g100, float3(Pf1.x, Pf0.yz));
-//    float n010 = dot(g010, float3(Pf0.x, Pf1.y, Pf0.z));
-//    float n110 = dot(g110, float3(Pf1.xy, Pf0.z));
-//    float n001 = dot(g001, float3(Pf0.xy, Pf1.z));
-//    float n101 = dot(g101, float3(Pf1.x, Pf0.y, Pf1.z));
-//    float n011 = dot(g011, float3(Pf0.x, Pf1.yz));
+//    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+//    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+//    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+//    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+//    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+//    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
 //    float n111 = dot(g111, Pf1);
 
-//    float3 fade_xyz = fade(Pf0);
+//    vec3 fade_xyz = fade(Pf0);
 //    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
 //    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
 //    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
@@ -477,14 +480,14 @@
 //}
 
 //// Classic Perlin noise, periodic variant
-//float pnoise(float3 P, float3 rep)
+//float pnoise(vec3 P, vec3 rep)
 //{
-//    float3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
-//    float3 Pi1 = mod(Pi0 + float3(1, 1, 1), rep); // Integer part + 1, mod period
+//    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
+//    vec3 Pi1 = mod(Pi0 + vec3(1, 1, 1), rep); // Integer part + 1, mod period
 //    Pi0 = mod289(Pi0);
 //    Pi1 = mod289(Pi1);
-//    float3 Pf0 = fract(P); // Fractional part for interpolation
-//    float3 Pf1 = Pf0 - float3(1, 1, 1); // Fractional part - 1.0
+//    vec3 Pf0 = fract(P); // Fractional part for interpolation
+//    vec3 Pf1 = Pf0 - vec3(1, 1, 1); // Fractional part - 1.0
 //    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
 //    vec4 iy = vec4(Pi0.yy, Pi1.yy);
 //    vec4 iz0 = Pi0.zzzz;
@@ -510,14 +513,14 @@
 //    gx1 -= sz1 * (step(0.0, gx1) - 0.5);
 //    gy1 -= sz1 * (step(0.0, gy1) - 0.5);
 
-//    float3 g000 = float3(gx0.x, gy0.x, gz0.x);
-//    float3 g100 = float3(gx0.y, gy0.y, gz0.y);
-//    float3 g010 = float3(gx0.z, gy0.z, gz0.z);
-//    float3 g110 = float3(gx0.w, gy0.w, gz0.w);
-//    float3 g001 = float3(gx1.x, gy1.x, gz1.x);
-//    float3 g101 = float3(gx1.y, gy1.y, gz1.y);
-//    float3 g011 = float3(gx1.z, gy1.z, gz1.z);
-//    float3 g111 = float3(gx1.w, gy1.w, gz1.w);
+//    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);
+//    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);
+//    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);
+//    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);
+//    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);
+//    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);
+//    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);
+//    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);
 
 //    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
 //    g000 *= norm0.x;
@@ -531,15 +534,15 @@
 //    g111 *= norm1.w;
 
 //    float n000 = dot(g000, Pf0);
-//    float n100 = dot(g100, float3(Pf1.x, Pf0.yz));
-//    float n010 = dot(g010, float3(Pf0.x, Pf1.y, Pf0.z));
-//    float n110 = dot(g110, float3(Pf1.xy, Pf0.z));
-//    float n001 = dot(g001, float3(Pf0.xy, Pf1.z));
-//    float n101 = dot(g101, float3(Pf1.x, Pf0.y, Pf1.z));
-//    float n011 = dot(g011, float3(Pf0.x, Pf1.yz));
+//    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+//    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+//    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+//    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+//    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+//    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
 //    float n111 = dot(g111, Pf1);
 
-//    float3 fade_xyz = fade(Pf0);
+//    vec3 fade_xyz = fade(Pf0);
 //    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
 //    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
 //    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
@@ -561,10 +564,10 @@
 //// ----------------------------------------------------------------------------
 
 //float fbm(
-//	_in( float3) pos,
+//	_in( vec3) pos,
 //	_in(float) lacunarity
 //){
-//float3 p = pos;
+//vec3 p = pos;
 //float
 //	t = 0.51749673 * noise(p);p *=
 //lacunarity;
@@ -582,7 +585,7 @@
 //Texture3D u_tex_noise : register(t1);
 //SamplerState u_sampler0 : register(s0);
 //#endif
-//float get_noise(_in( float3) x)
+//float get_noise(_in( vec3) x)
 //{
 //#if 0
 //	return u_tex_noise.Sample(u_sampler0, x);
@@ -591,25 +594,25 @@
 //#endif
 //}
 
-//_constant(float3) sun_color = float3(1., .7, .55);
+//_constant(vec3) sun_color = vec3(1., .7, .55);
 
 //_constant(sphere_t) atmosphere = _begin(sphere_t)
-//	float3(0, -450, 0), 500., 0
+//	vec3(0, -450, 0), 500., 0
 //_end;
 //_constant(sphere_t) atmosphere_2 = _begin(sphere_t)
 //	atmosphere.origin, atmosphere.radius + 50., 0
 //_end;
 //_constant(plane_t) ground = _begin(plane_t)
-//	float3(0., -1., 0.), 0., 1
+//	vec3(0., -1., 0.), 0., 1
 //_end;
 
-//float3render_sky_color(
+//vec3render_sky_color(
 //	_in(ray_t) eye
 //){
-//float3 rd = eye.direction;
+//vec3 rd = eye.direction;
 //float sun_amount = max(dot(rd, SUN_DIR), 0.0);
 
-//float3 sky = mix(float3(.0, .1, .4), float3(.3, .6, .8), 1.0 - rd.y);
+//vec3 sky = mix(vec3(.0, .1, .4), vec3(.3, .6, .8), 1.0 - rd.y);
 //	sky = sky + sun_color * min(pow(sun_amount, 1500.0) * 5.0, 1.0);
 //	sky = sky + sun_color * min(pow(sun_amount, 10.0) * .6, 1.0);
 
@@ -618,12 +621,12 @@
 //}
 
 //float density(
-//	_in( float3) pos,
-//	_in(float3) offset,
+//	_in( vec3) pos,
+//	_in(vec3) offset,
 //	_in(float) t
 //){
 //	// signal
-//float3 p = pos * .0212242 + offset;
+//vec3 p = pos * .0212242 + offset;
 //float dens = get_noise(p);
 	
 //float cov = 1. - COVERAGE;
@@ -636,13 +639,13 @@
 //}
 
 //float light(
-//	_in( float3) origin
+//	_in( vec3) origin
 //){
 //const int steps = 8;
 //float march_step = 1.;
 
-//float3 pos = origin;
-//float3 dir_step = SUN_DIR * march_step;
+//vec3 pos = origin;
+//vec3 dir_step = SUN_DIR * march_step;
 //float T = 1.; // transmitance
 
 //	for (
@@ -676,12 +679,12 @@
 //const int steps = STEPS; // +int(32. * r);
 //float march_step = thickness / float(steps);
 
-//float3 dir_step = eye.direction / eye.direction.y * march_step;
-//float3 pos = //eye.origin + eye.direction * 100.; 
+//vec3 dir_step = eye.direction / eye.direction.y * march_step;
+//vec3 pos = //eye.origin + eye.direction * 100.; 
 //		hit.origin;
 
 //float T = 1.; // transmitance
-//float3 C = float3(0, 0, 0); // color
+//vec3 C = vec3(0, 0, 0); // color
 //float alpha = 0.;
 
 //	for (
@@ -728,21 +731,21 @@
 //#ifdef HLSL
 //	point_ndc.y = 1. - point_ndc.y;
 //#endif
-//float3 point_cam = float3((2.0 * point_ndc - 1.0) * aspect_ratio * fov, -1.0);
+//vec3 point_cam = vec3((2.0 * point_ndc - 1.0) * aspect_ratio * fov, -1.0);
 
 //#if 0
 //	float n = saturate(get_noise(point_cam));
-//	fragColor = vec4(float3(n, n, n), 1);
+//	fragColor = vec4(vec3(n, n, n), 1);
 //	return;
 //#endif
 
-//float3 col = float3(0, 0, 0);
+//vec3 col = vec3(0, 0, 0);
 
 //	//mat3 rot = rotate_around_x(abs(sin(u_time / 2.)) * 45.);
 //	//sun_dir = mul(rot, sun_dir);
 
-//float3 eye = float3(0, 1., 0);
-//float3 look_at = float3(0, 1.6, -1);
+//vec3 eye = vec3(0, 1., 0);
+//vec3 look_at = vec3(0, 1.6, -1);
 //ray_t eye_ray = get_primary_ray(point_cam, eye, look_at);
 
 //	eye_ray.direction.yz = mul(rotate_2d(+u_mouse.y * .13), eye_ray.direction.yz);
@@ -753,19 +756,19 @@
 
 //	if (hit.material_id == 1) {
 //float cb = checkboard_pattern(hit.origin.xz, .5);
-//		col = mix(float3(.6, .6, .6), float3(.75, .75, .75), cb);
+//		col = mix(vec3(.6, .6, .6), vec3(.75, .75, .75), cb);
 //	} else {
 //#if 1
-//float3 sky = render_sky_color(eye_ray);
+//vec3 sky = render_sky_color(eye_ray);
 //vec4 cld = render_clouds(eye_ray);
 //		col = mix(sky, cld.rgb/(0.000001+cld.a), cld.a);
 //#else
 //		intersect_sphere(eye_ray, atmosphere, hit);
-//		float3 d = hit.normal;
+//		vec3 d = hit.normal;
 //		float u = .5 + atan(d.z, d.x) / (2. * PI);
 //		float v = .5 - asin(d.y) / PI;
 //		float cb = checkboard_pattern(vec2(u, v), 50.);
-//		col = float3(cb, cb, cb);
+//		col = vec3(cb, cb, cb);
 //#endif
 //	}
 

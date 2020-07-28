@@ -13,8 +13,8 @@ struct VSIn
 
 struct VSOut
 {
-    float4 pos : SV_Position;
     float2 tc : Texcoord;
+    float4 pos : SV_Position;
 };
 
 VSOut main(VSIn vsi)

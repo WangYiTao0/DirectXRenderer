@@ -27,10 +27,15 @@ namespace dr
 			vertices[1].Attr<Element::Position3D>() = { side,-side,0.0f };// 1
 			vertices[2].Attr<Element::Position3D>() = { -side,side,0.0f };// 2
 			vertices[3].Attr<Element::Position3D>() = { side,side,0.0f };// 3
-			vertices[0].Attr<Element::Texture2D>() = { 0.0f,0.0f };// 0 near side
-			vertices[1].Attr<Element::Texture2D>() = { 1.0f,0.0f };// 1
-			vertices[2].Attr<Element::Texture2D>() = { 0.0f,1.0f };// 2
-			vertices[3].Attr<Element::Texture2D>() = { 1.0f,1.0f };// 3
+			//vertices[0].Attr<Element::Texture2D>() = { 0.0f,0.0f };// 0 near side
+			//vertices[1].Attr<Element::Texture2D>() = { 1.0f,0.0f };// 1
+			//vertices[2].Attr<Element::Texture2D>() = { 0.0f,1.0f };// 2
+			//vertices[3].Attr<Element::Texture2D>() = { 1.0f,1.0f };// 3
+			//opengl 
+			vertices[0].Attr<Element::Texture2D>() = { 0.0f,1.0f };// 0 near side
+			vertices[1].Attr<Element::Texture2D>() = { 1.0f,1.0f };// 1
+			vertices[2].Attr<Element::Texture2D>() = { 0.0f,0.0f };// 2
+			vertices[3].Attr<Element::Texture2D>() = { 1.0f,0.0f };// 3
 
 			return{
 				std::move(vertices),{

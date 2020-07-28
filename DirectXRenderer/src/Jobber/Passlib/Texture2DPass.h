@@ -26,14 +26,19 @@ namespace dr
 				using namespace Bind;
 				RegisterSink(DirectBufferSink<RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSink(DirectBufferSink<DepthStencil>::Make("depthStencil", depthStencil));
+
+				AddBind(PixelShader::Resolve(gfx, "Texture2D_PS"));
+				AddBind(ShaderToySampler::Resolve(gfx,
+					ShaderToySampler::Filter::Linear,
+					ShaderToySampler::Wrap::Clamp, 1));
 				AddBindSink<Bind::DepthStencil>("shadowMap");
-				
-				AddBindSink<Bind::CachingPixelConstantBufferEx>("shaderToy");
+				AddBindSink<Bind::RenderTarget>("bufferA");
+				//AddBindSink<Bind::CachingPixelConstantBufferEx>("shaderToy");
 				//RegisterSink(DirectBindableSink<CachingPixelConstantBufferEx>::Make("shaderToy", shaderToy));
 
 				RegisterSource(DirectBufferSource<RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSource(DirectBufferSource<DepthStencil>::Make("depthStencil", depthStencil));
-				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
+				//AddBind(Stencil::Resolve(gfx, Stencil::Mode::Off));
 
 				//depthStencil = std::make_unique<ShaderInputDepthStencil>(gfx, 0, DepthStencil::Usage::ShadowDepth);
 				//RegisterSource(DirectBindableSource<DepthStencil>::Make("shadowOut", depthStencil));
