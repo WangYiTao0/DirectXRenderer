@@ -142,7 +142,14 @@ vec4 render(in vec3 ro, in vec3 rd, in ivec2 px)
 void Clouds(out vec4 fragColor, in vec2 fragCoord)
 {
     vec2 p = (2.0 * fragCoord - 1.0);
-
+    if (iResolution.x > iResolution.y)
+    {
+        p.x *= iResolution.x / iResolution.y;
+    }
+    else
+    {
+        p.y *= iResolution.y / iResolution.x;
+    }
     vec2 m = iMouse.xy / iResolution.xy;
     
     // camera

@@ -398,7 +398,7 @@ void Elvated(out vec4 fragColor, in vec2 fragCoord)
     //vec2 uv = fragCoord / iResolution.xy;
     vec2 uv = fragCoord;
     //vec4 data = texture(iChannel1, uv);
-    vec4 data = iChannel1.Sample(splr, uv);
+    vec4 data = iChannel0.Sample(splr, uv);
 
     vec3 col = vec3(0.0, 0.0, 0.0);
     if (data.w < 0.0)
@@ -419,7 +419,7 @@ void Elvated(out vec4 fragColor, in vec2 fragCoord)
             float h = float(i) / 31.0;
             vec2 pos = uv + dir * h;
             //col += texture(iChannel1, pos).xyz;
-            col += iChannel1.Sample(splr, pos).xyz;
+            col += iChannel0.Sample(splr, pos).xyz;
         }
         col /= 32.0;
     }

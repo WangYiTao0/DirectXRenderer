@@ -9,8 +9,8 @@ ShaderToyScene::ShaderToyScene(dr::Win32Window& wnd)
 {
 	cam2d.SetOrthoProjection((float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(), 0.0, 1.0);
 	
-	bufferA.SetPos({ (float)wnd.Gfx().GetWidth()/2.0f,(float)wnd.Gfx().GetHeight()/2.f,1.0 });
-	Final.SetPos({ (float)wnd.Gfx().GetWidth() / 2.0f,(float)wnd.Gfx().GetHeight() / 2.f,1.0 });
+	bufferA.SetPos({ (float)wnd.Gfx().GetWidth()/2.0f,(float)wnd.Gfx().GetHeight()/2.f,0.0 });
+	Final.SetPos({ (float)wnd.Gfx().GetWidth() / 2.0f,(float)wnd.Gfx().GetHeight() / 2.f,0.0 });
 
 	bufferA.LinkTechniques(rg);
 	Final.LinkTechniques(rg);
