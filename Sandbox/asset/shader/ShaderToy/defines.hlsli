@@ -20,7 +20,7 @@
 //#define texelFetch Load
 //#define textureLoad SampleLevel
 
-#define PI2 6.28318530718
+#define pi2 6.28318530718
 #define pi 3.14159265358979
 #define halfpi (pi * 0.5)
 #define oneoverpi (1.0 / pi)

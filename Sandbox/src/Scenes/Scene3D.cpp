@@ -40,8 +40,8 @@ Scene3D::Scene3D(dr::Win32Window& wnd)
 	//nano.LinkTechniques(rg);
 	//cameras.LinkTechniques(rg);
 
-	shadowViewTexture.SetPos({ 100,100,0 });
-	shadowViewTexture.LinkTechniques(rg);
+	//shadowViewTexture.SetPos({ 100,100,0 });
+	//shadowViewTexture.LinkTechniques(rg);
 
 	rg.BindShadowCamera(*light.ShareCamera());
 }
@@ -79,7 +79,7 @@ void Scene3D::Draw(float dt)
 	//gobber.Submit(Chan::shadow);
 	//nano.Submit(Chan::shadow);
 
-	shadowViewTexture.Submit(dr::Chan::Orth);
+	//shadowViewTexture.Submit(dr::Chan::Orth);
 
 	rg.Execute(wnd.Gfx());
 

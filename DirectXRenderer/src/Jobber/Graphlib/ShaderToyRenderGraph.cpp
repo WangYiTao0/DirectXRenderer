@@ -4,6 +4,8 @@
 #include "Jobber/Passlib/Texture2DPass.h"
 #include "Jobber/Passlib/ShadowMappingPass.h"
 #include "Jobber/Passlib/BufferAPass.h"
+#include "Jobber/Passlib/BufferBPass.h"
+#include "Jobber/Passlib/BufferCPass.h"
 
 namespace dr
 {
@@ -52,6 +54,14 @@ namespace dr
 				auto pass = std::make_unique<BufferAPass>(gfx, "BufferA",gfx.GetWidth(),gfx.GetHeight());
 				AppendPass(std::move(pass));
 			}
+			{
+				auto pass = std::make_unique<BufferBPass>(gfx, "BufferB", gfx.GetWidth(), gfx.GetHeight());
+				AppendPass(std::move(pass));
+			}
+			{
+				auto pass = std::make_unique<BufferCPass>(gfx, "BufferC", gfx.GetWidth(), gfx.GetHeight());
+				AppendPass(std::move(pass));
+			}
 
 			{
 				auto pass = std::make_unique<Texture2DPass>(gfx, "texture2D");
@@ -59,6 +69,8 @@ namespace dr
 				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
 				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
 				pass->SetSinkLinkage("bufferA", "BufferA.scratchOut");
+				pass->SetSinkLinkage("bufferB", "BufferB.scratchOut");
+				pass->SetSinkLinkage("bufferC", "BufferC.scratchOut");
 				//pass->SetSinkLinkage("shaderToy", "$.shaderToy");
 				AppendPass(std::move(pass));
 			}

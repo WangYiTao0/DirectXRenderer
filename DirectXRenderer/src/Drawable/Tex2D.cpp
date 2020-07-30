@@ -8,7 +8,8 @@
 namespace dr
 {
 
-	Tex2D::Tex2D(Graphics& gfx, std::string path, std::string vs_name,  float width, float height)
+	Tex2D::Tex2D(Graphics& gfx, std::string path, std::string vs_name, 
+		float width, float height,std::string stepname)
 	{
 		using namespace Bind;
 		namespace dx = DirectX;
@@ -24,7 +25,7 @@ namespace dr
 		{
 			Technique shade2D("Shade2D", Chan::Orth);
 			
-			Step only("BufferA");
+			Step only(stepname);
 
 			only.AddBindable(Texture::Resolve(gfx, path,1));
 			only.AddBindable(Texture::Resolve(gfx, "asset//textures//rgbaNoise.png", 2));

@@ -33,6 +33,8 @@ namespace dr
 					ShaderToySampler::Wrap::Clamp, 1));
 				AddBindSink<Bind::DepthStencil>("shadowMap");
 				AddBindSink<Bind::RenderTarget>("bufferA");
+				AddBindSink<Bind::RenderTarget>("bufferB");
+				AddBindSink<Bind::RenderTarget>("bufferC");
 				//AddBindSink<Bind::CachingPixelConstantBufferEx>("shaderToy");
 				//RegisterSink(DirectBindableSink<CachingPixelConstantBufferEx>::Make("shaderToy", shaderToy));
 

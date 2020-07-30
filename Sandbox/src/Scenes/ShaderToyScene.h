@@ -15,7 +15,12 @@ private:
 	dr::Camera2D cam2d;
 	dr::Rgph::ShaderToyRenderGraph rg{ wnd.Gfx() };
 
-	dr::Tex2D bufferA {wnd.Gfx(),"asset//textures//whiteNoise256x256.png","Texture2D_VS", (float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight()};
+	dr::Tex2D bufferA {wnd.Gfx(),"asset//textures//whiteNoise256x256.png","Texture2D_VS", 
+	(float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(),"BufferA"};
+	dr::Tex2D bufferB{ wnd.Gfx(),"asset//textures//whiteNoise256x256.png","Texture2D_VS",
+	(float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(),"BufferB" };
+	dr::Tex2D bufferC{ wnd.Gfx(),"asset//textures//whiteNoise256x256.png","Texture2D_VS",
+	(float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight(),"BufferC" };
 	dr::Tex2D Final { wnd.Gfx(),"Texture2D_VS", (float)wnd.Gfx().GetWidth(), (float)wnd.Gfx().GetHeight() };
 
 };
