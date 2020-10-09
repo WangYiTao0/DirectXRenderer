@@ -7,6 +7,8 @@ namespace dr
 
 	namespace Bind
 	{
+		class OutputOnlyDepthStencil;
+
 		class CubeTexture : public Bindable
 		{
 		public:
@@ -17,6 +19,19 @@ namespace dr
 		protected:
 			std::string path;
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
+		};
+
+		class DepthCubeTexture : public Bindable
+		{
+		public:
+			DepthCubeTexture(Graphics& gfx, UINT size, UINT slot = 0);
+			void Bind(Graphics& gfx) noxnd override;
+			OutputOnlyDepthStencil& GetDepthBuffer(size_t index) const;
+		private:
+			unsigned int slot;
+		protected:
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
+			std::vector<std::unique_ptr<OutputOnlyDepthStencil>> depthBuffers;
 		};
 	}
 }

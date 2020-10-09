@@ -3,6 +3,7 @@
 #include "Core/Surface.h"
 #include "Debug/ThrowMacros.h"
 #include "BindableCodex.h"
+#include "DepthStencil.h"
 #include <vector>
 
 namespace dr
@@ -68,5 +69,23 @@ namespace dr
 			INFOMAN_NOHR(gfx);
 			GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf()));
 		}
+
+
+
+		DepthCubeTexture::DepthCubeTexture(Graphics& gfx, UINT size, UINT slot /*= 0*/)
+		{
+
+		}
+
+		void DepthCubeTexture::Bind(Graphics& gfx) noxnd
+		{
+
+		}
+
+		Bind::OutputOnlyDepthStencil& DepthCubeTexture::GetDepthBuffer(size_t index)
+		{
+
+		}
+
 	}
 }
