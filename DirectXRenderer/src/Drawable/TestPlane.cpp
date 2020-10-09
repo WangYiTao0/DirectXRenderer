@@ -21,11 +21,11 @@ namespace dr
 
 		std::string shader_dir = ".\\asset\\shader\\cso\\";
 
-		auto pvs = VertexShader::Resolve(gfx, shader_dir + "Solid_vs.cso");
+		auto pvs = VertexShader::Resolve(gfx, shader_dir + "Solid_vs");
 		auto pvsbc = pvs->GetBytecode();
 		AddBind(std::move(pvs));
 
-		AddBind(PixelShader::Resolve(gfx, shader_dir + "Solid_ps.cso"));
+		AddBind(PixelShader::Resolve(gfx, shader_dir + "Solid_ps"));
 
 		AddBind(std::make_shared<PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
 

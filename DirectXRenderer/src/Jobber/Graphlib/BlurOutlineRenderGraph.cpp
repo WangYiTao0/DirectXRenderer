@@ -150,6 +150,7 @@ namespace dr
 
 		void BlurOutlineRenderGraph::RenderWindows(Graphics& gfx)
 		{
+			RenderShadowWindow(gfx);
 			RenderKernelWindow(gfx);
 		}
 
@@ -206,10 +207,18 @@ namespace dr
 			ImGui::End();
 		}
 
-		void Rgph::BlurOutlineRenderGraph::DumpShadowMap(Graphics& gfx, const std::string& path)
+		void Rgph::BlurOutlineRenderGraph::RenderShadowWindow(Graphics& gfx)
 		{
-			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).DumpShadowMap(gfx, path);
+			if (ImGui::Begin("Shadow"))
+			{
+				if (ImGui::Button("Dump Cubemap"))
+				{
+					DumpShadowMap(gfx, "Dumps\\shadow_");
+				}
+			}
+			ImGui::End();
 		}
+
 		void Rgph::BlurOutlineRenderGraph::BindMainCamera(Camera3D& cam)
 		{
 			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).BindMainCamera(cam);
@@ -219,6 +228,13 @@ namespace dr
 		{
 			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).BindShadowCamera(cam);
 			dynamic_cast<LambertianPass&>(FindPassByName("lambertian")).BindShadowCamera(cam);
+		}
+		void dr::Rgph::BlurOutlineRenderGraph::StoreDepth(Graphics& gfx, const std::string& path)
+		{
+		}
+		void Rgph::BlurOutlineRenderGraph::DumpShadowMap(Graphics& gfx, const std::string& path)
+		{
+			dynamic_cast<ShadowMappingPass&>(FindPassByName("shadowMap")).DumpShadowMap(gfx, path);
 		}
 	}
 }

@@ -88,10 +88,10 @@ namespace dr
 			// common (post)
 			{
 				step.AddBindable(std::make_shared<TransformCbuf>(gfx, 0u));
-				auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS.cso");
+				auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS");
 				step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *pvs));
 				step.AddBindable(std::move(pvs));
-				step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS.cso"));
+				step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS"));
 				if (hasTexture)
 				{
 					step.AddBindable(Bind::Sampler::Resolve(gfx));
@@ -134,7 +134,7 @@ namespace dr
 
 				// TODO: better sub-layout generation tech for future consideration maybe
 				mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout,
-					*VertexShader::Resolve(gfx, "Solid_VS.cso")));
+					*VertexShader::Resolve(gfx, "Solid_VS")));
 
 				mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -154,7 +154,7 @@ namespace dr
 				}
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *VertexShader::Resolve(gfx, "Solid_VS")));
 
 				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -171,7 +171,7 @@ namespace dr
 				Step draw("shadowMap");
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+				draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *VertexShader::Resolve(gfx, "Solid_VS")));
 
 				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 

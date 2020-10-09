@@ -31,11 +31,11 @@ namespace dr
 				only.AddBindable(Texture::Resolve(gfx, "asset//textures//brickwall.jpg"));
 				only.AddBindable(Sampler::Resolve(gfx));
 
-				auto pvs = VertexShader::Resolve(gfx, "ShadowTest_VS.cso");
+				auto pvs = VertexShader::Resolve(gfx, "ShadowTest_VS");
 				only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *pvs));
 				only.AddBindable(std::move(pvs));
 
-				only.AddBindable(PixelShader::Resolve(gfx, "ShadowTest_PS.cso"));
+				only.AddBindable(PixelShader::Resolve(gfx, "ShadowTest_PS"));
 
 				Dcb::RawLayout lay;
 				lay.Add<Dcb::Float3>("specularColor");
@@ -62,7 +62,7 @@ namespace dr
 				Step mask("outlineMask");
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+				mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS")));
 
 				mask.AddBindable(std::move(tcb));
 
@@ -80,7 +80,7 @@ namespace dr
 				draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS")));
 
 				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -97,7 +97,7 @@ namespace dr
 				Step draw("shadowMap");
 
 				// TODO: better sub-layout generation tech for future consideration maybe
-				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS")));
 
 				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 

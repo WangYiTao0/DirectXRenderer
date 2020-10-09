@@ -30,10 +30,10 @@ namespace dr
 				AddBind(Sampler::Resolve(gfx, Sampler::Type::Bilinear));
 				AddBind(Rasterizer::Resolve(gfx, true));
 				AddBind(std::make_shared<SkyboxTransformCbuf>(gfx));
-				AddBind(PixelShader::Resolve(gfx, "Skybox_PS.cso"));
+				AddBind(PixelShader::Resolve(gfx, "Skybox_PS"));
 				AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 				{
-					auto pvs = Bind::VertexShader::Resolve(gfx, "Skybox_VS.cso");
+					auto pvs = Bind::VertexShader::Resolve(gfx, "Skybox_VS");
 					auto model = Cube::Make();
 					model.Transform(DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f));
 					const auto geometryTag = "$cube_map";

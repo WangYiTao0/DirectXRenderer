@@ -17,9 +17,10 @@ namespace dr
 		}
 		void ShadowCameraCBuf::Update(Graphics& gfx)
 		{
+			const auto pos = pCamera->GetPos();
 			const Transform t{
 				dx::XMMatrixTranspose(
-					pCamera->GetMatrix() * pCamera->GetProjection()
+					dx::XMMatrixTranslation(-pos.x,-pos.y,-pos.z)
 				)
 			};
 			pVcbuf->Update(gfx, t);

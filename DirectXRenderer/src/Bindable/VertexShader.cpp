@@ -14,7 +14,7 @@ namespace dr
 			INFOMAN(gfx);
 			std::string shader_dir = "asset\\shader\\cso\\";
 
-			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(shader_dir + path).c_str(), &pBytecodeBlob));
+			GFX_THROW_INFO(D3DReadFileToBlob(dr::StrH::ToWide(shader_dir + path + ".cso").c_str(), &pBytecodeBlob));
 			GFX_THROW_INFO(GetDevice(gfx)->CreateVertexShader(
 				pBytecodeBlob->GetBufferPointer(),
 				pBytecodeBlob->GetBufferSize(),

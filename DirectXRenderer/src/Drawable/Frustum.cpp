@@ -51,11 +51,11 @@ namespace dr
 			{
 				Step unoccluded("lambertian");
 
-				auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+				auto pvs = VertexShader::Resolve(gfx, "Solid_VS");
 				unoccluded.AddBindable(InputLayout::Resolve(gfx, pVertices->GetLayout(), *pvs));
 				unoccluded.AddBindable(std::move(pvs));
 
-				unoccluded.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+				unoccluded.AddBindable(PixelShader::Resolve(gfx, "Solid_PS"));
 
 				struct PSColorConstant
 				{
@@ -73,11 +73,11 @@ namespace dr
 			{
 				Step occluded("wireframe");
 
-				auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+				auto pvs = VertexShader::Resolve(gfx, "Solid_VS");
 				occluded.AddBindable(InputLayout::Resolve(gfx, pVertices->GetLayout(), *pvs));
 				occluded.AddBindable(std::move(pvs));
 
-				occluded.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+				occluded.AddBindable(PixelShader::Resolve(gfx, "Solid_PS"));
 
 				struct PSColorConstant2
 				{

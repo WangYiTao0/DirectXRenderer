@@ -27,11 +27,11 @@ namespace dr
 			Technique solid{ Chan::main };
 			Step only("lambertian");
 
-			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS");
 			only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *pvs));
 			only.AddBindable(std::move(pvs));
 
-			only.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+			only.AddBindable(PixelShader::Resolve(gfx, "Solid_PS"));
 
 			struct PSColorConstant
 			{

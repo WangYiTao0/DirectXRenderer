@@ -22,8 +22,8 @@ namespace dr
 				RegisterSink(DirectBufferSink<Bind::DepthStencil>::Make("depthStencil", depthStencil));
 				RegisterSource(DirectBufferSource<Bind::RenderTarget>::Make("renderTarget", renderTarget));
 				RegisterSource(DirectBufferSource<Bind::DepthStencil>::Make("depthStencil", depthStencil));
-				AddBind(VertexShader::Resolve(gfx, "Solid_VS.cso"));
-				AddBind(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+				AddBind(VertexShader::Resolve(gfx, "Solid_VS"));
+				AddBind(PixelShader::Resolve(gfx, "Solid_PS"));
 				AddBind(Stencil::Resolve(gfx, Stencil::Mode::Mask));
 				AddBind(Rasterizer::Resolve(gfx, false));
 			}
