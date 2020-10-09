@@ -24,7 +24,7 @@ namespace dr
 		private:
 			void BindAsBuffer(Graphics& gfx, ID3D11DepthStencilView* pDepthStencilView) noxnd;
 		protected:
-			RenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture);
+			RenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture, std::optional<UINT> face);
 			RenderTarget(Graphics& gfx, UINT width, UINT height);
 			UINT width;
 			UINT height;
@@ -45,11 +45,9 @@ namespace dr
 		// RT for Graphics to create RenderTarget for the back buffer
 		class OutputOnlyRenderTarget : public RenderTarget
 		{
-			friend Graphics;
 		public:
 			void Bind(Graphics& gfx) noxnd override;
-		private:
-			OutputOnlyRenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture);
+			OutputOnlyRenderTarget(Graphics& gfx, ID3D11Texture2D* pTexture, std::optional<UINT> face = {});
 		};
 	}
 }

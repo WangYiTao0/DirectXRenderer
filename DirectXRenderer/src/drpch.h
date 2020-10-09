@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <random>
+#include <optional>
 
 
 // windows header
