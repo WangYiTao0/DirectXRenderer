@@ -64,8 +64,8 @@ namespace dr
 		Graphics(const Graphics&) = delete;
 		Graphics& operator=(const Graphics&) = delete;
 		~Graphics();
-		void EndFrame();
 		void BeginFrame(float red, float green, float blue) noexcept;
+		void EndFrame();
 		void DrawIndexed(UINT count) noxnd;
 		void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 		DirectX::XMMATRIX GetProjection() const noexcept;

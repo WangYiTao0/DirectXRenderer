@@ -1,7 +1,16 @@
 # Binaries
+**/bin/
+!3rdPart/premake/bin/
+bin-int/
+
 /bin/
 bin-obj/
-!3rdPart/bin/premake/*
+!3rdPart/premake/bin/*
+**bin-int/
+
+
+# JF files
+**.log
 
 # Visual Studio files and folder
 .vs/
@@ -9,6 +18,3 @@ bin-obj/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
-*.asm
-
-*.cso
