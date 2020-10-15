@@ -87,12 +87,23 @@ namespace dr
 
 	void Graphics::EndFrame()
 	{
+
+		ImGuiIO& io = ImGui::GetIO();
+
+		io.DisplaySize = ImVec2((float)width, (float)height);
+
 		// imgui frame end
 		if (imguiEnabled)
 		{
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		}
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+	}
 
 		HRESULT hr;
 #ifndef NDEBUG
@@ -119,6 +130,7 @@ namespace dr
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
+
 		}
 		// clearing shader inputs to prevent simultaneous in/out bind carried over from prev frame
 		ID3D11ShaderResourceView* const pNullTex = nullptr;
