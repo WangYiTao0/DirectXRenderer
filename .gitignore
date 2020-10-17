@@ -12,6 +12,10 @@ bin-obj/
 # JF files
 **.log
 
+#Shader
+*.cso
+*.asm
+
 # Visual Studio files and folder
 .vs/
 **.sln
