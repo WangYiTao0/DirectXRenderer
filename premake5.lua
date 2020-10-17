@@ -1,3 +1,6 @@
+include "./3rdPart/premake/premake_customization/solution_items.lua"
+
+
 workspace "DirectXRenderer"
     architecture "x64"
     targetdir "build"
@@ -10,6 +13,11 @@ workspace "DirectXRenderer"
         "Dist"
     }
 
+    solution_items
+	{
+		".editorconfig",
+    }
+    
     flags
     {
         "MultiProcessorCompile"
@@ -21,8 +29,11 @@ workspace "DirectXRenderer"
 IncludeDir = {}
 IncludeDir["ImGui"] = "3rdPart/imgui"
 
+LibraryDir = {}
+
 -- Projects
 group "Dependencies"
+    include "3rdPart/premake"
     include "DirectXRenderer/3rdPart/imgui"
 group ""
 

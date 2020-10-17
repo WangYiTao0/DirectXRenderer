@@ -181,7 +181,6 @@ namespace dr
 		return pTarget;
 	}
 
-
 	// Graphics exception stuff
 	Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
 		:
@@ -245,7 +244,6 @@ namespace dr
 		return info;
 	}
 
-
 	const char* Graphics::DeviceRemovedException::GetType() const noexcept
 	{
 		return "Dr Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
@@ -266,7 +264,6 @@ namespace dr
 			info.pop_back();
 		}
 	}
-
 
 	const char* Graphics::InfoException::what() const noexcept
 	{
