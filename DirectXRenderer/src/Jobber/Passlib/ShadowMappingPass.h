@@ -7,6 +7,7 @@
 #include "Core/Camera/Camera3D.h"
 #include "Bindable/ShadowRasterizer.h"
 
+#include "imgui.h"
 
 namespace dr
 {
