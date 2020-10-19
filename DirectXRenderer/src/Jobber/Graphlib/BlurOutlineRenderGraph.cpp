@@ -48,9 +48,9 @@ namespace dr
 			}
 
 			{
-				auto pass = std::make_unique<RTTPass>(gfx, "rtt");
-				//pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
-	
+				auto pass = std::make_unique<RTTPass>(gfx, "backRTT");
+				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
+				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
 				pass->SetSinkLinkage("backRTT", "clearRTT.buffer");
 				AppendPass(std::move(pass));
 			}
@@ -65,8 +65,8 @@ namespace dr
 			{
 				auto pass = std::make_unique<LambertianPass>(gfx, "lambertian");
 				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
-				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
-				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
+				pass->SetSinkLinkage("renderTarget", "backRTT.renderTarget");
+				pass->SetSinkLinkage("depthStencil", "backRTT.depthStencil");
 				AppendPass(std::move(pass));
 			}
 			{
