@@ -15,21 +15,16 @@
 #include <imgui/imgui.h>
 #include "Jobber/Passlib/SkyboxPass.h"
 
-#include "Jobber/Passlib/RTTPass.h"
-
-
+#include "Jobber/Passlib/RenderToTexturePass.h"
+#include "Jobber/Passlib/ImGuiViewPortPass.h"
 namespace dr
 {
 	namespace Rgph
 	{
 		BlurOutlineRenderGraph::BlurOutlineRenderGraph(Graphics& gfx)
 			:
-			m_backRTT(std::make_shared<Bind::ShaderInputRenderTarget>(gfx, gfx.GetWidth(), gfx.GetHeight(), 5)),
-			pSRV(m_backRTT->GetSRV()),
 			RenderGraph(gfx)
 		{
-			AddGlobalSource(DirectBufferSource<Bind::RenderTarget>::Make("backRTT", m_backRTT));
-			AddGlobalSink(DirectBufferSink<Bind::RenderTarget>::Make("backRTT", m_backRTT));
 			{
 				auto pass = std::make_unique<BufferClearPass>("clearRT");
 				pass->SetSinkLinkage("buffer", "$.backbuffer");
@@ -41,19 +36,17 @@ namespace dr
 				AppendPass(std::move(pass));
 			}
 
+
 			{
-				auto pass = std::make_unique<BufferClearPass>("clearRTT");
-				pass->SetSinkLinkage("buffer", "$.backRTT");
+				auto pass = std::make_unique<RenderToTexturePass>(gfx, "backRenderToTexturePass");
+				AppendPass(std::move(pass));
+			}
+			{
+				auto pass = std::make_unique<ImGuiViewPortPass>(gfx, "ImGuiViewPort");
+				pass->SetSinkLinkage("scratchIn", "backRenderToTexturePass.scratchOut");
 				AppendPass(std::move(pass));
 			}
 
-			{
-				auto pass = std::make_unique<RTTPass>(gfx, "backRTT");
-				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
-				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
-				pass->SetSinkLinkage("backRTT", "clearRTT.buffer");
-				AppendPass(std::move(pass));
-			}
 
 
 			{
@@ -65,8 +58,8 @@ namespace dr
 			{
 				auto pass = std::make_unique<LambertianPass>(gfx, "lambertian");
 				pass->SetSinkLinkage("shadowMap", "shadowMap.map");
-				pass->SetSinkLinkage("renderTarget", "backRTT.renderTarget");
-				pass->SetSinkLinkage("depthStencil", "backRTT.depthStencil");
+				pass->SetSinkLinkage("depthStencil", "clearDS.buffer");
+				pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
 				AppendPass(std::move(pass));
 			}
 			{
@@ -129,23 +122,14 @@ namespace dr
 				AppendPass(std::move(pass));
 			}
 
+			//SetSinkTarget("backRTT", "backRTT.backRTT");
+			SetSinkTarget("backbuffer", "wireframe.renderTarget");
 
-			SetSinkTarget("backbuffer","vertical.renderTarget");
 
-			SetSinkTarget("backRTT", "rtt.backRTT");
-		
 
 			Finalize();
 		}
 
-
-		void BlurOutlineRenderGraph::RenderViewPort(Graphics& gfx)
-		{
-			ImGui::Begin("ViewPort");
-			ImGui::Text("pointer = %p", pSRV);
-			ImGui::Image(reinterpret_cast<void*>(pSRV), ImVec2((float)gfx.GetWidth(), (float)gfx.GetHeight()));
-			ImGui::End();
-		}
 
 		void BlurOutlineRenderGraph::SetKernelGauss(int radius, float sigma) noxnd
 		{
@@ -240,6 +224,10 @@ namespace dr
 				}
 			}
 			ImGui::End();
+		}
+
+		void BlurOutlineRenderGraph::RenderViewPort(Graphics& gfx)
+		{
 		}
 
 		void Rgph::BlurOutlineRenderGraph::RenderShadowWindow(Graphics& gfx)
