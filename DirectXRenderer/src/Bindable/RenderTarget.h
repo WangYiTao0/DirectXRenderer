@@ -21,6 +21,7 @@ namespace dr
 			void Clear(Graphics& gfx, const std::array<float, 4>& color) noxnd;
 			UINT GetWidth() const noexcept;
 			UINT GetHeight() const noexcept;
+			ID3D11ShaderResourceView* GetSRV() { return pShaderResourceView.Get(); }
 		private:
 			void BindAsBuffer(Graphics& gfx, ID3D11DepthStencilView* pDepthStencilView) noxnd;
 		protected:
@@ -29,6 +30,7 @@ namespace dr
 			UINT width;
 			UINT height;
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTargetView;
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView;
 		};
 
 		class ShaderInputRenderTarget : public RenderTarget
@@ -39,7 +41,6 @@ namespace dr
 			Surface ToSurface(Graphics& gfx) const;
 		private:
 			UINT slot;
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView;
 		};
 
 		// RT for Graphics to create RenderTarget for the back buffer

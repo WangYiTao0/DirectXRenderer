@@ -23,14 +23,14 @@ namespace dr
 		{
 		public:
 			BlurOutlineRenderGraph(Graphics& gfx);
-			void RenderWindows(Graphics& gfx);
+			void OnImGuiRender(Graphics& gfx);
 			void BindMainCamera(Camera3D& cam);
 			void BindShadowCamera(Camera3D& cam);
 			void DumpShadowMap(Graphics& gfx, const std::string& path);
-			void StoreDepth(Graphics& gfx, const std::string& path);
 		private:
 			void RenderKernelWindow(Graphics& gfx);
 			void RenderShadowWindow(Graphics& gfx);
+			void RenderViewPort(Graphics& gfx);
 			// private functions
 			void SetKernelGauss(int radius, float sigma) noxnd;
 			void SetKernelBox(int radius)noxnd;
@@ -45,6 +45,9 @@ namespace dr
 			float sigma = 2.0f;
 			std::shared_ptr<Bind::CachingPixelConstantBufferEx> blurKernel;
 			std::shared_ptr<Bind::CachingPixelConstantBufferEx> blurDirection;
+
+			std::shared_ptr<Bind::RenderTarget> m_backRTT;
+			ID3D11ShaderResourceView* pSRV;
 		};
 	}
 }

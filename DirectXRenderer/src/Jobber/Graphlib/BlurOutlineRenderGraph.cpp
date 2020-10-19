@@ -15,14 +15,21 @@
 #include <imgui/imgui.h>
 #include "Jobber/Passlib/SkyboxPass.h"
 
+#include "Jobber/Passlib/RTTPass.h"
+
+
 namespace dr
 {
 	namespace Rgph
 	{
 		BlurOutlineRenderGraph::BlurOutlineRenderGraph(Graphics& gfx)
 			:
+			m_backRTT(std::make_shared<Bind::ShaderInputRenderTarget>(gfx, gfx.GetWidth(), gfx.GetHeight(), 5)),
+			pSRV(m_backRTT->GetSRV()),
 			RenderGraph(gfx)
 		{
+			AddGlobalSource(DirectBufferSource<Bind::RenderTarget>::Make("backRTT", m_backRTT));
+			AddGlobalSink(DirectBufferSink<Bind::RenderTarget>::Make("backRTT", m_backRTT));
 			{
 				auto pass = std::make_unique<BufferClearPass>("clearRT");
 				pass->SetSinkLinkage("buffer", "$.backbuffer");
@@ -33,6 +40,21 @@ namespace dr
 				pass->SetSinkLinkage("buffer", "$.masterDepth");
 				AppendPass(std::move(pass));
 			}
+
+			{
+				auto pass = std::make_unique<BufferClearPass>("clearRTT");
+				pass->SetSinkLinkage("buffer", "$.backRTT");
+				AppendPass(std::move(pass));
+			}
+
+			{
+				auto pass = std::make_unique<RTTPass>(gfx, "rtt");
+				//pass->SetSinkLinkage("renderTarget", "clearRT.buffer");
+	
+				pass->SetSinkLinkage("backRTT", "clearRTT.buffer");
+				AppendPass(std::move(pass));
+			}
+
 
 			{
 				auto pass = std::make_unique<ShadowMappingPass>(gfx, "shadowMap");
@@ -107,11 +129,23 @@ namespace dr
 				AppendPass(std::move(pass));
 			}
 
-			SetSinkTarget("backbuffer","wireframe.renderTarget");
+
+			SetSinkTarget("backbuffer","vertical.renderTarget");
+
+			SetSinkTarget("backRTT", "rtt.backRTT");
+		
 
 			Finalize();
 		}
 
+
+		void BlurOutlineRenderGraph::RenderViewPort(Graphics& gfx)
+		{
+			ImGui::Begin("ViewPort");
+			ImGui::Text("pointer = %p", pSRV);
+			ImGui::Image(reinterpret_cast<void*>(pSRV), ImVec2((float)gfx.GetWidth(), (float)gfx.GetHeight()));
+			ImGui::End();
+		}
 
 		void BlurOutlineRenderGraph::SetKernelGauss(int radius, float sigma) noxnd
 		{
@@ -148,10 +182,11 @@ namespace dr
 			blurKernel->SetBuffer(k);
 		}
 
-		void BlurOutlineRenderGraph::RenderWindows(Graphics& gfx)
+		void BlurOutlineRenderGraph::OnImGuiRender(Graphics& gfx)
 		{
 			RenderShadowWindow(gfx);
 			RenderKernelWindow(gfx);
+			RenderViewPort(gfx);
 		}
 
 
