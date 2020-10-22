@@ -10,7 +10,7 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(float dt)  override;
 private:
-	void SpawnImguiWindow();
+	void OnImGuiRender();
 private:
 	dr::Win32Window& wnd;
 	dr::CameraContainer cameras;
