@@ -246,12 +246,6 @@ namespace dr
 		void BlurOutlineRenderGraph::RenderViewPort(Graphics& gfx)
 		{
 			dynamic_cast<RenderToTexturePass&>(FindPassByName("backRenderToTexture")).OnImGuiRender(gfx);
-
-	/*			ID3D11ShaderResourceView* pSRV = backbufferTexture->GetSRV();
-				ImGui::Begin("ViewPort");
-				ImGui::Text("pointer = %p", pSRV);
-				ImGui::Image(reinterpret_cast<void*>(pSRV), ImVec2((float)gfx.GetWidth(), (float)gfx.GetHeight()));
-				ImGui::End();*/
 		}
 
 		void Rgph::BlurOutlineRenderGraph::RenderShadowWindow(Graphics& gfx)
