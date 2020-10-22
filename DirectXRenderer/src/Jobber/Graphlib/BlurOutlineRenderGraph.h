@@ -46,6 +46,8 @@ namespace dr
 			std::shared_ptr<Bind::CachingPixelConstantBufferEx> blurKernel;
 			std::shared_ptr<Bind::CachingPixelConstantBufferEx> blurDirection;
 
+		//	std::shared_ptr<Bind::RenderTarget> backbufferTexture;
+
 		};
 	}
 }

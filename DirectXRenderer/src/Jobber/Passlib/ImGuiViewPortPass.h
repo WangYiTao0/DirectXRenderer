@@ -16,7 +16,14 @@ namespace dr
 				:
 				FullscreenPass(std::move(name),gfx)
 			{
+				using namespace Bind;
 				AddBindSink<Bind::RenderTarget>("scratchIn");
+				AddBind(PixelShader::Resolve(gfx, "FullScreen_PS"));
+				AddBind(Stencil::Resolve(gfx, Stencil::Mode::DepthOff));
+				RegisterSink(DirectBufferSink<RenderTarget>::Make("renderTarget", renderTarget));
+				RegisterSink(DirectBufferSink<DepthStencil>::Make("depthStencil", depthStencil));
+				RegisterSource(DirectBufferSource<RenderTarget>::Make("renderTarget", renderTarget));
+				RegisterSource(DirectBufferSource<DepthStencil>::Make("depthStencil", depthStencil));
 				//pSRV = renderTarget->GetSRV();
 			}
 
@@ -34,7 +41,7 @@ namespace dr
 				//ImGui::End();
 			}
 		private:
-			ID3D11ShaderResourceView* pSRV;
+			//ID3D11ShaderResourceView* pSRV;
 		};
 
 	}

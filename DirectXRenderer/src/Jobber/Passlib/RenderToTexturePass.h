@@ -16,9 +16,18 @@ namespace dr
 				:
 				RenderQueuePass(std::move(name))
 			{
+
+				//RegisterSink(DirectBufferSink<RenderTarget>::Make("renderTarget", renderTarget));
+				RegisterSink(DirectBufferSink<DepthStencil>::Make("depthStencil", depthStencil));
+
 				renderTarget = std::make_shared<ShaderInputRenderTarget>(gfx, gfx.GetWidth(), gfx.GetHeight(), 5);
+		
+				pSRV = renderTarget->GetSRV();
 
 				RegisterSource(DirectBindableSource<Bind::RenderTarget>::Make("scratchOut", renderTarget));
+
+				RegisterSource(DirectBufferSource<RenderTarget>::Make("renderTarget", renderTarget));
+				RegisterSource(DirectBufferSource<DepthStencil>::Make("depthStencil", depthStencil));
 			}
 
 			void Execute(Graphics& gfx) const noxnd override
@@ -29,15 +38,14 @@ namespace dr
 
 			void OnImGuiRender(Graphics& gfx)
 			{
-				/*pSRV = renderTargetTex->GetSRV();
-					ImGui::Begin("ViewPort");
-					ImGui::Text("pointer = %p", pSRV);
-					ImGui::Image(reinterpret_cast<void*>(pSRV), ImVec2((float)gfx.GetWidth(), (float)gfx.GetHeight()));
-					ImGui::End();*/
+				ImGui::Begin("ViewPort");
+				ImGui::Text("pointer = %p", pSRV);
+				ImGui::Image(reinterpret_cast<void*>(pSRV), ImVec2((float)gfx.GetWidth(), (float)gfx.GetHeight()));
+				ImGui::End();
 			}
 		private:
 			ID3D11ShaderResourceView* pSRV;
-			std::shared_ptr<RenderTarget> m_BackRTT;
+
 		};
 
 	}
